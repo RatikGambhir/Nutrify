@@ -1,0 +1,44 @@
+# ---- OS / IDE ----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# ---- Secrets ----
+.env
+.env.*.local
+*.key
+*.pem
+
+# ---- Kotlin / Gradle ----
+.gradle/
+build/
+out/
+ktore-fitness-pal-service/src/main/resources/
+**/build/
+**/out/
+# If using Maven anywhere:
+target/
+
+# ---- Nuxt / Node ----
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+frontend/.nuxt/
+frontend/.output/
+frontend/.cache/
+# Nuxt build outputs (Nuxt 3)
+.nuxt/
+.output/
+
+# ---- Logs & coverage ----
+*.log
+logs/
+coverage/
+lcov.info
+
+# ---- Docker ----
+*.pid
+*.seed
