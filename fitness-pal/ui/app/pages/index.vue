@@ -1,5 +1,6 @@
 <script setup lang="ts">
 
+import { UDashboardPanel } from '#components'
 import type { DropdownMenuItem } from '@nuxt/ui'
 import type { Period, Range } from '~/types'
 
@@ -60,6 +61,7 @@ const period = ref<Period>('daily')
         </template>
       </UDashboardToolbar>
     </template>
+
 
     <template #body>
       <WorkoutStats :period="period" :range="range" />
