@@ -1,6 +1,7 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
+  srcDir: 'app', 
   devtools: { enabled: true },
 
   modules: [
