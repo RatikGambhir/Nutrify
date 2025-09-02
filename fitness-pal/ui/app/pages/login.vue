@@ -48,8 +48,8 @@ function onSubmit(payload: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center gap-4 p-4">
-    <UPageCard class="w-full max-w-md">
+  <div class="flex flex-col items-center justify-center p-4">
+    <UPageCard class="w-full max-w-md ml-108">
       <UAuthForm
         :schema="schema"
         title="Login"
