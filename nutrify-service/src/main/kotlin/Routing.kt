@@ -20,6 +20,9 @@ import io.ktor.sse.*
 import org.slf4j.event.*
 
 fun Application.configureRouting() {
+    // configure services here, then pass to controllers
+    // We're going to need to create an instance container to manage our dependencies, create
+    // objects, and wire them up
     install(SSE)
 
     routing {
