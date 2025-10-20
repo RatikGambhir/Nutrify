@@ -9,9 +9,10 @@ fun main(args: Array<String>) {
 fun Application.module() {
     configureFrameworks()
     configureSerialization()
-    configureDatabases()
-    configureMonitoring()
+    val dataSource = configureDatabases()
+
+    // configureMonitoring()
     configureHTTP()
-    configureSecurity()
+    // configureSecurity()
     configureRouting()
 }
