@@ -1,7 +1,5 @@
 package com.nutrify
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.http.*
@@ -19,22 +17,13 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
-import java.sql.Connection
-import java.sql.DriverManager
-import java.util.concurrent.TimeUnit
-import org.koin.dsl.module
-import org.koin.ktor.plugin.Koin
-import org.koin.logger.slf4jLogger
 import org.slf4j.event.*
 
 fun Application.configureRouting() {
     install(SSE)
+
     routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
-        sse("/hello") {
-            send(ServerSentEvent("world"))
-        }
+        get("/") { call.respondText("Hello World!") }
+        sse("/hello") { send(ServerSentEvent("world")) }
     }
 }
