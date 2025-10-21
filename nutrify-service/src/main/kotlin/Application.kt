@@ -9,7 +9,7 @@ fun main(args: Array<String>) {
 fun Application.module() {
     configureFrameworks()
     configureSerialization()
-    val dataSource = configureDatabases()
+    configureContainer()
 
     // configureMonitoring()
     configureHTTP()
