@@ -11,6 +11,7 @@ fun Application.module() {
     configureSerialization()
     configureContainer()
 
+
     // configureMonitoring()
     configureHTTP()
     // configureSecurity()

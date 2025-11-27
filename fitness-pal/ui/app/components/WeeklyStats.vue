@@ -1,112 +1,184 @@
 <script setup lang="ts">
-import { h, resolveComponent } from 'vue'
-import type { TableColumn } from '@nuxt/ui'
-import type { Period, Range, Sale } from '~/types'
+import { ref, computed } from "vue";
+import type { TableColumn } from "@nuxt/ui";
+import { Transition } from "vue";
 
-const props = defineProps<{
-  period: Period
-  range: Range
-}>()
+const selectedTab = ref("nutrition");
 
-const UBadge = resolveComponent('UBadge')
+const nutritionData = ref([
+    {
+        mealType: "Breakfast",
+        food: ["Oatmeal", "Berries", "Protein Powder"],
+        calories: 400,
+        protein: 30,
+        carbs: 45,
+        fats: 10,
+    },
+    {
+        mealType: "Lunch",
+        food: ["Chicken Salad", "Mixed Greens", "Olive Oil Dressing"],
+        calories: 500,
+        protein: 40,
+        carbs: 20,
+        fats: 25,
+    },
+    {
+        mealType: "Dinner",
+        food: ["Salmon", "Asparagus", "Quinoa"],
+        calories: 600,
+        protein: 50,
+        carbs: 30,
+        fats: 30,
+    },
+    {
+        mealType: "Snack",
+        food: ["Greek Yogurt", "Almonds"],
+        calories: 200,
+        protein: 20,
+        carbs: 10,
+        fats: 10,
+    },
+]);
 
-const sampleEmails = [
-  'james.anderson@example.com',
-  'mia.white@example.com',
-  'william.brown@example.com',
-  'emma.davis@example.com',
-  'ethan.harris@example.com'
-]
+const nutritionColumns: TableColumn[] = [
+    {
+        accessorKey: "mealType",
+        header: "Meal Type",
+        cell: ({ row }) => row.getValue("mealType"),
+    },
+    {
+        accessorKey: "food",
+        header: "Food",
+        cell: ({ row }) => (row.getValue("food") as string[]).join(", "),
+    },
+    {
+        accessorKey: "calories",
+        header: "Calories",
+        cell: ({ row }) => row.getValue("calories"),
+    },
+    {
+        accessorKey: "protein",
+        header: "Protein (g)",
+        cell: ({ row }) => row.getValue("protein"),
+    },
+    {
+        accessorKey: "carbs",
+        header: "Carbs (g)",
+        cell: ({ row }) => row.getValue("carbs"),
+    },
+    {
+        accessorKey: "fats",
+        header: "Fats (g)",
+        cell: ({ row }) => row.getValue("fats"),
+    },
+];
 
-const { data } = await useAsyncData('sales', async () => {
-  const sales: Sale[] = []
-  const currentDate = new Date()
+const workoutData = ref([
+    {
+        workoutType: "Strength Training",
+        duration: "60 min",
+        caloriesBurned: 350,
+        workouts: ["Bench Press", "Squats", "Deadlifts"],
+    },
+    {
+        workoutType: "Cardio",
+        duration: "45 min",
+        caloriesBurned: 400,
+        workouts: ["Running", "Elliptical"],
+    },
+    {
+        workoutType: "Yoga",
+        duration: "30 min",
+        caloriesBurned: 150,
+        workouts: ["Vinyasa Flow", "Warrior Pose"],
+    },
+]);
 
-  for (let i = 0; i < 5; i++) {
-    const hoursAgo = randomInt(0, 48)
-    const date = new Date(currentDate.getTime() - hoursAgo * 3600000)
+const workoutColumns: TableColumn[] = [
+    {
+        accessorKey: "workoutType",
+        header: "Workout Type",
+        cell: ({ row }) => row.getValue("workoutType"),
+    },
+    {
+        accessorKey: "duration",
+        header: "Duration",
+        cell: ({ row }) => row.getValue("duration"),
+    },
+    {
+        accessorKey: "caloriesBurned",
+        header: "Calories Burned",
+        cell: ({ row }) => row.getValue("caloriesBurned"),
+    },
+    {
+        accessorKey: "workouts",
+        header: "Workouts",
+        cell: ({ row }) => (row.getValue("workouts") as string[]).join(", "),
+    },
+];
 
-    sales.push({
-      id: (4600 - i).toString(),
-      date: date.toISOString(),
-      status: randomFrom(['paid', 'failed', 'refunded']),
-      email: randomFrom(sampleEmails),
-      amount: randomInt(100, 1000)
-    })
-  }
+const currentColumns = computed(() => {
+    return selectedTab.value === "nutrition"
+        ? nutritionColumns
+        : workoutColumns;
+});
 
-  return sales.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-}, {
-  watch: [() => props.period, () => props.range],
-  default: () => []
-})
-
-const columns: TableColumn<Sale>[] = [
-  {
-    accessorKey: 'id',
-    header: 'ID',
-    cell: ({ row }) => `#${row.getValue('id')}`
-  },
-  {
-    accessorKey: 'date',
-    header: 'Date',
-    cell: ({ row }) => {
-      return new Date(row.getValue('date')).toLocaleString('en-US', {
-        day: 'numeric',
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      })
-    }
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => {
-      const color = {
-        paid: 'success' as const,
-        failed: 'error' as const,
-        refunded: 'neutral' as const
-      }[row.getValue('status') as string]
-
-      return h(UBadge, { class: 'capitalize', variant: 'subtle', color }, () =>
-        row.getValue('status')
-      )
-    }
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email'
-  },
-  {
-    accessorKey: 'amount',
-    header: () => h('div', { class: 'text-right' }, 'Amount'),
-    cell: ({ row }) => {
-      const amount = Number.parseFloat(row.getValue('amount'))
-
-      const formatted = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount)
-
-      return h('div', { class: 'text-right font-medium' }, formatted)
-    }
-  }
-]
+const currentData = computed(() => {
+    return selectedTab.value === "nutrition"
+        ? nutritionData.value
+        : workoutData.value;
+});
 </script>
 
 <template>
-  <UTable
-    :data="data"
-    :columns="columns"
-    class="shrink-0"
-    :ui="{
-      base: 'table-fixed border-separate border-spacing-0',
-      thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
-      tbody: '[&>tr]:last:[&>td]:border-b-0',
-      th: 'first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
-      td: 'border-b border-default'
-    }"
-  />
+    <div>
+        <UButtonGroup class="mb-4">
+            <UButton
+                label="Nutrition"
+                :variant="selectedTab === 'nutrition' ? 'solid' : 'outline'"
+                @click="selectedTab = 'nutrition'"
+            />
+            <UButton
+                label="Workout"
+                :variant="selectedTab === 'workout' ? 'solid' : 'outline'"
+                @click="selectedTab = 'workout'"
+            />
+        </UButtonGroup>
+
+        <Transition
+            name="fade-slide"
+            mode="out-in"
+        >
+            <UTable
+                :key="selectedTab"
+                :data="currentData"
+                :columns="currentColumns"
+                class="shrink-0"
+                :ui="{
+                    base: 'table-fixed border-separate border-spacing-0',
+                    thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
+                    tbody: '[&>tr]:last:[&>td]:border-b-0',
+                    th: 'first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
+                    td: 'border-b border-default',
+                }"
+            />
+        </Transition>
+    </div>
 </template>
+
+<style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+    transition: all 0.3s ease;
+}
+
+.fade-slide-enter-from {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+</style>
