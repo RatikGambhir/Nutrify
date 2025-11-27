@@ -24,7 +24,7 @@ const links = [[{
 }, {
   label: 'Nutrition',
   icon: 'i-lucide-users',
-  to: '/',
+  to: '/nutrition',
   onSelect: () => {
     open.value = false
   }

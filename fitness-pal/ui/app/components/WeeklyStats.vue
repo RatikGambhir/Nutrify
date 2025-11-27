@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, Transition } from "vue";
 import type { TableColumn } from "@nuxt/ui";
-import { Transition } from "vue";
 
 const selectedTab = ref("nutrition");
 
@@ -145,10 +144,7 @@ const currentData = computed(() => {
             />
         </UButtonGroup>
 
-        <Transition
-            name="fade-slide"
-            mode="out-in"
-        >
+        <Transition name="fade-slide" mode="out-in">
             <UTable
                 :key="selectedTab"
                 :data="currentData"
