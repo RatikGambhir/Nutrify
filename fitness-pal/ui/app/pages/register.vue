@@ -19,10 +19,10 @@ const state = reactive({
 })
 
 function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log('Login submitted', event.data)
+  console.log('Register submitted', event.data)
   toast.add({
     title: 'Success',
-    description: 'Continuing with email login...',
+    description: 'Creating your account...',
     color: 'primary'
   })
 }
@@ -69,10 +69,10 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
         <div class="space-y-8">
           <div>
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Sign In or Join Now!
+              Create Your Account
             </h1>
             <p class="text-gray-600 dark:text-gray-400">
-              login or create your efferd account.
+              Start your journey with efferd today.
             </p>
           </div>
 
@@ -89,7 +89,7 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
           <!-- Email Form -->
           <div class="space-y-4">
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Enter your email address to sign in or create an account
+              Enter your email address to create an account
             </p>
 
             <UForm :schema="schema" :state="state" @submit="onSubmit" class="space-y-4">
@@ -121,6 +121,16 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
               <NuxtLink to="/terms" class="underline hover:text-gray-900 dark:hover:text-white">Terms of Service</NuxtLink>
               and
               <NuxtLink to="/privacy" class="underline hover:text-gray-900 dark:hover:text-white">Privacy Policy</NuxtLink>.
+            </p>
+          </div>
+
+          <!-- Login Link -->
+          <div class="text-center">
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Already have an account?
+              <NuxtLink to="/login" class="font-medium text-gray-900 dark:text-white hover:underline">
+                Sign in
+              </NuxtLink>
             </p>
           </div>
         </div>

@@ -15,9 +15,8 @@ const links = [[{
   }
 }, {
   label: 'Workouts',
-  icon: 'i-lucide-inbox',
-  to: '/',
-  badge: '4',
+  icon: 'i-lucide-dumbbell',
+  to: '/workouts',
   onSelect: () => {
     open.value = false
   }
