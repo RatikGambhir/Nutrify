@@ -19,8 +19,9 @@ class Container {
     fun bindSingleton(classname: KClass<*>, instance: Any) {
         beans[classname]?.let {
             return;
+        } ?: run {
+            beans[classname] = instance
         }
-        beans[classname] = instance
     }
 
     inline fun <reified T: Any> get(): T {

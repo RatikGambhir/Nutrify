@@ -1,10 +1,10 @@
 package com.nutrify
 
-import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+//TODO: Add controller class here
 
-fun Application.configureExerciseController() {
+fun Application.configureExerciseRoutes() {
     routing { get("/") { call.respondText("Hello, World!") } }
 }
