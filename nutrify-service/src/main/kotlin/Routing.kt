@@ -25,6 +25,9 @@ fun Application.configureRouting() {
     // objects, and wire them up
     install(SSE)
 
+    configureExerciseController();
+    configureUserControllers();
+
     routing {
         get("/") { call.respondText("Hello World!") }
         sse("/hello") { send(ServerSentEvent("world")) }
