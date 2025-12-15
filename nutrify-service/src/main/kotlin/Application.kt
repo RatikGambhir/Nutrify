@@ -9,11 +9,11 @@ fun main(args: Array<String>) {
 fun Application.module() {
     configureFrameworks()
     configureSerialization()
-    configureContainer()
+    val container = configureContainer()
 
 
     // configureMonitoring()
     configureHTTP()
     // configureSecurity()
-    configureRouting()
+    configureRouting(container)
 }

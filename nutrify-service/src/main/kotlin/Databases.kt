@@ -22,12 +22,18 @@ import io.ktor.sse.*
 import java.sql.Connection
 import org.slf4j.event.*
 
-fun Application.configureDatabases(): Connection {
-    // val dbConnection: Connection = connectToPostgres(embedded = false)
+//class PostgresDB(hikariDataSource: HikariDataSource) {
+//
+//
+//    fun <T: Any> query(block: (Connection) -> T): T {
+//
+//    }
+//}
+
+fun Application.configureDatabases(): HikariDataSource {
     val source = connectToPostgresPool()
-    source.connection
     log.info("Connected to postgres! way to go ratik")
-    return source.connection
+    return source
 }
 
 fun Application.connectToPostgresPool(): HikariDataSource {

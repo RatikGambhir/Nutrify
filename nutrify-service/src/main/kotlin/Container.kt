@@ -1,5 +1,6 @@
 package com.nutrify
 
+import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
 import java.sql.Connection
 import kotlin.reflect.KClass
@@ -8,7 +9,7 @@ import kotlin.reflect.full.primaryConstructor
 fun Application.configureContainer(): Container {
     val dataSource = configureDatabases()
     val container = Container()
-    container.bindSingleton(Connection::class, dataSource)
+    container.bindSingleton(HikariDataSource::class, dataSource)
     return container
 }
 
