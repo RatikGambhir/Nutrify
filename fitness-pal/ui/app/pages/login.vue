@@ -36,9 +36,6 @@ async function login(email: string): Promise<UserSession> {
         email: email,
     });
     if (error) {
-      console.log("error!!", error.code)
-      console.log("error!!", error.message)
-      console.log("error!!", error.cause)
         return {
           error: error,
           user: null,
@@ -86,17 +83,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <div
             class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#e5989b] via-[#d47b7e] to-[#c25d60]"
         >
-            <div class="absolute inset-0 opacity-30">
-                <div class="absolute top-0 left-0 w-full h-full">
-                    <div
-                        class="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"
-                    ></div>
-                    <div
-                        class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"
-                    ></div>
-                </div>
-            </div>
-
             <div class="absolute bottom-12 left-12 max-w-lg z-10">
                 <p class="text-white text-2xl font-medium mb-4">
                     "This platform has helped me to save time and serve my
@@ -114,7 +100,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                     <NuxtLink to="/" class="flex items-center gap-2">
                         <div
                             class="w-8 h-8 bg-gray-900 dark:bg-white rounded"
-                        ></div>
+                        />
                         <span
                             class="text-xl font-bold text-gray-900 dark:text-white"
                             >Nutrify</span
@@ -146,7 +132,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                         <div class="absolute inset-0 flex items-center">
                             <div
                                 class="w-full border-t border-gray-200 dark:border-gray-800"
-                            ></div>
+                            />
                         </div>
                         <div class="relative flex justify-center text-sm">
                             <span

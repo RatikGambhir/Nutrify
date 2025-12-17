@@ -3,6 +3,7 @@
 import { UDashboardPanel } from '#components'
 import type { DropdownMenuItem } from '@nuxt/ui'
 import type { Period, Range } from '~/types'
+import {useUserStore} from "~/stores/useUserStore";
 
 
 
@@ -15,6 +16,12 @@ const items = [[{
   icon: 'i-lucide-user-plus',
   to: '/customers'
 }]] satisfies DropdownMenuItem[][]
+
+//TODO: Prefetch user data
+const userStore = useUserStore()
+const user = userStore.user
+const session = userStore.session
+
 
 const range = shallowRef<Range>({
   start: new Date(Date.now() - 13 * 24 * 60 * 60 * 1000),

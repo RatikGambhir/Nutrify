@@ -152,8 +152,8 @@ const tabs = [
                     <UForm
                         :schema="profileSchema"
                         :state="userSettings.profile"
-                        @submit="onProfileSubmit"
                         class="space-y-4"
+                        @submit="onProfileSubmit"
                     >
                         <UFormGroup label="Full Name" name="name" required>
                             <UInput
