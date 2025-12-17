@@ -5,7 +5,6 @@ import type { TableColumn } from "@nuxt/ui";
 const selectedTab = ref("nutrition");
 const timePeriod = ref("daily");
 
-// Helper function to get the start of the current week (Sunday)
 const getWeekStart = (date: Date) => {
     const d = new Date(date);
     const day = d.getDay();
@@ -13,7 +12,6 @@ const getWeekStart = (date: Date) => {
     return new Date(d.setDate(diff));
 };
 
-// Helper function to get the end of the current week (Saturday)
 const getWeekEnd = (date: Date) => {
     const start = getWeekStart(date);
     const end = new Date(start);
@@ -21,7 +19,6 @@ const getWeekEnd = (date: Date) => {
     return end;
 };
 
-// Helper function to check if a date is in the current week
 const isInCurrentWeek = (date: Date) => {
     const now = new Date();
     const weekStart = getWeekStart(now);
@@ -31,23 +28,24 @@ const isInCurrentWeek = (date: Date) => {
     return date >= weekStart && date <= weekEnd;
 };
 
-// Helper function to check if a date is in the current month
 const isInCurrentMonth = (date: Date) => {
     const now = new Date();
-    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+    return (
+        date.getMonth() === now.getMonth() &&
+        date.getFullYear() === now.getFullYear()
+    );
 };
 
-// Helper function to check if a date is today
 const isToday = (date: Date) => {
     const now = new Date();
-    return date.getDate() === now.getDate() &&
-           date.getMonth() === now.getMonth() &&
-           date.getFullYear() === now.getFullYear();
+    return (
+        date.getDate() === now.getDate() &&
+        date.getMonth() === now.getMonth() &&
+        date.getFullYear() === now.getFullYear()
+    );
 };
 
-// Sample nutrition data with dates (expanded to show weekly/monthly data)
 const allNutritionData = ref([
-    // Today's meals
     {
         mealType: "Breakfast",
         food: ["Oatmeal", "Berries", "Protein Powder"],
@@ -146,11 +144,15 @@ const allNutritionData = ref([
 // Filtered nutrition data based on selected time period
 const nutritionData = computed(() => {
     if (timePeriod.value === "daily") {
-        return allNutritionData.value.filter(meal => isToday(meal.date));
+        return allNutritionData.value.filter((meal) => isToday(meal.date));
     } else if (timePeriod.value === "weekly") {
-        return allNutritionData.value.filter(meal => isInCurrentWeek(meal.date));
+        return allNutritionData.value.filter((meal) =>
+            isInCurrentWeek(meal.date),
+        );
     } else if (timePeriod.value === "monthly") {
-        return allNutritionData.value.filter(meal => isInCurrentMonth(meal.date));
+        return allNutritionData.value.filter((meal) =>
+            isInCurrentMonth(meal.date),
+        );
     }
     return allNutritionData.value;
 });
@@ -189,19 +191,19 @@ const nutritionColumns: TableColumn[] = [
 ];
 
 const totalCalories = computed(() =>
-    nutritionData.value.reduce((sum, meal) => sum + meal.calories, 0)
+    nutritionData.value.reduce((sum, meal) => sum + meal.calories, 0),
 );
 
 const totalProtein = computed(() =>
-    nutritionData.value.reduce((sum, meal) => sum + meal.protein, 0)
+    nutritionData.value.reduce((sum, meal) => sum + meal.protein, 0),
 );
 
 const totalCarbs = computed(() =>
-    nutritionData.value.reduce((sum, meal) => sum + meal.carbs, 0)
+    nutritionData.value.reduce((sum, meal) => sum + meal.carbs, 0),
 );
 
 const totalFats = computed(() =>
-    nutritionData.value.reduce((sum, meal) => sum + meal.fats, 0)
+    nutritionData.value.reduce((sum, meal) => sum + meal.fats, 0),
 );
 
 const macroChartData = computed(() => [
@@ -229,22 +231,34 @@ const periodLabel = computed(() => {
                 <template #right>
                     <UButtonGroup size="sm" orientation="horizontal">
                         <UButton
-                            :color="timePeriod === 'daily' ? 'primary' : 'neutral'"
-                            :variant="timePeriod === 'daily' ? 'solid' : 'ghost'"
+                            :color="
+                                timePeriod === 'daily' ? 'primary' : 'neutral'
+                            "
+                            :variant="
+                                timePeriod === 'daily' ? 'solid' : 'ghost'
+                            "
                             @click="timePeriod = 'daily'"
                         >
                             Daily
                         </UButton>
                         <UButton
-                            :color="timePeriod === 'weekly' ? 'primary' : 'neutral'"
-                            :variant="timePeriod === 'weekly' ? 'solid' : 'ghost'"
+                            :color="
+                                timePeriod === 'weekly' ? 'primary' : 'neutral'
+                            "
+                            :variant="
+                                timePeriod === 'weekly' ? 'solid' : 'ghost'
+                            "
                             @click="timePeriod = 'weekly'"
                         >
                             Weekly
                         </UButton>
                         <UButton
-                            :color="timePeriod === 'monthly' ? 'primary' : 'neutral'"
-                            :variant="timePeriod === 'monthly' ? 'solid' : 'ghost'"
+                            :color="
+                                timePeriod === 'monthly' ? 'primary' : 'neutral'
+                            "
+                            :variant="
+                                timePeriod === 'monthly' ? 'solid' : 'ghost'
+                            "
                             @click="timePeriod = 'monthly'"
                         >
                             Monthly
@@ -252,13 +266,12 @@ const periodLabel = computed(() => {
                     </UButtonGroup>
 
                     <UTooltip text="Notifications" :shortcuts="['N']">
-                        <UButton
-                            color="neutral"
-                            variant="ghost"
-                            square
-                        >
+                        <UButton color="neutral" variant="ghost" square>
                             <UChip color="error" inset>
-                                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
+                                <UIcon
+                                    name="i-lucide-bell"
+                                    class="size-5 shrink-0"
+                                />
                             </UChip>
                         </UButton>
                     </UTooltip>
@@ -268,40 +281,62 @@ const periodLabel = computed(() => {
 
         <template #body>
             <div class="space-y-6">
-                <!-- Macronutrient Pie Chart -->
                 <UCard>
                     <template #header>
-                        <h2 class="text-lg font-semibold">{{ periodLabel }} Macronutrient Distribution</h2>
+                        <h2 class="text-lg font-semibold">
+                            {{ periodLabel }} Macronutrient Distribution
+                        </h2>
                     </template>
                     <div class="flex flex-col items-center justify-center">
                         <MacroChart :data="macroChartData" />
                         <div class="mt-6 w-full">
                             <div class="text-center mb-4">
-                                <p class="text-3xl font-bold text-primary">{{ totalCalories }}</p>
-                                <p class="text-sm text-gray-600">Total Calories</p>
+                                <p class="text-3xl font-bold text-primary">
+                                    {{ totalCalories }}
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    Total Calories
+                                </p>
                             </div>
                             <div class="grid grid-cols-3 gap-4">
                                 <div class="text-center">
-                                    <p class="text-2xl font-bold text-blue-500">{{ totalProtein }}</p>
-                                    <p class="text-sm text-gray-600">Protein (g)</p>
+                                    <p class="text-2xl font-bold text-blue-500">
+                                        {{ totalProtein }}
+                                    </p>
+                                    <p class="text-sm text-gray-600">
+                                        Protein (g)
+                                    </p>
                                 </div>
                                 <div class="text-center">
-                                    <p class="text-2xl font-bold text-orange-500">{{ totalCarbs }}</p>
-                                    <p class="text-sm text-gray-600">Carbs (g)</p>
+                                    <p
+                                        class="text-2xl font-bold text-orange-500"
+                                    >
+                                        {{ totalCarbs }}
+                                    </p>
+                                    <p class="text-sm text-gray-600">
+                                        Carbs (g)
+                                    </p>
                                 </div>
                                 <div class="text-center">
-                                    <p class="text-2xl font-bold text-amber-500">{{ totalFats }}</p>
-                                    <p class="text-sm text-gray-600">Fats (g)</p>
+                                    <p
+                                        class="text-2xl font-bold text-amber-500"
+                                    >
+                                        {{ totalFats }}
+                                    </p>
+                                    <p class="text-sm text-gray-600">
+                                        Fats (g)
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </UCard>
 
-                <!-- Nutrition Table -->
                 <UCard>
                     <template #header>
-                        <h2 class="text-lg font-semibold">{{ periodLabel }} Nutrition Breakdown</h2>
+                        <h2 class="text-lg font-semibold">
+                            {{ periodLabel }} Nutrition Breakdown
+                        </h2>
                     </template>
                     <UTable
                         :data="nutritionData"

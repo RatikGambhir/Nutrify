@@ -33,6 +33,7 @@ import org.slf4j.event.*
 fun Application.configureDatabases(): HikariDataSource {
     val source = connectToPostgresPool()
     log.info("Connected to postgres! way to go ratik")
+
     return source
 }
 

@@ -6,7 +6,6 @@ const workoutId = Number(route.params.id);
 
 const isAddExerciseModalOpen = ref(false);
 
-// Mock workout data (same as in index.vue for now)
 const allWorkouts = ref([
     {
         id: 1,
@@ -17,9 +16,7 @@ const allWorkouts = ref([
             {
                 id: 1,
                 name: "Bicep Curl (Machine)",
-                sets: [
-                    { set: 1, previous: null, lbs: 50, reps: 12 },
-                ],
+                sets: [{ set: 1, previous: null, lbs: 50, reps: 12 }],
             },
         ],
     },
@@ -130,15 +127,14 @@ const deleteSet = (exerciseId: number, setIndex: number) => {
 
 const addExercise = (exercise: { id: number; name: string }) => {
     if (workout.value) {
-        const newExerciseId = workout.value.exercises.length > 0
-            ? Math.max(...workout.value.exercises.map((e) => e.id)) + 1
-            : 1;
+        const newExerciseId =
+            workout.value.exercises.length > 0
+                ? Math.max(...workout.value.exercises.map((e) => e.id)) + 1
+                : 1;
         workout.value.exercises.push({
             id: newExerciseId,
             name: exercise.name,
-            sets: [
-                { set: 1, previous: null, lbs: 0, reps: 0 },
-            ],
+            sets: [{ set: 1, previous: null, lbs: 0, reps: 0 }],
         });
     }
 };
@@ -147,7 +143,10 @@ const addExercise = (exercise: { id: number; name: string }) => {
 <template>
     <UDashboardPanel id="workout-detail">
         <template #header>
-            <UDashboardNavbar :title="workout?.name || 'Workout'" :ui="{ right: 'gap-3' }">
+            <UDashboardNavbar
+                :title="workout?.name || 'Workout'"
+                :ui="{ right: 'gap-3' }"
+            >
                 <template #leading>
                     <UButton
                         icon="i-lucide-arrow-left"
@@ -216,38 +215,56 @@ const addExercise = (exercise: { id: number; name: string }) => {
                         <UCard>
                             <div class="overflow-x-auto">
                                 <table class="w-full">
-                                    <thead class="bg-gray-50 border-b border-gray-200">
+                                    <thead
+                                        class="bg-gray-50 border-b border-gray-200"
+                                    >
                                         <tr>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">
+                                            <th
+                                                class="px-4 py-3 text-left text-sm font-semibold"
+                                            >
                                                 Set
                                             </th>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">
+                                            <th
+                                                class="px-4 py-3 text-left text-sm font-semibold"
+                                            >
                                                 Previous
                                             </th>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">
+                                            <th
+                                                class="px-4 py-3 text-left text-sm font-semibold"
+                                            >
                                                 lbs
                                             </th>
-                                            <th class="px-4 py-3 text-left text-sm font-semibold">
+                                            <th
+                                                class="px-4 py-3 text-left text-sm font-semibold"
+                                            >
                                                 Reps
                                             </th>
-                                            <th class="px-4 py-3 text-center text-sm font-semibold">
-
-                                            </th>
+                                            <th
+                                                class="px-4 py-3 text-center text-sm font-semibold"
+                                            ></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr
-                                            v-for="(set, index) in exercise.sets"
+                                            v-for="(
+                                                set, index
+                                            ) in exercise.sets"
                                             :key="index"
                                             class="border-b border-gray-100 hover:bg-gray-50"
                                         >
                                             <td class="px-4 py-3">
-                                                <div class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                                <div
+                                                    class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium"
+                                                >
                                                     {{ set.set }}
                                                 </div>
                                             </td>
                                             <td class="px-4 py-3 text-gray-500">
-                                                {{ set.previous !== null ? set.previous : '—' }}
+                                                {{
+                                                    set.previous !== null
+                                                        ? set.previous
+                                                        : "—"
+                                                }}
                                             </td>
                                             <td class="px-4 py-3">
                                                 <input
@@ -265,13 +282,20 @@ const addExercise = (exercise: { id: number; name: string }) => {
                                             </td>
                                             <td class="px-4 py-3 text-center">
                                                 <UButton
-                                                    v-if="exercise.sets.length > 1"
+                                                    v-if="
+                                                        exercise.sets.length > 1
+                                                    "
                                                     icon="i-lucide-trash"
                                                     color="red"
                                                     variant="ghost"
                                                     size="sm"
                                                     square
-                                                    @click="deleteSet(exercise.id, index)"
+                                                    @click="
+                                                        deleteSet(
+                                                            exercise.id,
+                                                            index,
+                                                        )
+                                                    "
                                                 />
                                             </td>
                                         </tr>
@@ -311,6 +335,9 @@ const addExercise = (exercise: { id: number; name: string }) => {
             </div>
         </template>
 
-        <ExerciseSelectModal v-model="isAddExerciseModalOpen" @select="addExercise" />
+        <ExerciseSelectModal
+            v-model="isAddExerciseModalOpen"
+            @select="addExercise"
+        />
     </UDashboardPanel>
 </template>
