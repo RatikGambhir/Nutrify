@@ -34,11 +34,11 @@ const router = useRouter();
 async function login(email: string): Promise<UserSession> {
     const { data, error } = await supabase.auth.signInWithOtp({
         email: email,
-        options: {
-            shouldCreateUser: false,
-        },
     });
     if (error) {
+      console.log("error!!", error.code)
+      console.log("error!!", error.message)
+      console.log("error!!", error.cause)
         return {
           error: error,
           user: null,
@@ -117,7 +117,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                         ></div>
                         <span
                             class="text-xl font-bold text-gray-900 dark:text-white"
-                            >efferd</span
+                            >Nutrify</span
                         >
                     </NuxtLink>
                 </div>
@@ -165,8 +165,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                         <UForm
                             :schema="schema"
                             :state="state"
-                            @submit="onSubmit"
                             class="space-y-4"
+                            @submit="onSubmit"
                         >
                             <UFormField name="email">
                                 <UInput
