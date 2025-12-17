@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import * as z from "zod";
+import { supabase } from "../utils/index.ts";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
 definePageMeta({
@@ -20,7 +21,33 @@ const state = reactive({
 
 const router = useRouter();
 
+async function login(email: string) {
+    const { data, error } = await supabase.auth.signInWithOtp(email, {
+        shouldCreateUser: false,
+    });
+    if (error) {
+        toast.add({
+            title: "Error",
+            description: error.message,
+            color: "danger",
+        });
+    } else {
+        toast.add({
+            title: "Success",
+            description: "Continuing with email login...",
+            color: "primary",
+        });
+
+        router.push({
+            path: "/verify-email",
+            query: { email },
+        });
+    }
+}
+
 function onSubmit(event: FormSubmitEvent<Schema>) {
+    const { email } = event.data;
+
     console.log("Login submitted", event.data);
     toast.add({
         title: "Success",
