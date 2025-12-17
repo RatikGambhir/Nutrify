@@ -13,6 +13,10 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
   ],
 
+  pinia: {
+    storesDirs: ["./stores/**", "./custom-folder/stores/**"],
+  },
+
   css: ["~/assets/css/main.css"],
 
   compatibilityDate: "2025-07-16",

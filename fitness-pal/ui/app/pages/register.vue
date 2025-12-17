@@ -62,7 +62,7 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
                         ></div>
                         <span
                             class="text-xl font-bold text-gray-900 dark:text-white"
-                            >efferd</span
+                            >Nutrify</span
                         >
                     </NuxtLink>
                 </div>
@@ -109,8 +109,8 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
                         <UForm
                             :schema="schema"
                             :state="state"
-                            @submit="onSubmit"
                             class="space-y-4"
+                            @submit="onSubmit"
                         >
                             <UFormField name="email">
                                 <UInput
@@ -126,7 +126,7 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
                             <UButton
                                 type="submit"
                                 size="lg"
-                                color="black"
+                                color="primary"
                                 block
                                 class="font-medium"
                             >

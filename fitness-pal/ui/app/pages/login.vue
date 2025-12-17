@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import * as z from "zod";
-import { supabase } from "../utils/index.ts";
+import { supabase } from "~/utils";
+import { useUserStore } from "~/stores/useUserStore";
 import type { FormSubmitEvent } from "@nuxt/ui";
+import type {AuthError} from "@supabase/supabase-js";
 
 definePageMeta({
     layout: false,
 });
+
+export interface UserSession {
+  error: AuthError | null,
+  user: object | null,
+  session: object | null
+}
+
+const userStore = useUserStore();
 
 const toast = useToast();
 
@@ -21,44 +31,53 @@ const state = reactive({
 
 const router = useRouter();
 
-async function login(email: string) {
-    const { data, error } = await supabase.auth.signInWithOtp(email, {
-        shouldCreateUser: false,
+async function login(email: string): Promise<UserSession> {
+    const { data, error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+            shouldCreateUser: false,
+        },
     });
     if (error) {
-        toast.add({
-            title: "Error",
-            description: error.message,
-            color: "danger",
-        });
-    } else {
+        return {
+          error: error,
+          user: null,
+          session: null
+        }
+    }
         toast.add({
             title: "Success",
             description: "Continuing with email login...",
             color: "primary",
         });
+        return {
+          user: data.user,
+          session: data.session,
+          error: error
+        }
 
-        router.push({
-            path: "/verify-email",
-            query: { email },
-        });
-    }
 }
 
-function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: FormSubmitEvent<Schema>) {
     const { email } = event.data;
-
-    console.log("Login submitted", event.data);
-    toast.add({
-        title: "Success",
-        description: "Continuing with email login...",
-        color: "primary",
-    });
-
-    router.push({
+    const {user, session, error} = await login(email)
+    if(error) {
+      toast.add({
+        title: "Uh oh, something went wrong with your email, please try again",
+        description: error.message,
+        color: "error",
+      });
+    } else {
+      userStore.addUserSession(user ?? {}, session ?? {});
+      await router.push({
         path: "/verify-email",
-        query: { email: event.data.email },
-    });
+        query: {email: event.data.email},
+      });
+    }
+
+
+
+
 }
 </script>
 
@@ -163,7 +182,7 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
                             <UButton
                                 type="submit"
                                 size="lg"
-                                color="black"
+                                color="primary"
                                 block
                                 class="font-medium"
                             >
