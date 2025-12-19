@@ -1,26 +1,27 @@
 package com.nutrify.repo
 
 import com.nutrify.entity.UserMetadataRow
+import com.nutrify.lib.SqlFactory
 import com.nutrify.lib.SupabaseManager
-import com.zaxxer.hikari.HikariDataSource
-import io.ktor.server.engine.logError
 import java.util.UUID
 
 class UserRepo(private val supabaseManager: SupabaseManager) {
 
 
     fun insertUserMetadata(userMetadata: UserMetadataRow): String {
-        val sql = """
-            INSERT INTO user_metadata (user_id, height, weight, age, gender, activity_level, goal, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """.trimIndent()
-        val params: List<Any> = listOf(UUID.fromString("36d85d3d-99dd-405a-8b42-3182fad39dfe"), userMetadata.height,
-            userMetadata.weight, userMetadata.gender, userMetadata.activityLevel,
+        val queryName = "registerUserMetadata"
+        val userId = UUID.fromString(userMetadata.userId.trim())
+        println(userId)
+        println(queryName)
+        val params: List<Any> = listOf(userId, userMetadata.height,
+            userMetadata.weight, userMetadata.age, userMetadata.gender, userMetadata.activityLevel,
             userMetadata.goal, userMetadata.notes)
-        val result = supabaseManager.mutate(sql, params)
+        val result = supabaseManager.mutate(queryName, params)
          if(result.body != null) {
-             //TODO: Handle Mapping
+             println("Success")
             return ""
         } else {
+            println("Error")
             //TODO: Handle Error or missing value
             return "Hello"
          }

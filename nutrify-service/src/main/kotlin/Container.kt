@@ -1,5 +1,6 @@
 package com.nutrify
 
+import com.nutrify.lib.SQLFactory
 import com.nutrify.lib.SupabaseManager
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
@@ -10,7 +11,8 @@ import kotlin.reflect.full.primaryConstructor
 fun Application.configureContainer(): Container {
     val dataSource = configureDatabases()
     val container = Container()
-    container.bindSingleton(SupabaseManager::class, SupabaseManager(dataSource))
+    val SQLFactory = SQLFactory()
+    container.bindSingleton(SupabaseManager::class, SupabaseManager(dataSource,SQLFactory))
     return container
 }
 
