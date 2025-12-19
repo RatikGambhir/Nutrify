@@ -26,7 +26,7 @@ const learnMore = () => {
   <div class="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
     <div class="absolute inset-0 z-0">
       <NuxtImg
-        src="/assets/landing-background.jpeg"
+        src="/assets/background-image.jpeg"
         alt="Background"
         class="w-full h-full object-cover"
       />
