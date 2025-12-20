@@ -1,35 +1,24 @@
 package com.nutrify.lib
 
-import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.companionObjectInstance
-import kotlin.reflect.full.memberProperties
-
-fun loadSqlQuery(path: String): String? {
-    try {
-        return object{}.javaClass.getResource(
-            path
-        )?.readText()
-    } catch (e: Exception) {
-        return null
-    }
-}
-
-object SqlFactory {
-    val registerUserMetadata = loadSqlQuery("/sql/register_user_metadata.sql")
-}
-
 class SQLFactory {
 
-    companion object {
-        val registerUserMetadata = loadSqlQuery("/sql/register_user_metadata.sql")
+    private val queries: Map<String, String?> by lazy {
+        mapOf(
+            "registerUserMetadata" to loadSqlQuery("/sql/register_user_metadata.sql"),
+            "Test" to loadSqlQuery("/sql/test.sql")
+        )
     }
 
-    fun genSQLQuery(queryName: String): String? {
-        val companion = this::class.companionObjectInstance!!
-        val query = this::class.companionObject!!.memberProperties.find { it.name == queryName }!!.getter.call(companion) as String
-        if(query.isEmpty()) {
+    private fun loadSqlQuery(path: String): String? {
+        try {
+            return object{}.javaClass.getResource(
+                path
+            )?.readText()
+        } catch (e: Exception) {
             return null
         }
-        return query
     }
+
+    fun get(name: String): String? =
+        queries[name]?.takeIf { it.isNotBlank() }
 }

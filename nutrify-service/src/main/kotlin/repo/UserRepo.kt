@@ -1,7 +1,6 @@
 package com.nutrify.repo
 
 import com.nutrify.entity.UserMetadataRow
-import com.nutrify.lib.SqlFactory
 import com.nutrify.lib.SupabaseManager
 import java.util.UUID
 

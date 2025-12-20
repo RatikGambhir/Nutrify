@@ -2,29 +2,57 @@ package com.nutrify
 
 import com.nutrify.lib.SQLFactory
 import com.nutrify.lib.SupabaseManager
-import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
-import java.sql.Connection
 import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.primaryConstructor
 
+fun Application.genSingletons(): List<Any> {
+    return listOf(configureDatabases(), configureRestClient())
+}
+
 fun Application.configureContainer(): Container {
-    val dataSource = configureDatabases()
+    val supabaseManager = configureDatabases()
+    val geminiClient = configureRestClient()
+    val configs = genSingletons()
     val container = Container()
-    val SQLFactory = SQLFactory()
-    container.bindSingleton(SupabaseManager::class, SupabaseManager(dataSource,SQLFactory))
+    container.bindSingleton(supabaseManager)
+    container.bindSingleton( geminiClient)
     return container
+
 }
 
 class Container {
 
     private val beans = mutableMapOf<KClass<*>, Any>()
 
-    fun bindSingleton(classname: KClass<*>, instance: Any) {
-        beans[classname]?.let {
+
+    fun bindAll(instances: List<Any>) {
+        instances.forEach {
+            val classname = it::class
+            bindSingleton(it)
+            val primaryConstructor = classname.primaryConstructor!!
+            val beansToBind = primaryConstructor.parameters.filter { param ->
+                param.type.classifier != String::class && param.type.classifier == Object::class
+            }.map { param -> param.type.classifier as KClass<*> }
+            bindAll(beansToBind)
+        }
+    }
+
+    fun <T: Any> has(type: KClass<T>): T? {
+        val instance = beans[type]
+        @Suppress("UNCHECKED_CAST")
+        instance?.let { return it as T }
+        return null
+    }
+
+
+
+    fun bindSingleton(instance: Any) {
+        beans[instance::class]?.let {
             return;
         } ?: run {
-            beans[classname] = instance
+            beans[instance::class] = instance
         }
     }
 
@@ -33,24 +61,22 @@ class Container {
     }
 
     fun <T: Any> get(classname: KClass<*>): T {
-        val instance = beans[classname]
+        val exists = has(classname)
         @Suppress("UNCHECKED_CAST")
-        instance?.let { return it as T }
+        exists?.let { return exists as T}
         val created = createInstance(classname)
         beans[classname] = created
         @Suppress("UNCHECKED_CAST")
         return created as T;
-
     }
 
      fun <T: Any> createInstance(classname: KClass<T>): T {
         val constructor = classname.primaryConstructor!!
         val parameters = constructor.parameters.associateWith{param ->
-            val type = param.type.classifier as KClass<*>
-            getInstance(type)
+            val classname = param.type.classifier as KClass<*>
+            getInstance(classname)
 
         }
-
          return constructor.callBy(parameters)
 
         }

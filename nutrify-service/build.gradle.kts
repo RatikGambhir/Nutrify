@@ -38,9 +38,12 @@ dependencies {
     implementation(libs.h2)
     implementation(libs.hikariCP)          // ← correct accessor (not libs.HikariCP)
     implementation(libs.logback.classic)
+    implementation("com.google.genai:google-genai:1.0.0")
+
 
     // --- Ktor client (optional in a server module) ---
     implementation(libs.ktor.client.core)
+    implementation("io.ktor:ktor-client-cio:<latest_version>")
     implementation(libs.ktor.client.apache)
 
     // --- Koin (optional; remove if doing manual DI) ---
@@ -52,4 +55,5 @@ dependencies {
     // --- Tests ---
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
+    testImplementation("io.mockk:mockk:1.13.8")
 }

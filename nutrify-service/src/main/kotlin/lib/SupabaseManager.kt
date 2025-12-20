@@ -10,9 +10,7 @@ class SupabaseManager(val dataSource: HikariDataSource, val sqlFactory: SQLFacto
 
 
     private fun getSQLQuery(queryName: String): String? {
-        // TODO: Load SQL queries from SQLFactor
-        return sqlFactory.genSQLQuery(queryName)
-
+        return sqlFactory.get(queryName)
     }
 
 
