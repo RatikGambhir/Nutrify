@@ -39,7 +39,7 @@ class Container {
         }
     }
 
-    fun <T: Any> has(type: KClass<T>): T? {
+    fun <T: Any> instanceExists(type: KClass<T>): T? {
         val instance = beans[type]
         @Suppress("UNCHECKED_CAST")
         instance?.let { return it as T }
@@ -61,7 +61,7 @@ class Container {
     }
 
     fun <T: Any> get(classname: KClass<*>): T {
-        val exists = has(classname)
+        val exists = instanceExists(classname)
         @Suppress("UNCHECKED_CAST")
         exists?.let { return exists as T}
         val created = createInstance(classname)
