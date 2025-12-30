@@ -34,9 +34,9 @@ class ContainerTest {
 
         container.bindAll(emptyObjects)
 
-        assertNotNull(container.has(EmptyObject1::class))
-        assertNotNull(container.has(EmptyObject2::class))
-        assertNotNull(container.has(EmptyObject3::class))
+        assertNotNull(container.instanceExists(EmptyObject1::class))
+        assertNotNull(container.instanceExists(EmptyObject2::class))
+        assertNotNull(container.instanceExists(EmptyObject3::class))
     }
 
     @Test
@@ -55,9 +55,9 @@ class ContainerTest {
 
         container.bindAll(nestedObjects)
 
-        assertNotNull(container.has(NestedObject1::class))
-        assertNotNull(container.has(NestedObject2::class))
-        assertNotNull(container.has(NestedObject3::class))
+        assertNotNull(container.instanceExists(NestedObject1::class))
+        assertNotNull(container.instanceExists(NestedObject2::class))
+        assertNotNull(container.instanceExists(NestedObject3::class))
     }
 
     @Test
@@ -74,11 +74,11 @@ class ContainerTest {
         val instances = listOf(supabaseManager, geminiClient)
         container.bindAll(instances)
 
-        val boundSupabaseManager = container.has(SupabaseManager::class)
+        val boundSupabaseManager = container.instanceExists(SupabaseManager::class)
         assertNotNull(boundSupabaseManager)
         assertSame(supabaseManager, boundSupabaseManager)
 
-        val boundGeminiClient = container.has(GeminiClient::class)
+        val boundGeminiClient = container.instanceExists(GeminiClient::class)
         assertNotNull(boundGeminiClient)
         assertSame(geminiClient, boundGeminiClient)
 
@@ -105,11 +105,11 @@ class ContainerTest {
 
         container.bindAll(allComponents)
 
-        assertNotNull(container.has(SupabaseManager::class))
-        assertNotNull(container.has(GeminiClient::class))
+        assertNotNull(container.instanceExists(SupabaseManager::class))
+        assertNotNull(container.instanceExists(GeminiClient::class))
 
-        val retrievedSupabaseManager = container.has(SupabaseManager::class)!!
-        val retrievedGeminiClient = container.has(GeminiClient::class)!!
+        val retrievedSupabaseManager = container.instanceExists(SupabaseManager::class)!!
+        val retrievedGeminiClient = container.instanceExists(GeminiClient::class)!!
 
         assertSame(mockDataSource, retrievedSupabaseManager.dataSource)
         assertSame(mockSQLFactory, retrievedSupabaseManager.sqlFactory)
@@ -130,7 +130,7 @@ class ContainerTest {
 
         container.bindAll(listOf(supabaseManager2))
 
-        val boundManager = container.has(SupabaseManager::class)
+        val boundManager = container.instanceExists(SupabaseManager::class)
         assertNotNull(boundManager)
         assertSame(supabaseManager1, boundManager)
     }
