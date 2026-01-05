@@ -133,9 +133,16 @@ async function onContinue(): Promise<void> {
       color: "success",
     });
     userStore.addUserSession(user, session)
-    await router.push({
-      path: "/"
-    })
+
+    // Check if user has completed profile
+    const { fetchProfile } = useUserProfile()
+    const profile = await fetchProfile()
+
+    if (!profile) {
+      await router.push({ path: "/setup-profile" })
+    } else {
+      await router.push({ path: "/" })
+    }
   }
 
 

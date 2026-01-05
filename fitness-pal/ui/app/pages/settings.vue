@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
+import type { ProfileSetupFormData, ActivityLevel, FitnessGoal } from "~/types";
 
 const toast = useToast();
 
@@ -12,6 +13,9 @@ const {
     updateNotifications,
     updatePrivacy,
 } = useUserSettings();
+
+const { fetchProfile, createProfile, updateProfile: updateFitnessProfile } = useUserProfile();
+const userStore = useUserStore();
 
 const activeTab = ref(0);
 
@@ -103,10 +107,77 @@ function savePrivacySettings() {
     });
 }
 
+// Fitness Profile
+const fitnessProfileState = reactive({
+    height: 66,
+    weight: 150,
+    gender: true,
+    activity_level: 'moderately_active' as ActivityLevel,
+    goal: 'get_fit' as FitnessGoal
+});
+
+const activityLevels = [
+    { value: 'sedentary', label: 'Sedentary', description: 'Little to no exercise' },
+    { value: 'lightly_active', label: 'Lightly Active', description: 'Exercise 1-3 days/week' },
+    { value: 'moderately_active', label: 'Moderately Active', description: 'Exercise 3-5 days/week' },
+    { value: 'very_active', label: 'Very Active', description: 'Exercise 6-7 days/week' },
+    { value: 'extremely_active', label: 'Extremely Active', description: 'Physical job or training twice/day' }
+];
+
+const goals = [
+    { value: 'get_fit', label: 'Get Fit', icon: 'i-lucide-heart-pulse', description: 'Improve overall fitness and health' },
+    { value: 'build_strength', label: 'Build Strength', icon: 'i-lucide-dumbbell', description: 'Gain muscle and increase strength' },
+    { value: 'improve_endurance', label: 'Improve Endurance', icon: 'i-lucide-zap', description: 'Boost stamina and energy levels' },
+    { value: 'stay_healthy', label: 'Stay Healthy', icon: 'i-lucide-shield-check', description: 'Maintain current fitness level' }
+];
+
+// Load fitness profile on mount
+onMounted(async () => {
+    const profile = await fetchProfile();
+    if (profile) {
+        fitnessProfileState.height = profile.height;
+        fitnessProfileState.weight = profile.weight;
+        fitnessProfileState.gender = profile.gender;
+        fitnessProfileState.activity_level = profile.activity_level;
+        fitnessProfileState.goal = profile.goal;
+    }
+});
+
+async function saveFitnessProfile() {
+    const profileData: ProfileSetupFormData = {
+        height: fitnessProfileState.height,
+        weight: fitnessProfileState.weight,
+        gender: fitnessProfileState.gender,
+        activity_level: fitnessProfileState.activity_level,
+        goal: fitnessProfileState.goal
+    };
+
+    const result = await updateFitnessProfile(profileData);
+
+    if (result) {
+        toast.add({
+            title: "Fitness Profile Updated",
+            description: "Your fitness profile has been successfully updated.",
+            color: "success",
+            icon: "i-lucide-check-circle",
+        });
+    } else {
+        toast.add({
+            title: "Error",
+            description: "Failed to update fitness profile.",
+            color: "error",
+        });
+    }
+}
+
 const tabs = [
     {
         label: "Profile",
         icon: "i-lucide-user",
+    },
+    {
+        label: "Fitness Profile",
+        icon: "i-lucide-activity",
     },
     {
         label: "Preferences",
@@ -191,6 +262,121 @@ const tabs = [
 
             <div v-else-if="activeTab === 1" class="space-y-6">
                 <div>
+                    <h2 class="text-2xl font-bold mb-2">Fitness Profile</h2>
+                    <p class="text-gray-500 dark:text-gray-400">
+                        Manage your fitness goals and personal metrics.
+                    </p>
+                </div>
+
+                <UCard>
+                    <div class="space-y-6">
+                        <UFormGroup
+                            label="Height (inches)"
+                            description="Your height in inches"
+                        >
+                            <UInput
+                                v-model.number="fitnessProfileState.height"
+                                type="number"
+                                icon="i-lucide-ruler"
+                                placeholder="66"
+                            />
+                        </UFormGroup>
+
+                        <UDivider />
+
+                        <UFormGroup
+                            label="Weight (lbs)"
+                            description="Your current weight in pounds"
+                        >
+                            <UInput
+                                v-model.number="fitnessProfileState.weight"
+                                type="number"
+                                icon="i-lucide-weight"
+                                placeholder="150"
+                            />
+                        </UFormGroup>
+
+                        <UDivider />
+
+                        <UFormGroup
+                            label="Gender"
+                            description="Select your gender"
+                        >
+                            <div class="flex gap-4">
+                                <UButton
+                                    :variant="fitnessProfileState.gender === true ? 'solid' : 'outline'"
+                                    :color="fitnessProfileState.gender === true ? 'primary' : 'secondary'"
+                                    size="md"
+                                    @click="fitnessProfileState.gender = true"
+                                >
+                                    Male
+                                </UButton>
+                                <UButton
+                                    :variant="fitnessProfileState.gender === false ? 'solid' : 'outline'"
+                                    :color="fitnessProfileState.gender === false ? 'primary' : 'secondary'"
+                                    size="md"
+                                    @click="fitnessProfileState.gender = false"
+                                >
+                                    Female
+                                </UButton>
+                            </div>
+                        </UFormGroup>
+
+                        <UDivider />
+
+                        <UFormGroup
+                            label="Activity Level"
+                            description="How active are you on a typical week?"
+                        >
+                            <URadioGroup
+                                v-model="fitnessProfileState.activity_level"
+                                :options="activityLevels"
+                                value-attribute="value"
+                            >
+                                <template #label="{ option }">
+                                    <div>
+                                        <p class="font-medium">{{ option.label }}</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ option.description }}</p>
+                                    </div>
+                                </template>
+                            </URadioGroup>
+                        </UFormGroup>
+
+                        <UDivider />
+
+                        <UFormGroup
+                            label="Fitness Goal"
+                            description="What do you want to achieve?"
+                        >
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <button
+                                    v-for="goal in goals"
+                                    :key="goal.value"
+                                    type="button"
+                                    class="p-4 rounded-lg border-2 transition-all text-left"
+                                    :class="fitnessProfileState.goal === goal.value
+                                        ? 'border-gray-900 bg-gray-50 dark:border-white dark:bg-gray-800'
+                                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'"
+                                    @click="fitnessProfileState.goal = goal.value as FitnessGoal"
+                                >
+                                    <UIcon :name="goal.icon" class="w-6 h-6 mb-2" />
+                                    <h3 class="font-bold mb-1">{{ goal.label }}</h3>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">{{ goal.description }}</p>
+                                </button>
+                            </div>
+                        </UFormGroup>
+
+                        <div class="flex justify-end pt-4">
+                            <UButton color="primary" @click="saveFitnessProfile">
+                                Save Fitness Profile
+                            </UButton>
+                        </div>
+                    </div>
+                </UCard>
+            </div>
+
+            <div v-else-if="activeTab === 2" class="space-y-6">
+                <div>
                     <h2 class="text-2xl font-bold mb-2">General Preferences</h2>
                     <p class="text-gray-500 dark:text-gray-400">
                         Customize your app experience with theme, language, and
@@ -246,7 +432,7 @@ const tabs = [
                 </UCard>
             </div>
 
-            <div v-else-if="activeTab === 2" class="space-y-6">
+            <div v-else-if="activeTab === 3" class="space-y-6">
                 <div>
                     <h2 class="text-2xl font-bold mb-2">Workout Settings</h2>
                     <p class="text-gray-500 dark:text-gray-400">
@@ -340,7 +526,7 @@ const tabs = [
                 </UCard>
             </div>
 
-            <div v-else-if="activeTab === 3" class="space-y-6">
+            <div v-else-if="activeTab === 4" class="space-y-6">
                 <div>
                     <h2 class="text-2xl font-bold mb-2">
                         Notification Settings
@@ -481,7 +667,7 @@ const tabs = [
                 </UCard>
             </div>
 
-            <div v-else-if="activeTab === 4" class="space-y-6">
+            <div v-else-if="activeTab === 5" class="space-y-6">
                 <div>
                     <h2 class="text-2xl font-bold mb-2">Privacy & Security</h2>
                     <p class="text-gray-500 dark:text-gray-400">

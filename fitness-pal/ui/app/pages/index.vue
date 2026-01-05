@@ -22,6 +22,13 @@ const userStore = useUserStore()
 const user = userStore.user
 const session = userStore.session
 
+// Load user profile if not already loaded
+const { fetchProfile } = useUserProfile()
+onMounted(async () => {
+  if (!userStore.getProfile) {
+    await fetchProfile()
+  }
+})
 
 const range = shallowRef<Range>({
   start: new Date(Date.now() - 13 * 24 * 60 * 60 * 1000),
@@ -71,6 +78,9 @@ const period = ref<Period>('daily')
 
 
     <template #body>
+      <div class="mb-6">
+        <ProfileSetupBanner />
+      </div>
       <WorkoutStats :period="period" :range="range" />
       <WeeklyChart :period="period" :range="range" />
       <WeeklyStats :period="period" :range="range" />

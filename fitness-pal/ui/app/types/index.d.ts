@@ -58,3 +58,25 @@ export interface Range {
   start: Date
   end: Date
 }
+
+export type ActivityLevel = 'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active' | 'extremely_active'
+export type FitnessGoal = 'get_fit' | 'build_strength' | 'improve_endurance' | 'stay_healthy'
+
+export interface UserProfile {
+  id: string
+  height: number
+  weight: number
+  gender: boolean
+  activity_level: ActivityLevel
+  goal: FitnessGoal
+  created_at?: string
+  updated_at?: string
+}
+
+export interface ProfileSetupFormData {
+  height: number
+  weight: number
+  gender: boolean
+  activity_level: ActivityLevel
+  goal: FitnessGoal
+}
