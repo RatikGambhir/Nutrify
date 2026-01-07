@@ -157,7 +157,7 @@ const nutritionData = computed(() => {
     return allNutritionData.value;
 });
 
-const nutritionColumns: TableColumn[] = [
+const nutritionColumns: TableColumn<object>[] = [
     {
         accessorKey: "mealType",
         header: "Meal Type",

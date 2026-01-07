@@ -15,4 +15,9 @@ class UserService(private val userRepo: UserRepo, private val client: GeminiClie
         val user = UserMetadataRow(userRequest.userId, userRequest.height, userRequest.weight, userRequest.gender, userRequest.activityLevel,  userRequest.goal, userRequest.age, userRequest.notes)
         return userRepo.insertUserMetadata(user);
     }
+
+    fun genRecommendations(userRequest: RegisterUserRequest): String {
+        // TODO: Here is where we send the client data to gemini, be sure to format prompt here
+        return "Mutation Success"
+    }
 }
