@@ -10,15 +10,16 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 
 
-class GeminiClient(val client: Client) {
+//class GeminiClient(val client: Client) {
+//
+//}
 
-}
-
-abstract class RestClient(apiKey: String, url: String = "") {
+abstract class RestClient(apiKey: String, url: String) {
          val client: HttpClient = HttpClient(CIO) {
                 defaultRequest {
                         url(url) {
-                                parameters.append("key", apiKey)
+                                headers.append("Content-Type", "application/json")
+                                headers.append("x-goog-api-key",apiKey)
                         }
                 }
         }
@@ -30,13 +31,13 @@ abstract class RestClient(apiKey: String, url: String = "") {
         abstract fun getFood(): String
 }
 
-class GeminiRestClient(val apiKey: String, val baseUrl: String = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=") : RestClient(apiKey, baseUrl) {
+class GeminiRestClient(val apiKey: String, val baseUrl: String = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent") : RestClient(apiKey, baseUrl) {
 
         override fun getFood(): String {
                 return searchRecipes("hello")
         }
 
-        suspend fun askQuestion(): String {
+        suspend fun askQuestion(prompt: String): String {
                 val response = client.post { setBody(
                         mapOf("contents" to listOf(
                                 mapOf("parts" to listOf(mapOf("text" to "What is the capital of France?")))
@@ -60,13 +61,9 @@ class NutritionAPIClient(
         }
 }
 
-fun Application.configureRestClient(): GeminiClient {
-        val client = Client.builder().apiKey(environment.config.property("api.gemini").getString())
-                .build()
-        return GeminiClient(client)
-}
 
-fun Application.configureClient(): List<RestClient> {
+
+fun Application.configureRestClient(): List<RestClient> {
         val geminiKey = environment.config.property("api.gemini").getString()
         val nutritionAPIKey = environment.config.property("api.nutrition").getString()
         val geminiClient = GeminiRestClient(geminiKey)

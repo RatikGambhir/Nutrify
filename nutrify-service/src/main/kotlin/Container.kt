@@ -6,18 +6,19 @@ import io.ktor.server.application.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.primaryConstructor
+import kotlin.collections.flatten
 
 fun Application.genSingletons(): List<Any> {
-    return listOf(configureDatabases(), configureRestClient())
+    return listOf(
+        listOf(configureDatabases()),
+        configureRestClient()
+    ).flatten()
 }
 
 fun Application.configureContainer(): Container {
-    val supabaseManager = configureDatabases()
-    val geminiClient = configureRestClient()
-    val configs = genSingletons()
+    val singletons = genSingletons()
     val container = Container()
-    container.bindSingleton(supabaseManager)
-    container.bindSingleton( geminiClient)
+    container.bindAll(singletons)
     return container
 
 }
@@ -25,7 +26,6 @@ fun Application.configureContainer(): Container {
 class Container {
 
     private val beans = mutableMapOf<KClass<*>, Any>()
-
 
     fun bindAll(instances: List<Any>) {
         instances.forEach {
