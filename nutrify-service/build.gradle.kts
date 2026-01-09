@@ -49,8 +49,13 @@ dependencies {
     // --- Koin (optional; remove if doing manual DI) ---
     implementation(libs.koin.ktor)
     implementation(libs.koin.logger.slf4j)
+    implementation("io.ktor:ktor-server-content-negotiation:3.2.3")
+    implementation("io.ktor:ktor-server-core:3.2.3")
+    implementation("io.ktor:ktor-server-core:3.2.3")
+    implementation("io.ktor:ktor-serialization-gson:3.2.3")
+    implementation("io.ktor:ktor-server-content-negotiation:3.2.3")
+    implementation("io.ktor:ktor-server-core:3.2.3")
 
-    
 
     // --- Tests ---
     testImplementation(libs.ktor.server.test.host)

@@ -14,15 +14,18 @@ class UserService(private val userRepo: UserRepo, private val client: GeminiRest
     suspend fun registerUserMetadata(userRequest: RegisterUserRequest): String {
         //TODO: Main logic here for nutrition calculations plus any other metadata
         val rec = genRecommendations(userRequest)
-        val user = UserMetadataRow(userRequest.userId, userRequest.height, userRequest.weight, userRequest.gender, userRequest.activityLevel,  userRequest.goal, userRequest.age, userRequest.notes)
-        return userRepo.insertUserMetadata(user);
+        println(rec)
+        return rec
+//        val user = UserMetadataRow(userRequest.userId, userRequest.height, userRequest.weight, userRequest.gender, userRequest.activityLevel,  userRequest.goal, userRequest.age, userRequest.notes)
+//        return userRepo.insertUserMetadata(user);
     }
 
     suspend fun genRecommendations(userRequest: RegisterUserRequest): String {
-        // TODO: Here is where we send the client data to gemini, be sure to format prompt here
-        val prompt = "Given these variables, generate a ideal workout and nutrition plan. For the workout plan, only generate how many carbs, fats, protein, " +
-                "and for workouts, generate a 5 day plan in json. Here are the factors:" +
-                "height: `${userRequest.height}`, weight: `${userRequest.weight}`, age: `${userRequest.age}`"
-        return "Mutation Success"
+        val result = client.askQuestion("How do CPUs work")
+        return result
+    }
+
+    suspend fun saveUserRecommendations(userRequest: RegisterUserRequest, recommendations: String) {
+
     }
 }
