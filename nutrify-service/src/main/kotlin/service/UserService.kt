@@ -1,7 +1,6 @@
 package com.nutrify.service
 
 import com.google.genai.Client
-import com.nutrify.GeminiClient
 import com.nutrify.GeminiRestClient
 import com.nutrify.dto.RegisterUserRequest
 import com.nutrify.entity.UserMetadataRow
@@ -19,6 +18,9 @@ class UserService(private val userRepo: UserRepo, private val client: GeminiRest
 
     fun genRecommendations(userRequest: RegisterUserRequest): String {
         // TODO: Here is where we send the client data to gemini, be sure to format prompt here
+        val prompt = "Given these variables, generate a ideal workout and nutrition plan. For the workout plan, only generate how many carbs, fats, protein, " +
+                "and for workouts, generate a 5 day plan in json. Here are the factors:" +
+                "height: `${userRequest.height}`, weight: `${userRequest.weight}`, age: `${userRequest.age}`"
         return "Mutation Success"
     }
 }
