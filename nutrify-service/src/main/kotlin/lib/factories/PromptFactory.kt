@@ -1,6 +1,4 @@
-package com.nutrify.lib
-
-import kotlin.text.isNotBlank
+package com.nutrify.lib.factories
 
 class PromptFactory {
     companion object {

@@ -1,10 +1,10 @@
 package com.nutrify.service
 
 import com.google.genai.Client
-import com.nutrify.GeminiRestClient
 import com.nutrify.dto.RegisterUserRequest
 import com.nutrify.entity.UserMetadataRow
-import com.nutrify.lib.PromptFactory
+import com.nutrify.lib.clients.GeminiRestClient
+import com.nutrify.lib.factories.PromptFactory
 import com.nutrify.repo.UserRepo
 import io.ktor.server.application.ApplicationEnvironment
 

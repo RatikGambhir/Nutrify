@@ -1,7 +1,7 @@
 package com.nutrify.repo
 
 import com.nutrify.entity.UserMetadataRow
-import com.nutrify.lib.SupabaseManager
+import com.nutrify.lib.factories.SupabaseManager
 import java.util.UUID
 
 class UserRepo(private val supabaseManager: SupabaseManager) {

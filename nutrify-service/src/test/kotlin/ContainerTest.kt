@@ -1,11 +1,10 @@
 package com.nutrify
 
 import com.google.genai.Client
-import com.nutrify.lib.SQLFactory
-import com.nutrify.lib.SupabaseManager
+import com.nutrify.lib.factories.SQLFactory
+import com.nutrify.lib.factories.SupabaseManager
 import com.zaxxer.hikari.HikariDataSource
 import io.mockk.mockk
-import io.mockk.every
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

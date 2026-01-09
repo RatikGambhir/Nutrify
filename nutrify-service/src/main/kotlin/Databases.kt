@@ -1,7 +1,7 @@
 package com.nutrify
 
-import com.nutrify.lib.SQLFactory
-import com.nutrify.lib.SupabaseManager
+import com.nutrify.lib.factories.SQLFactory
+import com.nutrify.lib.factories.SupabaseManager
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*

@@ -1,6 +1,5 @@
 package com.nutrify.lib.clients
 
-import com.nutrify.RestClient
 
 class NutritionRestClient(
     apiKey: String,

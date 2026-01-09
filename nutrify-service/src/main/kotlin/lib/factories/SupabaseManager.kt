@@ -1,4 +1,4 @@
-package com.nutrify.lib
+package com.nutrify.lib.factories
 
 import com.zaxxer.hikari.HikariDataSource
 import kotlin.use

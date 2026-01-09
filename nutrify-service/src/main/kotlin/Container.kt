@@ -1,10 +1,7 @@
 package com.nutrify
 
-import com.nutrify.lib.SQLFactory
-import com.nutrify.lib.SupabaseManager
 import io.ktor.server.application.*
 import kotlin.reflect.KClass
-import kotlin.reflect.full.createInstance
 import kotlin.reflect.full.primaryConstructor
 import kotlin.collections.flatten
 
