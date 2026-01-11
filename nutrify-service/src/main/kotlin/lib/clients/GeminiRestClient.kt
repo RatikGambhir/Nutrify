@@ -1,13 +1,14 @@
 package com.nutrify.lib.clients
 
 
+import com.nutrify.dto.GeminiRequest
+import com.nutrify.dto.GeminiResponse
 import com.nutrify.lib.factories.PromptFactory
 import io.ktor.client.call.body
-import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.post
-import io.ktor.client.request.preparePost
 import io.ktor.client.request.setBody
-import kotlinx.serialization.json.Json
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 
 class GeminiRestClient(val apiKey: String, val baseUrl: String = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent") : RestClient(apiKey, baseUrl) {
 
@@ -15,27 +16,21 @@ class GeminiRestClient(val apiKey: String, val baseUrl: String = "https://genera
         return searchRecipes("hello")
     }
 
-    suspend fun askQuestion(prompt: String): String {
-        val jsonBody = Json.encodeToString(
-            mapOf(
-                "contents" to listOf(
-                    mapOf(
-                        "parts" to listOf(
-                            mapOf("text" to prompt)
-                        )
-                    )
-                )
-            )
-        )
+    suspend fun askQuestion(
+        prompt: String,
+        config: com.nutrify.dto.GenerationConfig? = null,
+        systemInstruction: String? = null
+    ): String {
+        val request = GeminiRequest.fromPrompt(prompt, config, systemInstruction)
 
-        val statement = client.preparePost() {
-            setBody(
-                jsonBody
-        ) }
-        val response = statement.execute()
-        val result = response.body<Any>()
-        println(result)
-        return result.toString()
+        val response = client.post {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }
+
+        val result = response.body<GeminiResponse>()
+        return result.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
+            ?: throw Exception("No response from Gemini API")
     }
 
 }

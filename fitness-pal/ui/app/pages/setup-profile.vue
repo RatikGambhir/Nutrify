@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
-import type { ProfileSetupFormData, ActivityLevel, FitnessGoal } from '~/types'
+import { ActivityLevel, PrimaryGoal, type UserProfile } from '~/types'
+import { userApi } from '~/api/user'
 
 definePageMeta({
   layout: false,
@@ -9,43 +10,68 @@ definePageMeta({
 
 const router = useRouter()
 const toast = useToast()
-const { createProfile } = useUserProfile()
 
 const currentStep = ref(1)
 const totalSteps = 3
 const loading = ref(false)
 
 const schema = z.object({
+  age: z.number().min(13, 'You must be at least 13 years old').max(120, 'Age must be less than 120'),
   height: z.number().min(36, 'Height must be at least 36 inches').max(96, 'Height must be at most 96 inches'),
   weight: z.number().min(50, 'Weight must be at least 50 lbs').max(500, 'Weight must be at most 500 lbs'),
-  gender: z.boolean(),
-  activity_level: z.enum(['sedentary', 'lightly_active', 'moderately_active', 'very_active', 'extremely_active']),
-  goal: z.enum(['get_fit', 'build_strength', 'improve_endurance', 'stay_healthy'])
+  sex: z.string().min(1, 'Sex is required'),
+  gender: z.string().min(1, 'Gender is required'),
+  ethnicity: z.string().min(1, 'Ethnicity is required'),
+  activity_level: z.nativeEnum(ActivityLevel),
+  goal: z.nativeEnum(PrimaryGoal)
 })
 
 type Schema = z.output<typeof schema>
 
 const state = reactive<Schema>({
+  age: 25,
   height: 66,
   weight: 150,
-  gender: true,
-  activity_level: 'moderately_active',
-  goal: 'get_fit'
+  sex: 'male',
+  gender: 'male',
+  ethnicity: 'prefer_not_say',
+  activity_level: ActivityLevel.MODERATELY_ACTIVE,
+  goal: PrimaryGoal.GENERAL_HEALTH
 })
 
+const sexOptions = [
+  { value: 'male', label: 'Male' },
+  { value: 'female', label: 'Female' },
+  { value: 'other', label: 'Other' }
+]
+
+const ethnicityOptions = [
+  { value: 'asian', label: 'Asian' },
+  { value: 'black', label: 'Black or African American' },
+  { value: 'hispanic', label: 'Hispanic or Latino' },
+  { value: 'white', label: 'White or Caucasian' },
+  { value: 'native_american', label: 'Native American' },
+  { value: 'pacific_islander', label: 'Pacific Islander' },
+  { value: 'mixed', label: 'Mixed/Multiple' },
+  { value: 'other', label: 'Other' },
+  { value: 'prefer_not_say', label: 'Prefer not to say' }
+]
+
 const activityLevels = [
-  { value: 'sedentary', label: 'Sedentary', description: 'Little to no exercise' },
-  { value: 'lightly_active', label: 'Lightly Active', description: 'Exercise 1-3 days/week' },
-  { value: 'moderately_active', label: 'Moderately Active', description: 'Exercise 3-5 days/week' },
-  { value: 'very_active', label: 'Very Active', description: 'Exercise 6-7 days/week' },
-  { value: 'extremely_active', label: 'Extremely Active', description: 'Physical job or training twice/day' }
+  { value: ActivityLevel.SEDENTARY, label: 'Sedentary', description: 'Little to no exercise' },
+  { value: ActivityLevel.LIGHTLY_ACTIVE, label: 'Lightly Active', description: 'Exercise 1-3 days/week' },
+  { value: ActivityLevel.MODERATELY_ACTIVE, label: 'Moderately Active', description: 'Exercise 3-5 days/week' },
+  { value: ActivityLevel.VERY_ACTIVE, label: 'Very Active', description: 'Exercise 6-7 days/week' },
+  { value: ActivityLevel.EXTREMELY_ACTIVE, label: 'Extremely Active', description: 'Physical job or training twice/day' }
 ]
 
 const goals = [
-  { value: 'get_fit', label: 'Get Fit', icon: 'i-lucide-heart-pulse', description: 'Improve overall fitness and health' },
-  { value: 'build_strength', label: 'Build Strength', icon: 'i-lucide-dumbbell', description: 'Gain muscle and increase strength' },
-  { value: 'improve_endurance', label: 'Improve Endurance', icon: 'i-lucide-zap', description: 'Boost stamina and energy levels' },
-  { value: 'stay_healthy', label: 'Stay Healthy', icon: 'i-lucide-shield-check', description: 'Maintain current fitness level' }
+  { value: PrimaryGoal.FAT_LOSS, label: 'Fat Loss', icon: 'i-lucide-flame', description: 'Reduce body fat percentage' },
+  { value: PrimaryGoal.MUSCLE_GAIN, label: 'Muscle Gain', icon: 'i-lucide-dumbbell', description: 'Build muscle mass and size' },
+  { value: PrimaryGoal.RECOMPOSITION, label: 'Recomposition', icon: 'i-lucide-repeat', description: 'Lose fat while gaining muscle' },
+  { value: PrimaryGoal.STRENGTH, label: 'Strength', icon: 'i-lucide-zap', description: 'Increase overall strength' },
+  { value: PrimaryGoal.ENDURANCE, label: 'Endurance', icon: 'i-lucide-heart-pulse', description: 'Improve stamina and endurance' },
+  { value: PrimaryGoal.GENERAL_HEALTH, label: 'General Health', icon: 'i-lucide-shield-check', description: 'Maintain overall wellness' }
 ]
 
 const nextStep = () => {
@@ -68,17 +94,20 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   loading.value = true
 
   try {
-    const profileData: ProfileSetupFormData = {
+    const profileData: Omit<UserProfile, 'userId'> = {
+      age: event.data.age,
+      sex: event.data.sex,
+      gender: event.data.gender,
       height: event.data.height,
       weight: event.data.weight,
-      gender: event.data.gender,
-      activity_level: event.data.activity_level,
-      goal: event.data.goal
+      ethnicity: event.data.ethnicity,
+      activityLevel: event.data.activity_level,
+      primaryGoal: event.data.goal
     }
 
-    const profile = await createProfile(profileData)
+    const response = await userApi.createUserProfile(profileData)
 
-    if (profile) {
+    if (response) {
       toast.add({
         title: 'Profile Created!',
         description: 'Your fitness profile has been set up successfully.',
@@ -86,18 +115,12 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       })
 
       await router.push({ path: '/' })
-    } else {
-      toast.add({
-        title: 'Error',
-        description: 'Failed to create profile. Please try again.',
-        color: 'error'
-      })
     }
   } catch (error) {
     console.error('Error submitting profile:', error)
     toast.add({
       title: 'Error',
-      description: 'An unexpected error occurred.',
+      description: 'An unexpected error occurred. Please try again.',
       color: 'error'
     })
   } finally {
@@ -107,7 +130,12 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
 const canProceed = computed(() => {
   if (currentStep.value === 1) {
-    return state.height >= 36 && state.height <= 96 && state.weight >= 50 && state.weight <= 500
+    return state.age >= 13 && state.age <= 120 &&
+           state.height >= 36 && state.height <= 96 &&
+           state.weight >= 50 && state.weight <= 500 &&
+           state.sex.length > 0 &&
+           state.gender.length > 0 &&
+           state.ethnicity.length > 0
   }
   return true
 })
@@ -155,47 +183,77 @@ const canProceed = computed(() => {
               <p class="text-gray-600">Tell us about yourself</p>
             </div>
 
-            <UFormField name="height" label="Height (inches)">
-              <UInput
-                v-model.number="state.height"
+            <UFormField name="age" label="Age">
+              <input
+                v-model.number="state.age"
                 type="number"
-                size="lg"
-                placeholder="66"
-                icon="i-lucide-ruler"
-              />
+                min="13"
+                max="120"
+                class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
+              >
             </UFormField>
 
-            <UFormField name="weight" label="Weight (lbs)">
-              <UInput
-                v-model.number="state.weight"
-                type="number"
-                size="lg"
-                placeholder="150"
-                icon="i-lucide-weight"
-              />
-            </UFormField>
+            <div class="grid grid-cols-2 gap-4">
+              <UFormField name="height" label="Height (inches)">
+                <input
+                  v-model.number="state.height"
+                  type="number"
+                  min="36"
+                  max="96"
+                  class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
+                >
+              </UFormField>
 
-            <UFormField name="gender" label="Gender">
-              <div class="flex gap-4">
-                <UButton
-                  :variant="state.gender === true ? 'solid' : 'outline'"
-                  :color="state.gender === true ? 'primary' : 'secondary'"
-                  size="lg"
-                  block
-                  @click="state.gender = true"
+              <UFormField name="weight" label="Weight (lbs)">
+                <input
+                  v-model.number="state.weight"
+                  type="number"
+                  min="50"
+                  max="500"
+                  class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
                 >
-                  Male
-                </UButton>
+              </UFormField>
+            </div>
+
+            <UFormField name="sex" label="Sex">
+              <div class="flex gap-3">
                 <UButton
-                  :variant="state.gender === false ? 'solid' : 'outline'"
-                  :color="state.gender === false ? 'primary' : 'secondary'"
-                  size="lg"
-                  block
-                  @click="state.gender = false"
+                  v-for="option in sexOptions"
+                  :key="option.value"
+                  :variant="state.sex === option.value ? 'solid' : 'outline'"
+                  :color="state.sex === option.value ? 'primary' : 'secondary'"
+                  size="md"
+                  class="flex-1"
+                  @click="state.sex = option.value"
                 >
-                  Female
+                  {{ option.label }}
                 </UButton>
               </div>
+            </UFormField>
+
+            <UFormField name="gender" label="Gender Identity">
+              <div class="flex gap-3">
+                <UButton
+                  v-for="option in sexOptions"
+                  :key="option.value"
+                  :variant="state.gender === option.value ? 'solid' : 'outline'"
+                  :color="state.gender === option.value ? 'primary' : 'secondary'"
+                  size="md"
+                  class="flex-1"
+                  @click="state.gender = option.value"
+                >
+                  {{ option.label }}
+                </UButton>
+              </div>
+            </UFormField>
+
+            <UFormField name="ethnicity" label="Ethnicity">
+              <USelect
+                v-model="state.ethnicity"
+                :options="ethnicityOptions"
+                placeholder="Select your ethnicity"
+                size="lg"
+              />
             </UFormField>
 
             <div class="flex gap-3 pt-4">
@@ -280,7 +338,7 @@ const canProceed = computed(() => {
                   :class="state.goal === goal.value
                     ? 'border-gray-900 bg-gray-50'
                     : 'border-gray-200 hover:border-gray-300'"
-                  @click="state.goal = goal.value as FitnessGoal"
+                  @click="state.goal = goal.value"
                 >
                   <UIcon :name="goal.icon" class="w-8 h-8 mb-3" />
                   <h3 class="font-bold text-gray-900 mb-1">{{ goal.label }}</h3>

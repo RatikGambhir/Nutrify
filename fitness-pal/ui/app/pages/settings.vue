@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
-import type { ProfileSetupFormData, ActivityLevel, FitnessGoal } from "~/types";
+import { ActivityLevel, PrimaryGoal, type ProfileSetupFormData } from "~/types";
 
 const toast = useToast();
 
@@ -107,40 +107,34 @@ function savePrivacySettings() {
     });
 }
 
-// Fitness Profile
 const fitnessProfileState = reactive({
     height: 66,
     weight: 150,
     gender: true,
-    activity_level: 'moderately_active' as ActivityLevel,
-    goal: 'get_fit' as FitnessGoal
+    activity_level: ActivityLevel.MODERATELY_ACTIVE,
+    goal: PrimaryGoal.GENERAL_HEALTH
 });
 
 const activityLevels = [
-    { value: 'sedentary', label: 'Sedentary', description: 'Little to no exercise' },
-    { value: 'lightly_active', label: 'Lightly Active', description: 'Exercise 1-3 days/week' },
-    { value: 'moderately_active', label: 'Moderately Active', description: 'Exercise 3-5 days/week' },
-    { value: 'very_active', label: 'Very Active', description: 'Exercise 6-7 days/week' },
-    { value: 'extremely_active', label: 'Extremely Active', description: 'Physical job or training twice/day' }
+    { value: ActivityLevel.SEDENTARY, label: 'Sedentary', description: 'Little to no exercise' },
+    { value: ActivityLevel.LIGHTLY_ACTIVE, label: 'Lightly Active', description: 'Exercise 1-3 days/week' },
+    { value: ActivityLevel.MODERATELY_ACTIVE, label: 'Moderately Active', description: 'Exercise 3-5 days/week' },
+    { value: ActivityLevel.VERY_ACTIVE, label: 'Very Active', description: 'Exercise 6-7 days/week' },
+    { value: ActivityLevel.EXTREMELY_ACTIVE, label: 'Extremely Active', description: 'Physical job or training twice/day' }
 ];
 
 const goals = [
-    { value: 'get_fit', label: 'Get Fit', icon: 'i-lucide-heart-pulse', description: 'Improve overall fitness and health' },
-    { value: 'build_strength', label: 'Build Strength', icon: 'i-lucide-dumbbell', description: 'Gain muscle and increase strength' },
-    { value: 'improve_endurance', label: 'Improve Endurance', icon: 'i-lucide-zap', description: 'Boost stamina and energy levels' },
-    { value: 'stay_healthy', label: 'Stay Healthy', icon: 'i-lucide-shield-check', description: 'Maintain current fitness level' }
+    { value: PrimaryGoal.FAT_LOSS, label: 'Fat Loss', icon: 'i-lucide-flame', description: 'Reduce body fat percentage' },
+    { value: PrimaryGoal.MUSCLE_GAIN, label: 'Muscle Gain', icon: 'i-lucide-dumbbell', description: 'Build muscle mass and size' },
+    { value: PrimaryGoal.RECOMPOSITION, label: 'Recomposition', icon: 'i-lucide-repeat', description: 'Lose fat while gaining muscle' },
+    { value: PrimaryGoal.STRENGTH, label: 'Strength', icon: 'i-lucide-zap', description: 'Increase overall strength' },
+    { value: PrimaryGoal.ENDURANCE, label: 'Endurance', icon: 'i-lucide-heart-pulse', description: 'Improve stamina and endurance' },
+    { value: PrimaryGoal.GENERAL_HEALTH, label: 'General Health', icon: 'i-lucide-shield-check', description: 'Maintain overall wellness' }
 ];
 
-// Load fitness profile on mount
+// TODO: Load fitness profile on mount
 onMounted(async () => {
-    const profile = await fetchProfile();
-    if (profile) {
-        fitnessProfileState.height = profile.height;
-        fitnessProfileState.weight = profile.weight;
-        fitnessProfileState.gender = profile.gender;
-        fitnessProfileState.activity_level = profile.activity_level;
-        fitnessProfileState.goal = profile.goal;
-    }
+
 });
 
 async function saveFitnessProfile() {
@@ -357,7 +351,7 @@ const tabs = [
                                     :class="fitnessProfileState.goal === goal.value
                                         ? 'border-gray-900 bg-gray-50 dark:border-white dark:bg-gray-800'
                                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'"
-                                    @click="fitnessProfileState.goal = goal.value as FitnessGoal"
+                                    @click="fitnessProfileState.goal = goal.value"
                                 >
                                     <UIcon :name="goal.icon" class="w-6 h-6 mb-2" />
                                     <h3 class="font-bold mb-1">{{ goal.label }}</h3>

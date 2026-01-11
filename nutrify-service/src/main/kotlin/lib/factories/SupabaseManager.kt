@@ -3,8 +3,8 @@ package com.nutrify.lib.factories
 import com.zaxxer.hikari.HikariDataSource
 import kotlin.use
 
-data class MutationResult(val body: Any?, val error: Exception? )
-data class QueryResult(val body: Any?, val error: Exception? )
+
+data class Result(val body: Any?, val error: Exception? )
 
 class SupabaseManager(val dataSource: HikariDataSource, val sqlFactory: SQLFactory) {
 
@@ -14,38 +14,50 @@ class SupabaseManager(val dataSource: HikariDataSource, val sqlFactory: SQLFacto
     }
 
 
-    fun mutate(queryName: String, params: List<Any>): MutationResult {
-        val sqlQuery = getSQLQuery(queryName) ?: return MutationResult(null, Exception("SQL Query not found"))
-        dataSource.connection.use { connection -> connection.prepareStatement(sqlQuery).use { statement ->
-            params.forEachIndexed { index, param ->
-                statement.setObject(index + 1, param)
-            }
-
-            try {
-                statement.executeQuery().use {
-                        result ->
-                    val resultVal = if (result.next()) result.getObject(1) else "No result found"
-                    val result = MutationResult(resultVal, null)
-                    connection.close();
-                    return result
-
+    fun mutate(queryName: String, params: List<Any>): Result {
+        val sqlQuery = getSQLQuery(queryName) ?: return Result(null, Exception("SQL Query not found"))
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(sqlQuery).use { statement ->
+                params.forEachIndexed { index, param ->
+                    statement.setObject(index + 1, param)
                 }
-            } catch (e: Exception) {
-                println(e.message)
-                println(e.cause)
-                return MutationResult(null, e)
+
+                try {
+                    statement.executeQuery().use { resultSet ->
+                        val resultVal = if (resultSet.next()) resultSet.getObject(1) else "No result found"
+                        return Result(resultVal, null)
+                    }
+                } catch (e: Exception) {
+                    println(e.message)
+                    println(e.cause)
+                    return Result(null, e)
+                }
             }
-        }}
+        }
     }
 
-    // TODO: add query function (check for common logic as well)
+    fun <T> query(queryName: String, params: List<Any> = emptyList(), mapper: (java.sql.ResultSet) -> T): Result {
+        val sqlQuery = getSQLQuery(queryName) ?: return Result(null, Exception("SQL Query not found"))
+        dataSource.connection.use { connection ->
+            connection.prepareStatement(sqlQuery).use { statement ->
+                params.forEachIndexed { index, param ->
+                    statement.setObject(index + 1, param)
+                }
 
-//    fun query(queryName: String, params: List<Any>): QueryResult {
-//        val sqlQuery = getSQLQuery(queryName) ?: return QueryResult(null, Exception("SQL Query not found"))
-//        dataSource.connection.use { connection -> connection.prepareStatement(sqlQuery).use { statement ->
-//            params.forEachIndexed { index, param ->
-//                statement.setObject(index + 1, param)
-//            }
-//        }}
-//    }
+                try {
+                    statement.executeQuery().use { resultSet ->
+                        val results = mutableListOf<T>()
+                        while (resultSet.next()) {
+                            results.add(mapper(resultSet))
+                        }
+                        return Result(results, null)
+                    }
+                } catch (e: Exception) {
+                    println(e.message)
+                    println(e.cause)
+                    return Result(null, e)
+                }
+            }
+        }
+    }
 }

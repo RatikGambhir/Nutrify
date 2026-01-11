@@ -59,7 +59,7 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
                     <NuxtLink to="/" class="flex items-center gap-2">
                         <div
                             class="w-8 h-8 bg-gray-900 dark:bg-white rounded"
-                        ></div>
+                        />
                         <span
                             class="text-xl font-bold text-gray-900 dark:text-white"
                             >Nutrify</span
@@ -91,7 +91,7 @@ function onSubmit(event: FormSubmitEvent<Schema>) {
                         <div class="absolute inset-0 flex items-center">
                             <div
                                 class="w-full border-t border-gray-200 dark:border-gray-800"
-                            ></div>
+                            />
                         </div>
                         <div class="relative flex justify-center text-sm">
                             <span
