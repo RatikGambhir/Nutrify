@@ -1,6 +1,8 @@
 package com.nutrify
 
+import com.nutrify.controllers.NutritionController
 import com.nutrify.controllers.UserController
+import com.nutrify.routers.configureNutritionRoutes
 import com.nutrify.routers.configureUserRoutes
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -16,6 +18,7 @@ fun Application.configureRouting(container: Container) {
 
    // configureExerciseRoutes();
     configureUserRoutes(container.get<UserController>());
+    configureNutritionRoutes(container.get<NutritionController>())
 
 //    routing {
 //        get("/") { call.respondText("Hello World!") }

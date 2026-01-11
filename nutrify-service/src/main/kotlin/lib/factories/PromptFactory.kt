@@ -49,10 +49,10 @@ class PromptFactory {
      fun get(name: String): String? =
         prompts[name]?.takeIf { it.isNotBlank() } ?: throw IllegalArgumentException("Prompt '$name' is blank or missing")
 
-     fun getWithVariables(name: String, variables: Map<String, Any>): String {
+     fun getWithVariables(name: String, variables: Map<String, Any>): String? {
         val prompt = get(name)
         return variables.entries.fold(prompt) { acc, (key, value) ->
-            acc.replace("{$key}", value.toString())
+            acc?.replace("{$key}", value.toString())
         }
     }
 }

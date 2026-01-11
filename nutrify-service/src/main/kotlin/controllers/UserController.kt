@@ -5,9 +5,10 @@ import com.nutrify.service.UserService
 
 class UserController(private val userService: UserService) {
     suspend fun registerUserMetadata(registerUserRequest: RegisterUserRequest): String {
-        return userService.registerUserMetadata(
+        val thanks = userService.registerUserMetadata(
             registerUserRequest
         );
+        return "Thanks for registering!"
     }
 }
 
