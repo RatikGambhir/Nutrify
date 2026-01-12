@@ -14,8 +14,8 @@ enum class MealType {
 data class Meal(
     val id: String,
     val userId: String,
-    val mealType: String,
-    val consumedAt: String,
+    val mealItemId: List<String>? = null,
+    val mealType: String? = null,
     val notes: String? = null,
     val createdAt: String? = null,
     val updatedAt: String? = null
@@ -29,13 +29,12 @@ data class Food(
     val category: String? = null,
     val servingSize: Double? = null,
     val servingUnit: String? = null,
-    val nutritionPer100g: String? = null,
-    val caloriesPer100g: Double? = null,
-    val proteinGPer100g: Double? = null,
-    val carbGPer100g: Double? = null,
-    val fatGPer100g: Double? = null,
+    val caloriesPerServingSize: Double? = null,
+    val proteinGPerServingSize: Double? = null,
+    val carbGPerServingSize: Double? = null,
+    val fatGPerServingSize: Double? = null,
     val createdAt: String? = null,
-    val updatedAt: String? = null
+
 )
 
 @Serializable
@@ -45,13 +44,9 @@ data class MealItem(
     val foodId: String? = null,
     val customName: String? = null,
     val quantity: Double,
-    val unit: String,
-    val grams: Double? = null,
     val calories: Double,
     val proteinG: Double,
     val carbG: Double,
     val fatG: Double,
-    val nutritionJson: String? = null,
-    val createdAt: String? = null,
-    val updatedAt: String? = null
+    val consumedAt: String,
 )

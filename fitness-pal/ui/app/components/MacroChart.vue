@@ -1,4 +1,4 @@
-<script setup lang="ts">
+Ca<script setup lang="ts">
 import { computed } from "vue";
 
 interface MacroData {
