@@ -1,7 +1,7 @@
 package com.nutrify.routers
 
 import com.nutrify.controllers.UserController
-import com.nutrify.dto.RegisterUserRequest
+import com.nutrify.dto.RegisterUserProfileRequest
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.request.receive
@@ -16,12 +16,12 @@ import io.ktor.server.routing.routing
 fun Application.configureUserRoutes(userController: UserController) {
     routing {
         post("/register") {
-            val user = call.receive<RegisterUserRequest>()
+            val user = call.receive<RegisterUserProfileRequest>()
             if(user.userId.isBlank()) {
                 call.respondText("Invalid request, request body is invalid", status = HttpStatusCode.BadRequest)
                 return@post
             }
-            val registeredUser = userController.registerUserMetadata(user)
+            val registeredUser = userController.registerUserProfile(user)
             if(registeredUser === "Mutation Success") {
                 call.respond(HttpStatusCode.OK)
                 return@post

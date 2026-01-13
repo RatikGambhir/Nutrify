@@ -1,7 +1,7 @@
 package com.nutrify.service
 
 import com.nutrify.dto.GenerationConfig
-import com.nutrify.dto.RegisterUserRequest
+import com.nutrify.dto.RegisterUserProfileRequest
 import com.nutrify.entity.UserMetadata
 import com.nutrify.lib.clients.GeminiRestClient
 import com.nutrify.lib.factories.PromptFactory
@@ -11,17 +11,17 @@ import com.nutrify.repo.UserRepo
 
 class UserService(private val userRepo: UserRepo, private val client: GeminiRestClient) {
 
-    suspend fun registerUserMetadata(userRequest: RegisterUserRequest): String? {
-        val recommendations = genRecommendations(userRequest)
+    suspend fun registerUserProfile(request: RegisterUserProfileRequest): String? {
+        val recommendations = genRecommendations(request)
         val user = UserMetadata(
-            userRequest.userId,
-            userRequest.height,
-            userRequest.weight,
-            userRequest.gender,
-            userRequest.activityLevel,
-            userRequest.age,
+            request.userId,
+            request.basicDemographics.height,
+            request.basicDemographics.weight,
+            request.basicDemographics.gender ?: request.basicDemographics.sex ?: "",
+            request.activityLifestyle.activityLevel,
+            request.basicDemographics.age,
         )
-        val result = userRepo.insertUserMetadata(user);
+        val result = userRepo.insertUserMetadata(user)
 
         if(result === "Mutation Success") {
             return recommendations
@@ -30,11 +30,11 @@ class UserService(private val userRepo: UserRepo, private val client: GeminiRest
     }
 
     suspend fun genRecommendations(
-        userRequest: RegisterUserRequest,
+        request: RegisterUserProfileRequest,
         config: GenerationConfig? = null,
         systemInstruction: String? = null
     ): String {
-        val prompt = PromptFactory.getPromptWithVariables("registerUserMetadata", userRequest.toPromptVariables())
+        val prompt = PromptFactory.getPromptWithVariables("registerUserMetadata", request.toPromptVariables())
         val result = client.askQuestion(prompt, config, systemInstruction)
         return result
     }

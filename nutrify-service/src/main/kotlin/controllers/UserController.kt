@@ -1,14 +1,12 @@
 package com.nutrify.controllers
 
-import com.nutrify.dto.RegisterUserRequest
+import com.nutrify.dto.RegisterUserProfileRequest
 import com.nutrify.service.UserService
 
 class UserController(private val userService: UserService) {
-    suspend fun registerUserMetadata(registerUserRequest: RegisterUserRequest): String {
-        val thanks = userService.registerUserMetadata(
-            registerUserRequest
-        );
-        return "Thanks for registering!"
+    suspend fun registerUserProfile(request: RegisterUserProfileRequest): String {
+        val result = userService.registerUserProfile(request)
+        return result ?: "Error"
     }
 }
 
