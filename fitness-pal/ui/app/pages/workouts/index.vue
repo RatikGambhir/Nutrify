@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import Button from '~/components/ui/button/Button.vue'
 import Input from '~/components/ui/input/Input.vue'
 import Card from '~/components/ui/card/Card.vue'
 import CardHeader from '~/components/ui/card/CardHeader.vue'
 import CardContent from '~/components/ui/card/CardContent.vue'
+import Expandable from '~/components/ui/expandable/Expandable.vue'
+import ExpandableCard from '~/components/ui/expandable/ExpandableCard.vue'
+import ExpandableContent from '~/components/ui/expandable/ExpandableContent.vue'
+import ExpandableTrigger from '~/components/ui/expandable/ExpandableTrigger.vue'
 import Tooltip from '~/components/ui/tooltip/Tooltip.vue'
 import TooltipContent from '~/components/ui/tooltip/TooltipContent.vue'
 import TooltipProvider from '~/components/ui/tooltip/TooltipProvider.vue'
 import TooltipTrigger from '~/components/ui/tooltip/TooltipTrigger.vue'
 import Badge from '~/components/ui/badge/Badge.vue'
-import { Plus, Bell, MoreHorizontal, Circle, Search } from 'lucide-vue-next'
+import { Plus, Bell, MoreHorizontal, Circle, Search, ChevronDown, Clock } from 'lucide-vue-next'
 
 const isAddWorkoutModalOpen = ref(false);
 const searchQuery = ref("");
@@ -138,6 +142,42 @@ const filteredWorkouts = computed(() => {
             workout.date.toLowerCase().includes(query),
     );
 });
+
+const viewportWidth = ref(0);
+
+const updateViewport = () => {
+    viewportWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener("resize", updateViewport);
+});
+
+const columnsCount = computed(() => {
+    if (viewportWidth.value < 768) {
+        return 1;
+    }
+    if (viewportWidth.value < 1024) {
+        return 2;
+    }
+    if (viewportWidth.value < 1280) {
+        return 3;
+    }
+    return 4;
+});
+
+const columnedWorkouts = computed(() => {
+    const columns = Array.from({ length: columnsCount.value }, () => [] as typeof workouts.value);
+    filteredWorkouts.value.forEach((workout, index) => {
+        columns[index % columnsCount.value].push(workout);
+    });
+    return columns;
+});
 </script>
 
 <template>
@@ -187,61 +227,102 @@ const filteredWorkouts = computed(() => {
                 No workouts found
             </div>
 
-            <div
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
-                <Card
-                    v-for="workout in filteredWorkouts"
-                    :key="workout.id"
-                    class="cursor-pointer hover:shadow-lg transition-shadow"
-                    @click="navigateTo(`/workouts/${workout.id}`)"
+            <div class="flex flex-col md:flex-row gap-6">
+                <div
+                    v-for="(column, columnIndex) in columnedWorkouts"
+                    :key="`column-${columnIndex}`"
+                    class="flex flex-col gap-6 flex-1"
                 >
-                    <CardHeader class="pb-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-semibold">
-                                {{ workout.name }}
-                            </h3>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                class="h-8 w-8"
-                                @click.stop
-                            >
-                                <MoreHorizontal class="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </CardHeader>
-
-                    <CardContent>
-                        <div class="space-y-2">
-                            <div
-                                v-if="workout.exercises.length === 0"
-                                class="text-sm text-gray-500 italic py-4"
-                            >
-                                No exercises added yet
-                            </div>
-                            <ul v-else class="space-y-2">
-                                <li
-                                    v-for="exercise in workout.exercises"
-                                    :key="exercise.id"
-                                    class="flex items-center gap-2 text-sm"
+                    <Expandable v-for="workout in column" :key="workout.id" class="h-full max-h-4">
+                        <template #default="isExpanded">
+                            <ExpandableTrigger>
+                                <ExpandableCard
+                                    class="rounded-lg border bg-card text-card-foreground shadow-sm transition-[height] duration-300"
+                                    :class="isExpanded ? 'h-full' : 'h-[260px]'"
                                 >
-                                    <Circle class="h-2 w-2 text-gray-400 fill-current" />
-                                    <span class="font-medium">{{
-                                        exercise.name
-                                    }}</span>
-                                    <span class="text-gray-500"
-                                        >- {{ exercise.sets.length }} set{{
-                                            exercise.sets.length !== 1
-                                                ? "s"
-                                                : ""
-                                        }}</span
-                                    >
-                                </li>
-                            </ul>
-                        </div>
-                    </CardContent>
-                </Card>
+                                    <Card class="border-0 shadow-none">
+                                        <CardHeader class="pb-2">
+                                            <div class="flex items-center justify-between">
+                                                <div>
+                                                    <h3 class="text-lg font-semibold">
+                                                        {{ workout.name }}
+                                                    </h3>
+                                                    <div class="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                                                        <Badge variant="secondary">{{ workout.date }}</Badge>
+                                                        <span class="flex items-center gap-1">
+                                                            <Clock class="h-3 w-3" />
+                                                            {{ workout.duration }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        class="h-8 w-8"
+                                                        @click.stop
+                                                    >
+                                                        <MoreHorizontal class="h-4 w-4" />
+                                                    </Button>
+                                                    <ChevronDown
+                                                        class="h-4 w-4 text-muted-foreground transition-transform duration-200"
+                                                        :class="isExpanded ? 'rotate-180' : ''"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </CardHeader>
+
+                                        <CardContent>
+                                            <div class="space-y-2">
+                                                <div
+                                                    v-if="workout.exercises.length === 0"
+                                                    class="text-sm text-gray-500 italic py-4"
+                                                >
+                                                    No exercises added yet
+                                                </div>
+                                                <ul v-else class="space-y-2">
+                                                    <li
+                                                        v-for="exercise in workout.exercises"
+                                                        :key="exercise.id"
+                                                        class="flex items-center gap-2 text-sm"
+                                                    >
+                                                        <Circle class="h-2 w-2 text-gray-400 fill-current" />
+                                                        <span class="font-medium">{{ exercise.name }}</span>
+                                                        <span class="text-gray-500">
+                                                            - {{ exercise.sets.length }} set{{ exercise.sets.length !== 1 ? "s" : "" }}
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <ExpandableContent preset="slide-up" class="mt-4">
+                                                <div class="border-t pt-4 space-y-3">
+                                                    <div
+                                                        v-for="exercise in workout.exercises"
+                                                        :key="`detail-${exercise.id}`"
+                                                        class="text-sm text-muted-foreground"
+                                                    >
+                                                        <span class="font-medium text-foreground">
+                                                            {{ exercise.name }}
+                                                        </span>
+                                                        <span>
+                                                            - {{ exercise.sets.map((set) => `${set.lbs}lb x ${set.reps}`).join(", ") }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex justify-end">
+                                                        <Button size="sm" @click.stop="navigateTo(`/workouts/${workout.id}`)">
+                                                            Open workout
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </ExpandableContent>
+                                        </CardContent>
+                                    </Card>
+                                </ExpandableCard>
+                            </ExpandableTrigger>
+                        </template>
+                    </Expandable>
+                </div>
             </div>
         </div>
 

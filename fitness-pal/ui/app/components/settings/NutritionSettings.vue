@@ -1,0 +1,199 @@
+<script setup lang="ts">
+import Button from '~/components/ui/button/Button.vue'
+import Card from '~/components/ui/card/Card.vue'
+import CardContent from '~/components/ui/card/CardContent.vue'
+import Input from '~/components/ui/input/Input.vue'
+import Textarea from '~/components/ui/textarea/Textarea.vue'
+import Select from '~/components/ui/select/Select.vue'
+import SelectContent from '~/components/ui/select/SelectContent.vue'
+import SelectItem from '~/components/ui/select/SelectItem.vue'
+import SelectTrigger from '~/components/ui/select/SelectTrigger.vue'
+import SelectValue from '~/components/ui/select/SelectValue.vue'
+import Separator from '~/components/ui/separator/Separator.vue'
+import Label from '~/components/ui/label/Label.vue'
+import type { IsSelected, Option, PlaceholderFor, SettingsFormDefaults, SettingsFormState } from '~/components/settings/types'
+
+defineProps<{
+    formState: SettingsFormState;
+    formDefaults: SettingsFormDefaults;
+    placeholderFor: PlaceholderFor;
+    isSelected: IsSelected;
+    yesNoOptions: Option[];
+    dietPatterns: Option[];
+    skillLevels: Option[];
+    budgetOptions: Option[];
+    alcoholOptions: Option[];
+}>();
+</script>
+
+<template>
+    <div class="space-y-6">
+        <div class="space-y-1">
+            <h2 class="text-lg font-semibold">Nutrition</h2>
+            <p class="text-sm text-muted-foreground">
+                Configure your nutrition preferences and dietary information.
+            </p>
+        </div>
+
+        <Card>
+            <CardContent class="p-6 space-y-5">
+                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
+                    <div>
+                        <Label>Current Diet Pattern</Label>
+                        <p class="text-xs text-muted-foreground">What dietary pattern do you currently follow?</p>
+                    </div>
+                    <Select v-model="formState.nutrition.dietPattern">
+                        <SelectTrigger>
+                            <SelectValue :placeholder="placeholderFor(formDefaults.nutrition.dietPattern, 'Select a diet pattern')" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="option in dietPatterns" :key="option.value" :value="option.value">
+                                {{ option.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <Separator />
+
+                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
+                    <div>
+                        <Label>Calorie Tracking Experience</Label>
+                        <p class="text-xs text-muted-foreground">Have you tracked calories before?</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <Button
+                            variant="outline"
+                            :class="isSelected(formState.nutrition.calorieTracking, formDefaults.nutrition.calorieTracking, 'yes') ? 'border-foreground text-foreground' : ''"
+                            @click="formState.nutrition.calorieTracking = 'yes'"
+                        >
+                            {{ yesNoOptions[0].label }}
+                        </Button>
+                        <Button
+                            variant="outline"
+                            :class="isSelected(formState.nutrition.calorieTracking, formDefaults.nutrition.calorieTracking, 'no') ? 'border-foreground text-foreground' : ''"
+                            @click="formState.nutrition.calorieTracking = 'no'"
+                        >
+                            {{ yesNoOptions[1].label }}
+                        </Button>
+                    </div>
+                </div>
+
+                <Separator />
+
+                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
+                    <div>
+                        <Label>Cooking Skill Level</Label>
+                        <p class="text-xs text-muted-foreground">How would you rate your cooking skills?</p>
+                    </div>
+                    <Select v-model="formState.nutrition.cookingSkill">
+                        <SelectTrigger>
+                            <SelectValue :placeholder="placeholderFor(formDefaults.nutrition.cookingSkill, 'Select skill level')" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="option in skillLevels" :key="option.value" :value="option.value">
+                                {{ option.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <Separator />
+
+                <div class="grid gap-4 md:grid-cols-[220px,1fr] items-start">
+                    <div>
+                        <Label>Macronutrient Preferences</Label>
+                        <p class="text-xs text-muted-foreground">Any specific preferences for protein, carbs, or fats?</p>
+                    </div>
+                    <Textarea
+                        v-model="formState.nutrition.macroPreferences"
+                        :placeholder="placeholderFor(formDefaults.nutrition.macroPreferences, 'e.g., High protein, moderate carbs, low fat')"
+                        :rows="2"
+                    />
+                </div>
+
+                <Separator />
+
+                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
+                    <div>
+                        <Label>Food Allergies</Label>
+                        <p class="text-xs text-muted-foreground">List any food allergies you have.</p>
+                    </div>
+                    <Input
+                        v-model="formState.nutrition.allergies"
+                        :placeholder="placeholderFor(formDefaults.nutrition.allergies, 'Add a food allergy...')"
+                    />
+                </div>
+
+                <Separator />
+
+                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
+                    <div>
+                        <Label>Dietary Restrictions</Label>
+                        <p class="text-xs text-muted-foreground">Any dietary restrictions or foods you avoid?</p>
+                    </div>
+                    <Input
+                        v-model="formState.nutrition.dietaryRestrictions"
+                        :placeholder="placeholderFor(formDefaults.nutrition.dietaryRestrictions, 'Add a dietary restriction...')"
+                    />
+                </div>
+
+                <Separator />
+
+                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
+                    <div>
+                        <Label>Cultural Food Preferences</Label>
+                        <p class="text-xs text-muted-foreground">Any cultural or regional food preferences?</p>
+                    </div>
+                    <Input
+                        v-model="formState.nutrition.culturalPreferences"
+                        :placeholder="placeholderFor(formDefaults.nutrition.culturalPreferences, 'e.g., Mediterranean, Asian, Indian')"
+                    />
+                </div>
+
+                <Separator />
+
+                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
+                    <div>
+                        <Label>Food Budget</Label>
+                        <p class="text-xs text-muted-foreground">Your weekly/monthly food budget.</p>
+                    </div>
+                    <Select v-model="formState.nutrition.foodBudget">
+                        <SelectTrigger>
+                            <SelectValue :placeholder="placeholderFor(formDefaults.nutrition.foodBudget, 'Select budget range')" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="option in budgetOptions" :key="option.value" :value="option.value">
+                                {{ option.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <Separator />
+
+                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
+                    <div>
+                        <Label>Alcohol Intake</Label>
+                        <p class="text-xs text-muted-foreground">How often do you consume alcohol?</p>
+                    </div>
+                    <Select v-model="formState.nutrition.alcoholIntake">
+                        <SelectTrigger>
+                            <SelectValue :placeholder="placeholderFor(formDefaults.nutrition.alcoholIntake, 'Select frequency')" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="option in alcoholOptions" :key="option.value" :value="option.value">
+                                {{ option.label }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </CardContent>
+        </Card>
+
+        <div class="flex justify-end gap-3">
+            <Button variant="ghost">Cancel</Button>
+            <Button>Save changes</Button>
+        </div>
+    </div>
+</template>
