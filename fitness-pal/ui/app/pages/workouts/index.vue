@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import Button from '~/components/ui/button/Button.vue'
+import Input from '~/components/ui/input/Input.vue'
+import Card from '~/components/ui/card/Card.vue'
+import CardHeader from '~/components/ui/card/CardHeader.vue'
+import CardContent from '~/components/ui/card/CardContent.vue'
+import Tooltip from '~/components/ui/tooltip/Tooltip.vue'
+import TooltipContent from '~/components/ui/tooltip/TooltipContent.vue'
+import TooltipProvider from '~/components/ui/tooltip/TooltipProvider.vue'
+import TooltipTrigger from '~/components/ui/tooltip/TooltipTrigger.vue'
+import Badge from '~/components/ui/badge/Badge.vue'
+import { Plus, Bell, MoreHorizontal, Circle, Search } from 'lucide-vue-next'
 
 const isAddWorkoutModalOpen = ref(false);
 const searchQuery = ref("");
@@ -130,76 +141,78 @@ const filteredWorkouts = computed(() => {
 </script>
 
 <template>
-    <UDashboardPanel id="workouts">
-        <template #header>
-            <UDashboardNavbar title="Workouts" :ui="{ right: 'gap-3' }">
-                <template #leading>
-                    <UDashboardSidebarCollapse />
-                </template>
+    <div class="flex-1 flex flex-col h-full">
+        <!-- Header -->
+        <header class="flex h-16 items-center justify-between border-b px-6 shrink-0">
+            <h1 class="text-xl font-semibold">Workouts</h1>
+            <div class="flex items-center gap-3">
+                <Button @click="isAddWorkoutModalOpen = true">
+                    <Plus class="h-4 w-4 mr-2" />
+                    Add Workout
+                </Button>
 
-                <template #right>
-                    <UButton
-                        icon="i-lucide-plus"
-                        size="md"
-                        @click="isAddWorkoutModalOpen = true"
-                    >
-                        Add Workout
-                    </UButton>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger as-child>
+                            <Button variant="ghost" size="icon" class="relative">
+                                <Bell class="h-5 w-5" />
+                                <Badge class="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]" variant="destructive">
+                                    3
+                                </Badge>
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Notifications (N)</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+            </div>
+        </header>
 
-                    <UTooltip text="Notifications" :shortcuts="['N']">
-                        <UButton color="neutral" variant="ghost" square>
-                            <UChip color="error" inset>
-                                <UIcon
-                                    name="i-lucide-bell"
-                                    class="size-5 shrink-0"
-                                />
-                            </UChip>
-                        </UButton>
-                    </UTooltip>
-                </template>
-            </UDashboardNavbar>
-        </template>
-
-        <template #body>
-            <div class="p-6 space-y-6">
-                <UInput
+        <!-- Body -->
+        <div class="flex-1 overflow-auto p-6 space-y-6">
+            <div class="relative">
+                <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
                     v-model="searchQuery"
-                    icon="i-lucide-search"
                     placeholder="Search workouts..."
-                    size="lg"
+                    class="pl-10 h-11"
                 />
+            </div>
 
-                <div
-                    v-if="filteredWorkouts.length === 0"
-                    class="text-center py-12 text-gray-500"
+            <div
+                v-if="filteredWorkouts.length === 0"
+                class="text-center py-12 text-gray-500"
+            >
+                No workouts found
+            </div>
+
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+                <Card
+                    v-for="workout in filteredWorkouts"
+                    :key="workout.id"
+                    class="cursor-pointer hover:shadow-lg transition-shadow"
+                    @click="navigateTo(`/workouts/${workout.id}`)"
                 >
-                    No workouts found
-                </div>
+                    <CardHeader class="pb-2">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold">
+                                {{ workout.name }}
+                            </h3>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                class="h-8 w-8"
+                                @click.stop
+                            >
+                                <MoreHorizontal class="h-4 w-4" />
+                            </Button>
+                        </div>
+                    </CardHeader>
 
-                <div
-                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                >
-                    <UCard
-                        v-for="workout in filteredWorkouts"
-                        :key="workout.id"
-                        class="cursor-pointer hover:shadow-lg transition-shadow"
-                        @click="navigateTo(`/workouts/${workout.id}`)"
-                    >
-                        <template #header>
-                            <div class="flex items-center justify-between">
-                                <h3 class="text-lg font-semibold">
-                                    {{ workout.name }}
-                                </h3>
-                                <UButton
-                                    icon="i-lucide-more-horizontal"
-                                    color="neutral"
-                                    variant="ghost"
-                                    size="sm"
-                                    square
-                                />
-                            </div>
-                        </template>
-
+                    <CardContent>
                         <div class="space-y-2">
                             <div
                                 v-if="workout.exercises.length === 0"
@@ -213,10 +226,7 @@ const filteredWorkouts = computed(() => {
                                     :key="exercise.id"
                                     class="flex items-center gap-2 text-sm"
                                 >
-                                    <UIcon
-                                        name="i-lucide-circle"
-                                        class="size-2 text-gray-400"
-                                    />
+                                    <Circle class="h-2 w-2 text-gray-400 fill-current" />
                                     <span class="font-medium">{{
                                         exercise.name
                                     }}</span>
@@ -230,11 +240,11 @@ const filteredWorkouts = computed(() => {
                                 </li>
                             </ul>
                         </div>
-                    </UCard>
-                </div>
+                    </CardContent>
+                </Card>
             </div>
-        </template>
+        </div>
 
-        <!-- <WorkoutAddModal v-model="isAddWorkoutModalOpen" @create="createWorkout" /> -->
-    </UDashboardPanel>
+        <WorkoutAddModal v-model="isAddWorkoutModalOpen" @create="createWorkout" />
+    </div>
 </template>

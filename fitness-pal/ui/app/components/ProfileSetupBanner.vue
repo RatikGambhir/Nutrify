@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import Alert from '~/components/ui/alert/Alert.vue'
+import AlertTitle from '~/components/ui/alert/AlertTitle.vue'
+import AlertDescription from '~/components/ui/alert/AlertDescription.vue'
+import Button from '~/components/ui/button/Button.vue'
+import { UserCircle, X } from 'lucide-vue-next'
+
 const router = useRouter()
 const userStore = useUserStore()
 
@@ -39,34 +45,35 @@ const remindLater = () => {
 </script>
 
 <template>
-  <UAlert
-    v-if="shouldShowBanner"
-    icon="i-lucide-user-circle"
-    color="primary"
-    variant="subtle"
-    title="Complete Your Profile"
-    description="Set up your fitness profile to get personalized recommendations and track your progress more effectively."
-    :close-button="{ icon: 'i-lucide-x', color: 'gray', variant: 'ghost' }"
-    @close="remindLater"
-  >
-    <template #actions>
-      <UButton
-        color="primary"
-        variant="solid"
+  <Alert v-if="shouldShowBanner" class="relative bg-primary/10 border-primary/20">
+    <UserCircle class="h-5 w-5" />
+    <AlertTitle>Complete Your Profile</AlertTitle>
+    <AlertDescription>
+      Set up your fitness profile to get personalized recommendations and track your progress more effectively.
+    </AlertDescription>
+    <div class="mt-4 flex gap-2">
+      <Button
         size="sm"
         class="bg-gray-900 hover:bg-gray-800"
         @click="completeNow"
       >
         Complete Now
-      </UButton>
-      <UButton
-        color="secondary"
+      </Button>
+      <Button
         variant="ghost"
         size="sm"
         @click="remindLater"
       >
         Remind Me Later
-      </UButton>
-    </template>
-  </UAlert>
+      </Button>
+    </div>
+    <Button
+      variant="ghost"
+      size="icon"
+      class="absolute top-2 right-2 h-6 w-6"
+      @click="remindLater"
+    >
+      <X class="h-4 w-4" />
+    </Button>
+  </Alert>
 </template>

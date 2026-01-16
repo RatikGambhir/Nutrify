@@ -1,8 +1,27 @@
 <script setup lang="ts">
 import * as z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
 import { ActivityLevel, PrimaryGoal, type UserProfile } from '~/types'
 import { userApi } from '~/api/user'
+import Card from '~/components/ui/card/Card.vue'
+import CardContent from '~/components/ui/card/CardContent.vue'
+import Button from '~/components/ui/button/Button.vue'
+import Label from '~/components/ui/label/Label.vue'
+import RadioGroup from '~/components/ui/radio-group/RadioGroup.vue'
+import RadioGroupItem from '~/components/ui/radio-group/RadioGroupItem.vue'
+import Select from '~/components/ui/select/Select.vue'
+import SelectContent from '~/components/ui/select/SelectContent.vue'
+import SelectItem from '~/components/ui/select/SelectItem.vue'
+import SelectTrigger from '~/components/ui/select/SelectTrigger.vue'
+import SelectValue from '~/components/ui/select/SelectValue.vue'
+import {
+  Flame,
+  Dumbbell,
+  Repeat,
+  Zap,
+  HeartPulse,
+  ShieldCheck,
+  Loader2
+} from 'lucide-vue-next'
 
 definePageMeta({
   layout: false,
@@ -65,13 +84,22 @@ const activityLevels = [
   { value: ActivityLevel.EXTREMELY_ACTIVE, label: 'Extremely Active', description: 'Physical job or training twice/day' }
 ]
 
+const goalIconMap: Record<string, any> = {
+  [PrimaryGoal.FAT_LOSS]: Flame,
+  [PrimaryGoal.MUSCLE_GAIN]: Dumbbell,
+  [PrimaryGoal.RECOMPOSITION]: Repeat,
+  [PrimaryGoal.STRENGTH]: Zap,
+  [PrimaryGoal.ENDURANCE]: HeartPulse,
+  [PrimaryGoal.GENERAL_HEALTH]: ShieldCheck
+}
+
 const goals = [
-  { value: PrimaryGoal.FAT_LOSS, label: 'Fat Loss', icon: 'i-lucide-flame', description: 'Reduce body fat percentage' },
-  { value: PrimaryGoal.MUSCLE_GAIN, label: 'Muscle Gain', icon: 'i-lucide-dumbbell', description: 'Build muscle mass and size' },
-  { value: PrimaryGoal.RECOMPOSITION, label: 'Recomposition', icon: 'i-lucide-repeat', description: 'Lose fat while gaining muscle' },
-  { value: PrimaryGoal.STRENGTH, label: 'Strength', icon: 'i-lucide-zap', description: 'Increase overall strength' },
-  { value: PrimaryGoal.ENDURANCE, label: 'Endurance', icon: 'i-lucide-heart-pulse', description: 'Improve stamina and endurance' },
-  { value: PrimaryGoal.GENERAL_HEALTH, label: 'General Health', icon: 'i-lucide-shield-check', description: 'Maintain overall wellness' }
+  { value: PrimaryGoal.FAT_LOSS, label: 'Fat Loss', description: 'Reduce body fat percentage' },
+  { value: PrimaryGoal.MUSCLE_GAIN, label: 'Muscle Gain', description: 'Build muscle mass and size' },
+  { value: PrimaryGoal.RECOMPOSITION, label: 'Recomposition', description: 'Lose fat while gaining muscle' },
+  { value: PrimaryGoal.STRENGTH, label: 'Strength', description: 'Increase overall strength' },
+  { value: PrimaryGoal.ENDURANCE, label: 'Endurance', description: 'Improve stamina and endurance' },
+  { value: PrimaryGoal.GENERAL_HEALTH, label: 'General Health', description: 'Maintain overall wellness' }
 ]
 
 const nextStep = () => {
@@ -90,19 +118,19 @@ const skipSetup = async () => {
   await router.push({ path: '/' })
 }
 
-const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+const onSubmit = async () => {
   loading.value = true
 
   try {
     const profileData: Omit<UserProfile, 'userId'> = {
-      age: event.data.age,
-      sex: event.data.sex,
-      gender: event.data.gender,
-      height: event.data.height,
-      weight: event.data.weight,
-      ethnicity: event.data.ethnicity,
-      activityLevel: event.data.activity_level,
-      primaryGoal: event.data.goal
+      age: state.age,
+      sex: state.sex,
+      gender: state.gender,
+      height: state.height,
+      weight: state.weight,
+      ethnicity: state.ethnicity,
+      activityLevel: state.activity_level,
+      primaryGoal: state.goal
     }
 
     const response = await userApi.createUserProfile(profileData)
@@ -171,164 +199,166 @@ const canProceed = computed(() => {
         </div>
       </div>
 
-      <UCard class="shadow-xl">
-        <UForm
-          :schema="schema"
-          :state="state"
-          @submit="onSubmit"
-        >
-          <div v-if="currentStep === 1" class="space-y-6">
-            <div class="text-center mb-6">
-              <h2 class="text-2xl font-bold text-gray-900 mb-2">Basic Information</h2>
-              <p class="text-gray-600">Tell us about yourself</p>
-            </div>
+      <Card class="shadow-xl">
+        <CardContent class="p-6">
+          <form @submit.prevent="onSubmit">
+            <div v-if="currentStep === 1" class="space-y-6">
+              <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Basic Information</h2>
+                <p class="text-gray-600">Tell us about yourself</p>
+              </div>
 
-            <UFormField name="age" label="Age">
-              <input
-                v-model.number="state.age"
-                type="number"
-                min="13"
-                max="120"
-                class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
-              >
-            </UFormField>
-
-            <div class="grid grid-cols-2 gap-4">
-              <UFormField name="height" label="Height (inches)">
+              <div class="space-y-2">
+                <Label for="age">Age</Label>
                 <input
-                  v-model.number="state.height"
+                  id="age"
+                  v-model.number="state.age"
                   type="number"
-                  min="36"
-                  max="96"
+                  min="13"
+                  max="120"
                   class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
                 >
-              </UFormField>
-
-              <UFormField name="weight" label="Weight (lbs)">
-                <input
-                  v-model.number="state.weight"
-                  type="number"
-                  min="50"
-                  max="500"
-                  class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
-                >
-              </UFormField>
-            </div>
-
-            <UFormField name="sex" label="Sex">
-              <div class="flex gap-3">
-                <UButton
-                  v-for="option in sexOptions"
-                  :key="option.value"
-                  :variant="state.sex === option.value ? 'solid' : 'outline'"
-                  :color="state.sex === option.value ? 'primary' : 'secondary'"
-                  size="md"
-                  class="flex-1"
-                  @click="state.sex = option.value"
-                >
-                  {{ option.label }}
-                </UButton>
               </div>
-            </UFormField>
 
-            <UFormField name="gender" label="Gender Identity">
-              <div class="flex gap-3">
-                <UButton
-                  v-for="option in sexOptions"
-                  :key="option.value"
-                  :variant="state.gender === option.value ? 'solid' : 'outline'"
-                  :color="state.gender === option.value ? 'primary' : 'secondary'"
-                  size="md"
-                  class="flex-1"
-                  @click="state.gender = option.value"
-                >
-                  {{ option.label }}
-                </UButton>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <Label for="height">Height (inches)</Label>
+                  <input
+                    id="height"
+                    v-model.number="state.height"
+                    type="number"
+                    min="36"
+                    max="96"
+                    class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
+                  >
+                </div>
+
+                <div class="space-y-2">
+                  <Label for="weight">Weight (lbs)</Label>
+                  <input
+                    id="weight"
+                    v-model.number="state.weight"
+                    type="number"
+                    min="50"
+                    max="500"
+                    class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
+                  >
+                </div>
               </div>
-            </UFormField>
 
-            <UFormField name="ethnicity" label="Ethnicity">
-              <USelect
-                v-model="state.ethnicity"
-                :options="ethnicityOptions"
-                placeholder="Select your ethnicity"
-                size="lg"
-              />
-            </UFormField>
+              <div class="space-y-2">
+                <Label>Sex</Label>
+                <div class="flex gap-3">
+                  <Button
+                    v-for="option in sexOptions"
+                    :key="option.value"
+                    type="button"
+                    :variant="state.sex === option.value ? 'default' : 'outline'"
+                    class="flex-1"
+                    :class="state.sex === option.value ? 'bg-gray-900 hover:bg-gray-800' : ''"
+                    @click="state.sex = option.value"
+                  >
+                    {{ option.label }}
+                  </Button>
+                </div>
+              </div>
 
-            <div class="flex gap-3 pt-4">
-              <UButton
-                size="lg"
-                variant="outline"
-                color="secondary"
-                block
-                @click="skipSetup"
-              >
-                Skip for Now
-              </UButton>
-              <UButton
-                size="lg"
-                color="primary"
-                block
-                :disabled="!canProceed"
-                class="bg-gray-900 hover:bg-gray-800"
-                @click="nextStep"
-              >
-                Next
-              </UButton>
-            </div>
-          </div>
+              <div class="space-y-2">
+                <Label>Gender Identity</Label>
+                <div class="flex gap-3">
+                  <Button
+                    v-for="option in sexOptions"
+                    :key="option.value"
+                    type="button"
+                    :variant="state.gender === option.value ? 'default' : 'outline'"
+                    class="flex-1"
+                    :class="state.gender === option.value ? 'bg-gray-900 hover:bg-gray-800' : ''"
+                    @click="state.gender = option.value"
+                  >
+                    {{ option.label }}
+                  </Button>
+                </div>
+              </div>
 
-          <!-- Step 2: Activity Level -->
-          <div v-if="currentStep === 2" class="space-y-6">
-            <div class="text-center mb-6">
-              <h2 class="text-2xl font-bold text-gray-900 mb-2">Activity Level</h2>
-              <p class="text-gray-600">How active are you?</p>
-            </div>
+              <div class="space-y-2">
+                <Label>Ethnicity</Label>
+                <Select v-model="state.ethnicity">
+                  <SelectTrigger class="h-11">
+                    <SelectValue placeholder="Select your ethnicity" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem v-for="option in ethnicityOptions" :key="option.value" :value="option.value">
+                      {{ option.label }}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <UFormField name="activity_level">
-              <URadioGroup
-                v-model="state.activity_level"
-                :options="activityLevels"
-                value-attribute="value"
-              >
-                <template #label="{ option }">
-                  <div>
-                    <p class="font-medium text-gray-900">{{ option.label }}</p>
-                    <p class="text-sm text-gray-500">{{ option.description }}</p>
-                  </div>
-                </template>
-              </URadioGroup>
-            </UFormField>
-
-            <div class="flex gap-3 pt-4">
-              <UButton
-                size="lg"
-                variant="outline"
-                color="secondary"
-                @click="prevStep"
-              >
-                Back
-              </UButton>
-              <UButton
-                size="lg"
-                color="primary"
-                block
-                class="bg-gray-900 hover:bg-gray-800"
-                @click="nextStep"
-              >
-                Next
-              </UButton>
-            </div>
-          </div>
-
-          <div v-if="currentStep === 3" class="space-y-6">
-            <div class="text-center mb-6">
-              <h2 class="text-2xl font-bold text-gray-900 mb-2">Your Goal</h2>
-              <p class="text-gray-600">What do you want to achieve?</p>
+              <div class="flex gap-3 pt-4">
+                <Button
+                  type="button"
+                  size="lg"
+                  variant="outline"
+                  class="flex-1"
+                  @click="skipSetup"
+                >
+                  Skip for Now
+                </Button>
+                <Button
+                  type="button"
+                  size="lg"
+                  class="flex-1 bg-gray-900 hover:bg-gray-800"
+                  :disabled="!canProceed"
+                  @click="nextStep"
+                >
+                  Next
+                </Button>
+              </div>
             </div>
 
-            <UFormField name="goal">
+            <!-- Step 2: Activity Level -->
+            <div v-if="currentStep === 2" class="space-y-6">
+              <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Activity Level</h2>
+                <p class="text-gray-600">How active are you?</p>
+              </div>
+
+              <RadioGroup v-model="state.activity_level" class="space-y-3">
+                <div v-for="level in activityLevels" :key="level.value" class="flex items-start space-x-3">
+                  <RadioGroupItem :id="level.value" :value="level.value" class="mt-1" />
+                  <Label :for="level.value" class="cursor-pointer flex-1">
+                    <p class="font-medium text-gray-900">{{ level.label }}</p>
+                    <p class="text-sm text-gray-500">{{ level.description }}</p>
+                  </Label>
+                </div>
+              </RadioGroup>
+
+              <div class="flex gap-3 pt-4">
+                <Button
+                  type="button"
+                  size="lg"
+                  variant="outline"
+                  @click="prevStep"
+                >
+                  Back
+                </Button>
+                <Button
+                  type="button"
+                  size="lg"
+                  class="flex-1 bg-gray-900 hover:bg-gray-800"
+                  @click="nextStep"
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+
+            <div v-if="currentStep === 3" class="space-y-6">
+              <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Your Goal</h2>
+                <p class="text-gray-600">What do you want to achieve?</p>
+              </div>
+
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
                   v-for="goal in goals"
@@ -340,36 +370,35 @@ const canProceed = computed(() => {
                     : 'border-gray-200 hover:border-gray-300'"
                   @click="state.goal = goal.value"
                 >
-                  <UIcon :name="goal.icon" class="w-8 h-8 mb-3" />
+                  <component :is="goalIconMap[goal.value]" class="w-8 h-8 mb-3" />
                   <h3 class="font-bold text-gray-900 mb-1">{{ goal.label }}</h3>
                   <p class="text-sm text-gray-600">{{ goal.description }}</p>
                 </button>
               </div>
-            </UFormField>
 
-            <div class="flex gap-3 pt-4">
-              <UButton
-                size="lg"
-                variant="outline"
-                color="secondary"
-                @click="prevStep"
-              >
-                Back
-              </UButton>
-              <UButton
-                type="submit"
-                size="lg"
-                color="primary"
-                block
-                :loading="loading"
-                class="bg-gray-900 hover:bg-gray-800"
-              >
-                Complete Setup
-              </UButton>
+              <div class="flex gap-3 pt-4">
+                <Button
+                  type="button"
+                  size="lg"
+                  variant="outline"
+                  @click="prevStep"
+                >
+                  Back
+                </Button>
+                <Button
+                  type="submit"
+                  size="lg"
+                  class="flex-1 bg-gray-900 hover:bg-gray-800"
+                  :disabled="loading"
+                >
+                  <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
+                  Complete Setup
+                </Button>
+              </div>
             </div>
-          </div>
-        </UForm>
-      </UCard>
+          </form>
+        </CardContent>
+      </Card>
 
       <div class="text-center mt-6">
         <p class="text-sm text-gray-500">

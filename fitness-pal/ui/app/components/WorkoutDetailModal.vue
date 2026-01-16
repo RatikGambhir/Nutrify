@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
+import Dialog from '~/components/ui/dialog/Dialog.vue'
+import DialogContent from '~/components/ui/dialog/DialogContent.vue'
+import DialogHeader from '~/components/ui/dialog/DialogHeader.vue'
+import DialogTitle from '~/components/ui/dialog/DialogTitle.vue'
+import Button from '~/components/ui/button/Button.vue'
+import { MoreHorizontal, Calendar, Clock, LineChart, Trash } from 'lucide-vue-next'
 
 const props = defineProps<{
     modelValue: boolean;
@@ -106,29 +112,26 @@ const handleCancel = () => {
 </script>
 
 <template>
-    <UModal v-model="isOpen" :ui="{ width: 'sm:max-w-4xl' }">
-        <UCard>
-            <template #header>
+    <Dialog v-model:open="isOpen">
+        <DialogContent class="sm:max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+            <DialogHeader class="flex-shrink-0">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-bold">{{ workoutData?.name || "Workout" }}</h3>
-                    <UButton
-                        icon="i-lucide-more-horizontal"
-                        color="neutral"
-                        variant="ghost"
-                        square
-                    />
+                    <DialogTitle>{{ workoutData?.name || "Workout" }}</DialogTitle>
+                    <Button variant="ghost" size="icon">
+                        <MoreHorizontal class="h-5 w-5" />
+                    </Button>
                 </div>
-            </template>
+            </DialogHeader>
 
-            <div class="space-y-6 max-h-[70vh] overflow-y-auto">
+            <div class="flex-1 overflow-y-auto space-y-6 py-4">
                 <!-- Workout Header Info -->
-                <div class="flex items-center gap-6 text-gray-600">
+                <div class="flex items-center gap-6 text-gray-600 dark:text-gray-400">
                     <div class="flex items-center gap-2">
-                        <UIcon name="i-lucide-calendar" class="size-5" />
+                        <Calendar class="h-5 w-5" />
                         <span>{{ workoutData?.date }}</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <UIcon name="i-lucide-clock" class="size-5" />
+                        <Clock class="h-5 w-5" />
                         <span>{{ workoutData?.duration }}</span>
                     </div>
                 </div>
@@ -145,28 +148,20 @@ const handleCancel = () => {
                                 {{ exercise.name }}
                             </h3>
                             <div class="flex items-center gap-2">
-                                <UButton
-                                    icon="i-lucide-line-chart"
-                                    color="neutral"
-                                    variant="ghost"
-                                    size="sm"
-                                    square
-                                />
-                                <UButton
-                                    icon="i-lucide-more-horizontal"
-                                    color="neutral"
-                                    variant="ghost"
-                                    size="sm"
-                                    square
-                                />
+                                <Button variant="ghost" size="icon" class="h-8 w-8">
+                                    <LineChart class="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="icon" class="h-8 w-8">
+                                    <MoreHorizontal class="h-4 w-4" />
+                                </Button>
                             </div>
                         </div>
 
                         <!-- Sets Table -->
-                        <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                             <div class="overflow-x-auto">
                                 <table class="w-full">
-                                    <thead class="bg-gray-50 border-b border-gray-200">
+                                    <thead class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                                         <tr>
                                             <th class="px-4 py-3 text-left text-sm font-semibold">
                                                 Set
@@ -188,10 +183,10 @@ const handleCancel = () => {
                                         <tr
                                             v-for="(set, index) in exercise.sets"
                                             :key="index"
-                                            class="border-b border-gray-100 hover:bg-gray-50"
+                                            class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                                         >
                                             <td class="px-4 py-3">
-                                                <div class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                                <div class="bg-gray-200 dark:bg-gray-700 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                                     {{ set.set }}
                                                 </div>
                                             </td>
@@ -202,70 +197,67 @@ const handleCancel = () => {
                                                 <input
                                                     v-model.number="set.lbs"
                                                     type="number"
-                                                    class="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    class="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-background"
                                                 />
                                             </td>
                                             <td class="px-4 py-3">
                                                 <input
                                                     v-model.number="set.reps"
                                                     type="number"
-                                                    class="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    class="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-background"
                                                 />
                                             </td>
                                             <td class="px-4 py-3 text-center">
-                                                <UButton
+                                                <Button
                                                     v-if="exercise.sets.length > 1"
-                                                    icon="i-lucide-trash"
-                                                    color="red"
                                                     variant="ghost"
-                                                    size="sm"
-                                                    square
+                                                    size="icon"
+                                                    class="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
                                                     @click="deleteSet(exercise.id, index)"
-                                                />
+                                                >
+                                                    <Trash class="h-4 w-4" />
+                                                </Button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
-                            <div class="p-4 border-t border-gray-200 bg-white">
-                                <UButton
-                                    color="neutral"
+                            <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-background">
+                                <Button
                                     variant="outline"
-                                    block
+                                    class="w-full"
                                     @click="addSet(exercise.id)"
                                 >
                                     + Add Set (2:00)
-                                </UButton>
+                                </Button>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Add Exercises Button -->
-                <UButton
-                    color="primary"
+                <Button
                     variant="outline"
                     size="lg"
-                    block
+                    class="w-full"
                     @click="isAddExerciseModalOpen = true"
                 >
                     Add Exercises
-                </UButton>
+                </Button>
 
                 <!-- Cancel Workout Button -->
-                <UButton
-                    color="red"
+                <Button
                     variant="outline"
                     size="lg"
-                    block
+                    class="w-full text-red-500 border-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
                     @click="handleCancel"
                 >
                     Cancel Workout
-                </UButton>
+                </Button>
             </div>
-        </UCard>
+        </DialogContent>
 
         <ExerciseSelectModal v-model="isAddExerciseModalOpen" @select="addExercise" />
-    </UModal>
+    </Dialog>
 </template>

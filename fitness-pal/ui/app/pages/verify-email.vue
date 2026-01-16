@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {useUserStore} from "~/stores/useUserStore";
 import type {UserSession} from "~/pages/login.vue"
+import Button from '~/components/ui/button/Button.vue'
 
 const userStore = useUserStore();
 
@@ -91,7 +92,7 @@ async function verifyOtpCode(verificationCode: string): Promise<UserSession> {
     error: error,
     session: session,
   }
-  
+
 }
 
 async function onContinue(): Promise<void> {
@@ -246,11 +247,9 @@ onUnmounted(() => {
                     </button>
                 </div>
 
-                <UButton
+                <Button
                     size="lg"
-                    color="info"
-                    block
-                    class="font-medium mb-6"
+                    class="w-full font-medium mb-6"
                     :disabled="!isCodeComplete"
                     :class="{
                         'opacity-50 cursor-not-allowed': !isCodeComplete,
@@ -258,7 +257,7 @@ onUnmounted(() => {
                     @click="onContinue"
                 >
                     Continue
-                </UButton>
+                </Button>
 
                 <div class="text-center">
                     <NuxtLink

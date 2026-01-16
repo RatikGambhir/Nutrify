@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { Period, Range, Stat } from '~/types'
-import { randomInt } from '~/utils';
+import { randomInt } from '~/utils'
+import Card from '~/components/ui/card/Card.vue'
+import CardContent from '~/components/ui/card/CardContent.vue'
+import Badge from '~/components/ui/badge/Badge.vue'
+import { Users, PieChart, CircleDollarSign, ShoppingCart } from 'lucide-vue-next'
 
 const props = defineProps<{
   period: Period
@@ -13,6 +17,13 @@ function formatCurrency(value: number): string {
     currency: 'USD',
     maximumFractionDigits: 0
   })
+}
+
+const iconMap: Record<string, any> = {
+  'i-lucide-users': Users,
+  'i-lucide-chart-pie': PieChart,
+  'i-lucide-circle-dollar-sign': CircleDollarSign,
+  'i-lucide-shopping-cart': ShoppingCart
 }
 
 const baseStats = [{
@@ -65,35 +76,31 @@ const { data: stats } = await useAsyncData<Stat[]>('stats', async () => {
 </script>
 
 <template>
-  <UPageGrid class="lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-px">
-    <UPageCard
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <Card
       v-for="(stat, index) in stats"
       :key="index"
-      :icon="stat.icon"
-      :title="stat.title"
-      to="/customers"
-      variant="subtle"
-      :ui="{
-        container: 'gap-y-1.5',
-        wrapper: 'items-start',
-        leading: 'p-2.5 rounded-full bg-primary/10 ring ring-inset ring-primary/25 flex-col',
-        title: 'font-normal text-muted text-xs uppercase'
-      }"
-      class="lg:rounded-none first:rounded-l-lg last:rounded-r-lg hover:z-1"
+      class="hover:shadow-md transition-shadow"
     >
-      <div class="flex items-center gap-2">
-        <span class="text-2xl font-semibold text-highlighted">
-          {{ stat.value }}
-        </span>
-
-        <UBadge
-          :color="stat.variation > 0 ? 'success' : 'error'"
-          variant="subtle"
-          class="text-xs"
-        >
-          {{ stat.variation > 0 ? '+' : '' }}{{ stat.variation }}%
-        </UBadge>
-      </div>
-    </UPageCard>
-  </UPageGrid>
+      <CardContent class="p-4">
+        <div class="flex items-start gap-3">
+          <div class="p-2.5 rounded-full bg-primary/10 ring ring-inset ring-primary/25">
+            <component :is="iconMap[stat.icon] || Users" class="h-5 w-5 text-primary" />
+          </div>
+          <div class="flex-1">
+            <p class="text-xs uppercase text-muted-foreground mb-1">{{ stat.title }}</p>
+            <div class="flex items-center gap-2">
+              <span class="text-2xl font-semibold">{{ stat.value }}</span>
+              <Badge
+                :variant="stat.variation > 0 ? 'default' : 'destructive'"
+                class="text-xs"
+              >
+                {{ stat.variation > 0 ? '+' : '' }}{{ stat.variation }}%
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
 </template>

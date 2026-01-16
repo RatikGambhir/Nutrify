@@ -1,8 +1,23 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import type { TableColumn } from "@nuxt/ui";
+import Button from '~/components/ui/button/Button.vue'
+import Card from '~/components/ui/card/Card.vue'
+import CardHeader from '~/components/ui/card/CardHeader.vue'
+import CardContent from '~/components/ui/card/CardContent.vue'
+import CardTitle from '~/components/ui/card/CardTitle.vue'
+import Tooltip from '~/components/ui/tooltip/Tooltip.vue'
+import TooltipContent from '~/components/ui/tooltip/TooltipContent.vue'
+import TooltipProvider from '~/components/ui/tooltip/TooltipProvider.vue'
+import TooltipTrigger from '~/components/ui/tooltip/TooltipTrigger.vue'
+import Badge from '~/components/ui/badge/Badge.vue'
+import Table from '~/components/ui/table/Table.vue'
+import TableBody from '~/components/ui/table/TableBody.vue'
+import TableCell from '~/components/ui/table/TableCell.vue'
+import TableHead from '~/components/ui/table/TableHead.vue'
+import TableHeader from '~/components/ui/table/TableHeader.vue'
+import TableRow from '~/components/ui/table/TableRow.vue'
+import { Bell } from 'lucide-vue-next'
 
-const selectedTab = ref("nutrition");
 const timePeriod = ref("daily");
 
 const getWeekStart = (date: Date) => {
@@ -157,39 +172,6 @@ const nutritionData = computed(() => {
     return allNutritionData.value;
 });
 
-const nutritionColumns: TableColumn<object>[] = [
-    {
-        accessorKey: "mealType",
-        header: "Meal Type",
-        cell: ({ row }) => row.getValue("mealType"),
-    },
-    {
-        accessorKey: "food",
-        header: "Food",
-        cell: ({ row }) => (row.getValue("food") as string[]).join(", "),
-    },
-    {
-        accessorKey: "calories",
-        header: "Calories",
-        cell: ({ row }) => row.getValue("calories"),
-    },
-    {
-        accessorKey: "protein",
-        header: "Protein (g)",
-        cell: ({ row }) => row.getValue("protein"),
-    },
-    {
-        accessorKey: "carbs",
-        header: "Carbs (g)",
-        cell: ({ row }) => row.getValue("carbs"),
-    },
-    {
-        accessorKey: "fats",
-        header: "Fats (g)",
-        cell: ({ row }) => row.getValue("fats"),
-    },
-];
-
 const totalCalories = computed(() =>
     nutritionData.value.reduce((sum, meal) => sum + meal.calories, 0),
 );
@@ -221,72 +203,63 @@ const periodLabel = computed(() => {
 </script>
 
 <template>
-    <UDashboardPanel id="nutrition">
-        <template #header>
-            <UDashboardNavbar title="Nutrition" :ui="{ right: 'gap-3' }">
-                <template #leading>
-                    <UDashboardSidebarCollapse />
-                </template>
+    <div class="flex-1 flex flex-col h-full">
+        <!-- Header -->
+        <header class="flex h-16 items-center justify-between border-b px-6 shrink-0">
+            <h1 class="text-xl font-semibold">Nutrition</h1>
+            <div class="flex items-center gap-3">
+                <div class="inline-flex rounded-md shadow-sm" role="group">
+                    <Button
+                        :variant="timePeriod === 'daily' ? 'default' : 'outline'"
+                        class="rounded-r-none"
+                        size="sm"
+                        @click="timePeriod = 'daily'"
+                    >
+                        Daily
+                    </Button>
+                    <Button
+                        :variant="timePeriod === 'weekly' ? 'default' : 'outline'"
+                        class="rounded-none border-x-0"
+                        size="sm"
+                        @click="timePeriod = 'weekly'"
+                    >
+                        Weekly
+                    </Button>
+                    <Button
+                        :variant="timePeriod === 'monthly' ? 'default' : 'outline'"
+                        class="rounded-l-none"
+                        size="sm"
+                        @click="timePeriod = 'monthly'"
+                    >
+                        Monthly
+                    </Button>
+                </div>
 
-                <template #right>
-                    <UButtonGroup size="sm" orientation="horizontal">
-                        <UButton
-                            :color="
-                                timePeriod === 'daily' ? 'primary' : 'neutral'
-                            "
-                            :variant="
-                                timePeriod === 'daily' ? 'solid' : 'ghost'
-                            "
-                            @click="timePeriod = 'daily'"
-                        >
-                            Daily
-                        </UButton>
-                        <UButton
-                            :color="
-                                timePeriod === 'weekly' ? 'primary' : 'neutral'
-                            "
-                            :variant="
-                                timePeriod === 'weekly' ? 'solid' : 'ghost'
-                            "
-                            @click="timePeriod = 'weekly'"
-                        >
-                            Weekly
-                        </UButton>
-                        <UButton
-                            :color="
-                                timePeriod === 'monthly' ? 'primary' : 'neutral'
-                            "
-                            :variant="
-                                timePeriod === 'monthly' ? 'solid' : 'ghost'
-                            "
-                            @click="timePeriod = 'monthly'"
-                        >
-                            Monthly
-                        </UButton>
-                    </UButtonGroup>
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger as-child>
+                            <Button variant="ghost" size="icon" class="relative">
+                                <Bell class="h-5 w-5" />
+                                <Badge class="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px]" variant="destructive">
+                                    3
+                                </Badge>
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Notifications (N)</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+            </div>
+        </header>
 
-                    <UTooltip text="Notifications" :shortcuts="['N']">
-                        <UButton color="neutral" variant="ghost" square>
-                            <UChip color="error" inset>
-                                <UIcon
-                                    name="i-lucide-bell"
-                                    class="size-5 shrink-0"
-                                />
-                            </UChip>
-                        </UButton>
-                    </UTooltip>
-                </template>
-            </UDashboardNavbar>
-        </template>
-
-        <template #body>
-            <div class="space-y-6">
-                <UCard>
-                    <template #header>
-                        <h2 class="text-lg font-semibold">
-                            {{ periodLabel }} Macronutrient Distribution
-                        </h2>
-                    </template>
+        <!-- Body -->
+        <div class="flex-1 overflow-auto p-6 space-y-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>{{ periodLabel }} Macronutrient Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
                     <div class="flex flex-col items-center justify-center">
                         <MacroChart :data="macroChartData" />
                         <div class="mt-6 w-full">
@@ -308,9 +281,7 @@ const periodLabel = computed(() => {
                                     </p>
                                 </div>
                                 <div class="text-center">
-                                    <p
-                                        class="text-2xl font-bold text-orange-500"
-                                    >
+                                    <p class="text-2xl font-bold text-orange-500">
                                         {{ totalCarbs }}
                                     </p>
                                     <p class="text-sm text-gray-600">
@@ -318,9 +289,7 @@ const periodLabel = computed(() => {
                                     </p>
                                 </div>
                                 <div class="text-center">
-                                    <p
-                                        class="text-2xl font-bold text-amber-500"
-                                    >
+                                    <p class="text-2xl font-bold text-amber-500">
                                         {{ totalFats }}
                                     </p>
                                     <p class="text-sm text-gray-600">
@@ -330,28 +299,40 @@ const periodLabel = computed(() => {
                             </div>
                         </div>
                     </div>
-                </UCard>
+                </CardContent>
+            </Card>
 
-                <UCard>
-                    <template #header>
-                        <h2 class="text-lg font-semibold">
-                            {{ periodLabel }} Nutrition Breakdown
-                        </h2>
-                    </template>
-                    <UTable
-                        :data="nutritionData"
-                        :columns="nutritionColumns"
-                        class="shrink-0"
-                        :ui="{
-                            base: 'table-fixed border-separate border-spacing-0',
-                            thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
-                            tbody: '[&>tr]:last:[&>td]:border-b-0',
-                            th: 'first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
-                            td: 'border-b border-default',
-                        }"
-                    />
-                </UCard>
-            </div>
-        </template>
-    </UDashboardPanel>
+            <Card>
+                <CardHeader>
+                    <CardTitle>{{ periodLabel }} Nutrition Breakdown</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div class="rounded-lg border">
+                        <Table>
+                            <TableHeader>
+                                <TableRow class="bg-muted/50">
+                                    <TableHead>Meal Type</TableHead>
+                                    <TableHead>Food</TableHead>
+                                    <TableHead>Calories</TableHead>
+                                    <TableHead>Protein (g)</TableHead>
+                                    <TableHead>Carbs (g)</TableHead>
+                                    <TableHead>Fats (g)</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                <TableRow v-for="meal in nutritionData" :key="meal.mealType + meal.date.toString()">
+                                    <TableCell>{{ meal.mealType }}</TableCell>
+                                    <TableCell>{{ meal.food.join(", ") }}</TableCell>
+                                    <TableCell>{{ meal.calories }}</TableCell>
+                                    <TableCell>{{ meal.protein }}</TableCell>
+                                    <TableCell>{{ meal.carbs }}</TableCell>
+                                    <TableCell>{{ meal.fats }}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    </div>
 </template>

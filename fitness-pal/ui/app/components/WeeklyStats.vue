@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, Transition } from "vue";
-import type { TableColumn } from "@nuxt/ui";
+import { ref, computed, Transition } from "vue"
+import Button from '~/components/ui/button/Button.vue'
+import Table from '~/components/ui/table/Table.vue'
+import TableBody from '~/components/ui/table/TableBody.vue'
+import TableCell from '~/components/ui/table/TableCell.vue'
+import TableHead from '~/components/ui/table/TableHead.vue'
+import TableHeader from '~/components/ui/table/TableHeader.vue'
+import TableRow from '~/components/ui/table/TableRow.vue'
 
-const selectedTab = ref("nutrition");
+const selectedTab = ref("nutrition")
 
 const nutritionData = ref([
     {
@@ -37,40 +43,7 @@ const nutritionData = ref([
         carbs: 10,
         fats: 10,
     },
-]);
-
-const nutritionColumns: TableColumn[] = [
-    {
-        accessorKey: "mealType",
-        header: "Meal Type",
-        cell: ({ row }) => row.getValue("mealType"),
-    },
-    {
-        accessorKey: "food",
-        header: "Food",
-        cell: ({ row }) => (row.getValue("food") as string[]).join(", "),
-    },
-    {
-        accessorKey: "calories",
-        header: "Calories",
-        cell: ({ row }) => row.getValue("calories"),
-    },
-    {
-        accessorKey: "protein",
-        header: "Protein (g)",
-        cell: ({ row }) => row.getValue("protein"),
-    },
-    {
-        accessorKey: "carbs",
-        header: "Carbs (g)",
-        cell: ({ row }) => row.getValue("carbs"),
-    },
-    {
-        accessorKey: "fats",
-        header: "Fats (g)",
-        cell: ({ row }) => row.getValue("fats"),
-    },
-];
+])
 
 const workoutData = ref([
     {
@@ -91,73 +64,70 @@ const workoutData = ref([
         caloriesBurned: 150,
         workouts: ["Vinyasa Flow", "Warrior Pose"],
     },
-]);
-
-const workoutColumns: TableColumn[] = [
-    {
-        accessorKey: "workoutType",
-        header: "Workout Type",
-        cell: ({ row }) => row.getValue("workoutType"),
-    },
-    {
-        accessorKey: "duration",
-        header: "Duration",
-        cell: ({ row }) => row.getValue("duration"),
-    },
-    {
-        accessorKey: "caloriesBurned",
-        header: "Calories Burned",
-        cell: ({ row }) => row.getValue("caloriesBurned"),
-    },
-    {
-        accessorKey: "workouts",
-        header: "Workouts",
-        cell: ({ row }) => (row.getValue("workouts") as string[]).join(", "),
-    },
-];
-
-const currentColumns = computed(() => {
-    return selectedTab.value === "nutrition"
-        ? nutritionColumns
-        : workoutColumns;
-});
-
-const currentData = computed(() => {
-    return selectedTab.value === "nutrition"
-        ? nutritionData.value
-        : workoutData.value;
-});
+])
 </script>
 
 <template>
     <div>
-        <UButtonGroup class="mb-4">
-            <UButton
-                label="Nutrition"
-                :variant="selectedTab === 'nutrition' ? 'solid' : 'outline'"
+        <div class="flex gap-1 mb-4">
+            <Button
+                :variant="selectedTab === 'nutrition' ? 'default' : 'outline'"
                 @click="selectedTab = 'nutrition'"
-            />
-            <UButton
-                label="Workout"
-                :variant="selectedTab === 'workout' ? 'solid' : 'outline'"
+            >
+                Nutrition
+            </Button>
+            <Button
+                :variant="selectedTab === 'workout' ? 'default' : 'outline'"
                 @click="selectedTab = 'workout'"
-            />
-        </UButtonGroup>
+            >
+                Workout
+            </Button>
+        </div>
 
         <Transition name="fade-slide" mode="out-in">
-            <UTable
-                :key="selectedTab"
-                :data="currentData"
-                :columns="currentColumns"
-                class="shrink-0"
-                :ui="{
-                    base: 'table-fixed border-separate border-spacing-0',
-                    thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
-                    tbody: '[&>tr]:last:[&>td]:border-b-0',
-                    th: 'first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
-                    td: 'border-b border-default',
-                }"
-            />
+            <div :key="selectedTab" class="rounded-lg border">
+                <Table v-if="selectedTab === 'nutrition'">
+                    <TableHeader>
+                        <TableRow class="bg-muted/50">
+                            <TableHead>Meal Type</TableHead>
+                            <TableHead>Food</TableHead>
+                            <TableHead>Calories</TableHead>
+                            <TableHead>Protein (g)</TableHead>
+                            <TableHead>Carbs (g)</TableHead>
+                            <TableHead>Fats (g)</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow v-for="item in nutritionData" :key="item.mealType">
+                            <TableCell>{{ item.mealType }}</TableCell>
+                            <TableCell>{{ item.food.join(", ") }}</TableCell>
+                            <TableCell>{{ item.calories }}</TableCell>
+                            <TableCell>{{ item.protein }}</TableCell>
+                            <TableCell>{{ item.carbs }}</TableCell>
+                            <TableCell>{{ item.fats }}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+
+                <Table v-else>
+                    <TableHeader>
+                        <TableRow class="bg-muted/50">
+                            <TableHead>Workout Type</TableHead>
+                            <TableHead>Duration</TableHead>
+                            <TableHead>Calories Burned</TableHead>
+                            <TableHead>Workouts</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow v-for="item in workoutData" :key="item.workoutType">
+                            <TableCell>{{ item.workoutType }}</TableCell>
+                            <TableCell>{{ item.duration }}</TableCell>
+                            <TableCell>{{ item.caloriesBurned }}</TableCell>
+                            <TableCell>{{ item.workouts.join(", ") }}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </div>
         </Transition>
     </div>
 </template>

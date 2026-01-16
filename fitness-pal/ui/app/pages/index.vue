@@ -1,21 +1,25 @@
 <script setup lang="ts">
-
-import { UDashboardPanel } from '#components'
-import type { DropdownMenuItem } from '@nuxt/ui'
 import type { Period, Range } from '~/types'
-import {useUserStore} from "~/stores/useUserStore";
+import { useUserStore } from "~/stores/useUserStore"
+import Button from '~/components/ui/button/Button.vue'
+import { Bell, Plus, Send, UserPlus } from 'lucide-vue-next'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '~/components/ui/dropdown-menu'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '~/components/ui/tooltip'
 
-
-
-const items = [[{
-  label: 'New mail',
-  icon: 'i-lucide-send',
-  to: '/inbox'
-}, {
-  label: 'New customer',
-  icon: 'i-lucide-user-plus',
-  to: '/customers'
-}]] satisfies DropdownMenuItem[][]
+const items = [
+  { label: 'New mail', icon: Send, to: '/inbox' },
+  { label: 'New customer', icon: UserPlus, to: '/customers' }
+]
 
 //TODO: Prefetch user data
 const userStore = useUserStore()
@@ -39,51 +43,60 @@ const period = ref<Period>('daily')
 
 
 <template>
-  <UDashboardPanel id="home">
-    <template #header>
-      <UDashboardNavbar title="Home" :ui="{ right: 'gap-3' }">
-        <template #leading>
-          <UDashboardSidebarCollapse />
-        </template>
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Header -->
+    <header class="border-b bg-background">
+      <div class="flex h-16 items-center justify-between px-6">
+        <h1 class="text-xl font-semibold">Home</h1>
 
-        <template #right>
-          <UTooltip text="Notifications" :shortcuts="['N']">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              square
-              
-            >
-              <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
-              </UChip>
-            </UButton>
-          </UTooltip>
+        <div class="flex items-center gap-3">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button variant="ghost" size="icon" class="relative">
+                  <Bell class="h-5 w-5" />
+                  <span class="absolute -top-1 -right-1 h-3 w-3 bg-destructive rounded-full" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Notifications (N)</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-          <UDropdownMenu :items="items">
-            <UButton icon="i-lucide-plus" size="md" class="rounded-full" />
-          </UDropdownMenu>
-        </template>
-      </UDashboardNavbar>
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button size="icon" class="rounded-full">
+                <Plus class="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem v-for="item in items" :key="item.label" as-child>
+                <NuxtLink :to="item.to" class="flex items-center gap-2">
+                  <component :is="item.icon" class="h-4 w-4" />
+                  {{ item.label }}
+                </NuxtLink>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
 
-      <UDashboardToolbar>
-        <template #left>
-          <!-- NOTE: The `-ms-1` class is used to align with the `DashboardSidebarCollapse` button here. -->
-          <HomeDateRangePicker v-model="range" class="-ms-1" />
+      <!-- Toolbar -->
+      <div class="flex items-center gap-4 px-6 py-3 border-t">
+        <HomeDateRangePicker v-model="range" />
+        <HomePeriodSelect v-model="period" :range="range" />
+      </div>
+    </header>
 
-          <HomePeriodSelect v-model="period" :range="range" />
-        </template>
-      </UDashboardToolbar>
-    </template>
-
-
-    <template #body>
+    <!-- Body -->
+    <div class="flex-1 overflow-auto p-6">
       <div class="mb-6">
         <ProfileSetupBanner />
       </div>
       <WorkoutStats :period="period" :range="range" />
       <WeeklyChart :period="period" :range="range" />
       <WeeklyStats :period="period" :range="range" />
-    </template>
-  </UDashboardPanel>
+    </div>
+  </div>
 </template>

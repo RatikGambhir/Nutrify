@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { BentoCardData } from '~/components/landing/BentoGrid.vue'
+import Button from '~/components/ui/button/Button.vue'
+import { ArrowRight } from 'lucide-vue-next'
 
 definePageMeta({
   layout: 'landing',
@@ -127,7 +129,7 @@ const benefitCards: BentoCardData[] = [
         />
       </div>
     </div>
-    <UContainer class="relative z-10 py-24 sm:py-32">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24 sm:py-32">
       <div class="flex flex-col items-start max-w-3xl space-y-8">
         <div
           class="transition-all duration-800 ease-out"
@@ -172,72 +174,35 @@ const benefitCards: BentoCardData[] = [
             'opacity-100 translate-x-0': mounted,
           }"
         >
-          <UButton
-            size="xl"
-            color="primary"
-            variant="solid"
-            class="px-8 py-4 text-lg font-semibold bg-gray-900 hover:bg-gray-800 text-white shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 rounded-2xl"
+          <Button
+            size="lg"
+            class="px-8 py-4 h-auto text-lg font-semibold bg-gray-900 hover:bg-gray-800 text-white shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 rounded-2xl"
             @click="getStarted"
           >
             <span class="flex items-center gap-2">
               Get Started
-              <UIcon name="i-lucide-arrow-right" class="w-5 h-5" />
+              <ArrowRight class="w-5 h-5" />
             </span>
-          </UButton>
+          </Button>
 
-          <UButton
-            size="xl"
-            color="neutral"
+          <Button
+            size="lg"
             variant="outline"
-            class="px-8 py-4 text-lg font-semibold border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 hover:scale-105 transition-all duration-300 rounded-2xl"
+            class="px-8 py-4 h-auto text-lg font-semibold border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 hover:scale-105 transition-all duration-300 rounded-2xl"
             @click="learnMore"
           >
             <span class="flex items-center gap-2">
               Learn More
             </span>
-          </UButton>
+          </Button>
         </div>
       </div>
 
-<!--      <div class="w-full h-px bg-gradient-to-r from-transparent via-gray-900 to-transparent mt-0 mb-8" />-->
-
-<!--      <div class="max-w-3xl">-->
-<!--        <div-->
-<!--          class="flex flex-wrap gap-3 transition-all duration-1000 ease-out delay-400"-->
-<!--          :class="{-->
-<!--            'opacity-0 -translate-x-8': !mounted,-->
-<!--            'opacity-100 translate-x-0': mounted,-->
-<!--          }"-->
-<!--        >-->
-<!--          <div-->
-<!--            v-for="(feature, index) in ['Calorie Tracking', 'Macro Analysis', 'Workout Logs', 'Progress Charts']"-->
-<!--            :key="feature"-->
-<!--            class="transition-all duration-700 ease-out"-->
-<!--            :style="{ transitionDelay: `${500 + index * 100}ms` }"-->
-<!--            :class="{-->
-<!--              'opacity-0 translate-y-4': !mounted,-->
-<!--              'opacity-100 translate-y-0': mounted,-->
-<!--            }"-->
-<!--          >-->
-<!--            <UButton-->
-<!--              size="xl"-->
-<!--              color="neutral"-->
-<!--              variant="outline"-->
-<!--              class="px-4 py-2 rounded-full bg-white border border-gray-200 text-gray-700 text-sm font-medium shadow-sm hover:shadow-md hover:border-gray-300 transition-all duration-300"-->
-<!--              @click="learnMore"-->
-<!--            >-->
-<!--              <span class="flex items-center gap-2">-->
-<!--                {{ feature }}-->
-<!--              </span>-->
-<!--            </UButton>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-    </UContainer>
+    </div>
 
     <!-- Features Bento Section -->
     <section class="py-24 bg-white">
-      <UContainer>
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-5xl font-bold text-gray-900 mb-4">
             Everything You Need to Succeed
@@ -247,12 +212,12 @@ const benefitCards: BentoCardData[] = [
           </p>
         </div>
         <LandingBentoGrid :cards="featureCards" />
-      </UContainer>
+      </div>
     </section>
 
     <!-- Benefits Bento Section -->
     <section class="py-24 bg-gray-50">
-      <UContainer>
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
           <h2 class="text-5xl font-bold text-gray-900 mb-4">
             Why Choose Nutrify?
@@ -262,14 +227,14 @@ const benefitCards: BentoCardData[] = [
           </p>
         </div>
         <LandingBentoGrid :cards="benefitCards" :columns="3" />
-      </UContainer>
+      </div>
     </section>
 
     <!-- Feedback Form Section -->
     <section class="py-24 pb-32 bg-white">
-      <UContainer>
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <LandingFeedbackForm />
-      </UContainer>
+      </div>
     </section>
   </div>
 </template>

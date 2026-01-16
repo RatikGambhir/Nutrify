@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import Button from '~/components/ui/button/Button.vue'
+import Card from '~/components/ui/card/Card.vue'
+import CardContent from '~/components/ui/card/CardContent.vue'
+import { ArrowLeft, MoreHorizontal, Calendar, Clock, LineChart, Trash } from 'lucide-vue-next'
 
 const route = useRoute();
 const workoutId = Number(route.params.id);
@@ -141,78 +145,70 @@ const addExercise = (exercise: { id: number; name: string }) => {
 </script>
 
 <template>
-    <UDashboardPanel id="workout-detail">
-        <template #header>
-            <UDashboardNavbar
-                :title="workout?.name || 'Workout'"
-                :ui="{ right: 'gap-3' }"
-            >
-                <template #leading>
-                    <UButton
-                        icon="i-lucide-arrow-left"
-                        color="neutral"
-                        variant="ghost"
-                        square
-                        @click="navigateTo('/workouts')"
-                    />
-                </template>
+    <div class="flex-1 flex flex-col h-full">
+        <!-- Header -->
+        <header class="flex h-16 items-center justify-between border-b px-6 shrink-0">
+            <div class="flex items-center gap-3">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    @click="navigateTo('/workouts')"
+                >
+                    <ArrowLeft class="h-5 w-5" />
+                </Button>
+                <h1 class="text-xl font-semibold">{{ workout?.name || 'Workout' }}</h1>
+            </div>
+            <Button variant="ghost" size="icon">
+                <MoreHorizontal class="h-5 w-5" />
+            </Button>
+        </header>
 
-                <template #right>
-                    <UButton
-                        icon="i-lucide-more-horizontal"
-                        color="neutral"
-                        variant="ghost"
-                        square
-                    />
-                </template>
-            </UDashboardNavbar>
-        </template>
-
-        <template #body>
-            <div class="p-6 space-y-6">
-                <!-- Workout Header Info -->
-                <div class="flex items-center gap-6 text-gray-600">
-                    <div class="flex items-center gap-2">
-                        <UIcon name="i-lucide-calendar" class="size-5" />
-                        <span>{{ workout?.date }}</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <UIcon name="i-lucide-clock" class="size-5" />
-                        <span>{{ workout?.duration }}</span>
-                    </div>
+        <!-- Body -->
+        <div class="flex-1 overflow-auto p-6 space-y-6">
+            <!-- Workout Header Info -->
+            <div class="flex items-center gap-6 text-gray-600">
+                <div class="flex items-center gap-2">
+                    <Calendar class="h-5 w-5" />
+                    <span>{{ workout?.date }}</span>
                 </div>
+                <div class="flex items-center gap-2">
+                    <Clock class="h-5 w-5" />
+                    <span>{{ workout?.duration }}</span>
+                </div>
+            </div>
 
-                <!-- Exercises List -->
-                <div class="space-y-6">
-                    <div
-                        v-for="exercise in workout?.exercises"
-                        :key="exercise.id"
-                        class="space-y-4"
-                    >
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-blue-600">
-                                {{ exercise.name }}
-                            </h3>
-                            <div class="flex items-center gap-2">
-                                <UButton
-                                    icon="i-lucide-line-chart"
-                                    color="neutral"
-                                    variant="ghost"
-                                    size="sm"
-                                    square
-                                />
-                                <UButton
-                                    icon="i-lucide-more-horizontal"
-                                    color="neutral"
-                                    variant="ghost"
-                                    size="sm"
-                                    square
-                                />
-                            </div>
+            <!-- Exercises List -->
+            <div class="space-y-6">
+                <div
+                    v-for="exercise in workout?.exercises"
+                    :key="exercise.id"
+                    class="space-y-4"
+                >
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-semibold text-blue-600">
+                            {{ exercise.name }}
+                        </h3>
+                        <div class="flex items-center gap-2">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                class="h-8 w-8"
+                            >
+                                <LineChart class="h-4 w-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                class="h-8 w-8"
+                            >
+                                <MoreHorizontal class="h-4 w-4" />
+                            </Button>
                         </div>
+                    </div>
 
-                        <!-- Sets Table -->
-                        <UCard>
+                    <!-- Sets Table -->
+                    <Card>
+                        <CardContent class="p-0">
                             <div class="overflow-x-auto">
                                 <table class="w-full">
                                     <thead
@@ -281,63 +277,65 @@ const addExercise = (exercise: { id: number; name: string }) => {
                                                 />
                                             </td>
                                             <td class="px-4 py-3 text-center">
-                                                <UButton
+                                                <Button
                                                     v-if="
                                                         exercise.sets.length > 1
                                                     "
-                                                    icon="i-lucide-trash"
-                                                    color="red"
                                                     variant="ghost"
-                                                    size="sm"
-                                                    square
+                                                    size="icon"
+                                                    class="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
                                                     @click="
                                                         deleteSet(
                                                             exercise.id,
                                                             index,
                                                         )
                                                     "
-                                                />
+                                                >
+                                                    <Trash class="h-4 w-4" />
+                                                </Button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
-                            <div class="mt-4 pt-4 border-t border-gray-200">
-                                <UButton
-                                    color="neutral"
+                            <div class="p-4 border-t border-gray-200">
+                                <Button
                                     variant="outline"
-                                    block
+                                    class="w-full"
                                     @click="addSet(exercise.id)"
                                 >
                                     + Add Set (2:00)
-                                </UButton>
+                                </Button>
                             </div>
-                        </UCard>
-                    </div>
+                        </CardContent>
+                    </Card>
                 </div>
-
-                <!-- Add Exercises Button -->
-                <UButton
-                    color="primary"
-                    variant="outline"
-                    size="lg"
-                    block
-                    @click="isAddExerciseModalOpen = true"
-                >
-                    Add Exercises
-                </UButton>
-
-                <!-- Cancel Workout Button -->
-                <UButton color="red" variant="outline" size="lg" block>
-                    Cancel Workout
-                </UButton>
             </div>
-        </template>
+
+            <!-- Add Exercises Button -->
+            <Button
+                variant="outline"
+                size="lg"
+                class="w-full"
+                @click="isAddExerciseModalOpen = true"
+            >
+                Add Exercises
+            </Button>
+
+            <!-- Cancel Workout Button -->
+            <Button
+                variant="outline"
+                size="lg"
+                class="w-full text-red-500 border-red-300 hover:bg-red-50 hover:text-red-600"
+            >
+                Cancel Workout
+            </Button>
+        </div>
 
         <ExerciseSelectModal
             v-model="isAddExerciseModalOpen"
             @select="addExercise"
         />
-    </UDashboardPanel>
+    </div>
 </template>

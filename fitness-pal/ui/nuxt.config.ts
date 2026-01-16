@@ -1,11 +1,11 @@
 import { defineNuxtConfig } from "nuxt/config";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
   srcDir: "app",
   devtools: { enabled: true },
 
   modules: [
-    "@nuxt/ui-pro",
     "@nuxt/eslint",
     "@nuxt/image",
     "@nuxt/scripts",
@@ -18,6 +18,25 @@ export default defineNuxtConfig({
   },
 
   css: ["~/assets/css/main.css"],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
+
+  components: {
+    dirs: [
+      {
+        path: '~/components',
+        extensions: ['.vue'],
+        pathPrefix: false,
+      },
+      {
+        path: '~/components/ui',
+        extensions: ['.vue'],
+        pathPrefix: false,
+      },
+    ],
+  },
 
   compatibilityDate: "2025-07-16",
 });

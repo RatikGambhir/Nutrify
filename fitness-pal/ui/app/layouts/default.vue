@@ -1,91 +1,28 @@
 <script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui'
+import { Home, Dumbbell, Utensils, Settings, MessageCircle, HelpCircle, Search, PanelLeftClose, PanelLeft } from 'lucide-vue-next'
+import Button from '~/components/ui/button/Button.vue'
 
 const route = useRoute()
 const toast = useToast()
 
-const open = ref(false)
+const sidebarOpen = ref(true)
+const sidebarCollapsed = ref(false)
 
-const links = [[{
-  label: 'Home',
-  icon: 'i-lucide-house',
-  to: '/',
-  onSelect: () => {
-    open.value = false
-  }
-}, {
-  label: 'Workouts',
-  icon: 'i-lucide-dumbbell',
-  to: '/workouts',
-  onSelect: () => {
-    open.value = false
-  }
-}, {
-  label: 'Nutrition',
-  icon: 'i-lucide-users',
-  to: '/nutrition',
-  onSelect: () => {
-    open.value = false
-  }
-}, {
-  label: 'Settings',
-  to: '/',
-  icon: 'i-lucide-settings',
-  defaultOpen: true,
-  type: 'trigger',
-  children: [{
-    label: 'General',
-    to: '/settings',
-    exact: true,
-    onSelect: () => {
-      open.value = false
-    }
-  }, {
-    label: 'Members',
-    to: '/',
-    onSelect: () => {
-      open.value = false
-    }
-  }, {
-    label: 'Notifications',
-    to: '/',
-    onSelect: () => {
-      open.value = false
-    }
-  }, {
-    label: 'Security',
-    to: '/',
-    onSelect: () => {
-      open.value = false
-    }
-  }]
-}], [{
-  label: 'Feedback',
-  icon: 'i-lucide-message-circle',
-  to: 'https://github.com/nuxt-ui-pro/dashboard',
-  target: '_blank'
-}, {
-  label: 'Help & Support',
-  icon: 'i-lucide-info',
-  to: 'https://github.com/nuxt/ui-pro',
-  target: '_blank'
-}]] satisfies NavigationMenuItem[][]
+const mainNavItems = [
+  { label: 'Home', icon: Home, to: '/' },
+  { label: 'Workouts', icon: Dumbbell, to: '/workouts' },
+  { label: 'Nutrition', icon: Utensils, to: '/nutrition' },
+  { label: 'Settings', icon: Settings, to: '/settings' }
+]
 
-const groups = computed(() => [{
-  id: 'links',
-  label: 'Go to',
-  items: links.flat()
-}, {
-  id: 'code',
-  label: 'Code',
-  items: [{
-    id: 'source',
-    label: 'View page source',
-    icon: 'i-simple-icons-github',
-    to: `https://github.com/nuxt-ui-pro/dashboard/blob/main/app/pages${route.path === '/' ? '/index' : route.path}.vue`,
-    target: '_blank'
-  }]
-}])
+const secondaryNavItems = [
+  { label: 'Feedback', icon: MessageCircle, to: 'https://github.com/nuxt-ui-pro/dashboard', external: true },
+  { label: 'Help & Support', icon: HelpCircle, to: 'https://github.com/nuxt/ui-pro', external: true }
+]
+
+const toggleSidebar = () => {
+  sidebarCollapsed.value = !sidebarCollapsed.value
+}
 
 onMounted(async () => {
   const cookie = useCookie('cookie-consent')
@@ -95,67 +32,90 @@ onMounted(async () => {
 
   toast.add({
     title: 'We use first-party cookies to enhance your experience on our website.',
-    duration: 0,
-    close: false,
-    actions: [{
-      label: 'Accept',
-      color: 'neutral',
-      variant: 'outline',
-      onClick: () => {
-        cookie.value = 'accepted'
-      }
-    }, {
-      label: 'Opt out',
-      color: 'neutral',
-      variant: 'ghost'
-    }]
+    description: 'Click Accept to continue.',
+    color: 'info'
   })
+  cookie.value = 'accepted'
 })
 </script>
 
 <template>
-  <UDashboardGroup unit="rem">
-    <UDashboardSidebar
-      id="default"
-      v-model:open="open"
-      collapsible
-      resizable
-      class="bg-elevated/25"
-      :ui="{ footer: 'lg:border-t lg:border-default' }"
+  <div class="flex h-screen bg-background">
+    <!-- Sidebar -->
+    <aside
+      class="flex flex-col border-r bg-card transition-all duration-300"
+      :class="sidebarCollapsed ? 'w-16' : 'w-64'"
     >
-      <template #header="{ collapsed }">
-        <TeamsMenu :collapsed="collapsed" />
-      </template>
+      <!-- Header -->
+      <div class="flex h-16 items-center border-b px-4">
+        <NuxtLink to="/" class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-primary rounded" />
+          <span v-if="!sidebarCollapsed" class="text-lg font-bold">Nutrify</span>
+        </NuxtLink>
+      </div>
 
-      <template #default="{ collapsed }">
-        <UDashboardSearchButton :collapsed="collapsed" class="bg-transparent ring-default" />
+      <!-- Search Button -->
+      <div class="p-2">
+        <Button
+          variant="outline"
+          :class="sidebarCollapsed ? 'w-full justify-center' : 'w-full justify-start'"
+        >
+          <Search class="h-4 w-4" />
+          <span v-if="!sidebarCollapsed" class="ml-2">Search...</span>
+        </Button>
+      </div>
 
-        <UNavigationMenu
-          :collapsed="collapsed"
-          :items="links[0]"
-          orientation="vertical"
-          tooltip
-          popover
-        />
+      <!-- Main Navigation -->
+      <nav class="flex-1 space-y-1 p-2">
+        <NuxtLink
+          v-for="item in mainNavItems"
+          :key="item.to"
+          :to="item.to"
+          class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          :class="{
+            'bg-accent text-accent-foreground': route.path === item.to || (item.to !== '/' && route.path.startsWith(item.to)),
+            'justify-center': sidebarCollapsed
+          }"
+        >
+          <component :is="item.icon" class="h-5 w-5 shrink-0" />
+          <span v-if="!sidebarCollapsed">{{ item.label }}</span>
+        </NuxtLink>
+      </nav>
 
-        <UNavigationMenu
-          :collapsed="collapsed"
-          :items="links[1]"
-          orientation="vertical"
-          tooltip
-          class="mt-auto"
-        />
-      </template>
+      <!-- Secondary Navigation -->
+      <div class="border-t p-2">
+        <a
+          v-for="item in secondaryNavItems"
+          :key="item.to"
+          :href="item.to"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          :class="{ 'justify-center': sidebarCollapsed }"
+        >
+          <component :is="item.icon" class="h-5 w-5 shrink-0" />
+          <span v-if="!sidebarCollapsed">{{ item.label }}</span>
+        </a>
+      </div>
 
-      <template #footer="{ collapsed }">
-        <UserMenu :collapsed="collapsed" />
-      </template>
-    </UDashboardSidebar>
+      <!-- Collapse Toggle -->
+      <div class="border-t p-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          :class="sidebarCollapsed ? 'w-full justify-center' : 'w-full justify-start'"
+          @click="toggleSidebar"
+        >
+          <PanelLeftClose v-if="!sidebarCollapsed" class="h-4 w-4" />
+          <PanelLeft v-else class="h-4 w-4" />
+          <span v-if="!sidebarCollapsed" class="ml-2">Collapse</span>
+        </Button>
+      </div>
+    </aside>
 
-    <UDashboardSearch :groups="groups" />
-
-    <slot />
-
-    <NotificationsSlideover />
-  </UDashboardGroup>
+    <!-- Main Content -->
+    <main class="flex-1 overflow-auto">
+      <slot />
+    </main>
+  </div>
 </template>

@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import Dialog from '~/components/ui/dialog/Dialog.vue'
+import DialogContent from '~/components/ui/dialog/DialogContent.vue'
+import DialogHeader from '~/components/ui/dialog/DialogHeader.vue'
+import DialogTitle from '~/components/ui/dialog/DialogTitle.vue'
+import DialogFooter from '~/components/ui/dialog/DialogFooter.vue'
+import Button from '~/components/ui/button/Button.vue'
+import Input from '~/components/ui/input/Input.vue'
+import { X } from 'lucide-vue-next'
 
 const props = defineProps<{
     modelValue: boolean;
@@ -24,7 +32,6 @@ const isOpen = computed({
 });
 
 const handleCreate = () => {
-    console.log("Creating workout", isOpen.value);
     if (workoutName.value.trim()) {
         emit("create", workoutName.value);
         workoutName.value = "";
@@ -39,50 +46,37 @@ const handleCancel = () => {
 </script>
 
 <template>
-    <UModal v-model="isOpen">
-        <UCard>
-            <template #header>
-                <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-semibold">New Workout</h3>
-                    <UButton
-                        icon="i-lucide-x"
-                        color="neutral"
-                        variant="ghost"
-                        size="sm"
-                        square
-                        @click="handleCancel"
-                    />
-                </div>
-            </template>
+    <Dialog v-model:open="isOpen">
+        <DialogContent class="sm:max-w-md">
+            <DialogHeader>
+                <DialogTitle>New Workout</DialogTitle>
+            </DialogHeader>
 
-            <div class="space-y-4">
+            <div class="space-y-4 py-4">
                 <div>
-                    <label class="block text-sm font-medium mb-2"
-                        >Workout Name</label
-                    >
-                    <UInput
+                    <label class="block text-sm font-medium mb-2">
+                        Workout Name
+                    </label>
+                    <Input
                         v-model="workoutName"
                         placeholder="Enter workout name"
-                        size="lg"
+                        class="h-11"
                         @keyup.enter="handleCreate"
                     />
                 </div>
             </div>
 
-            <template #footer>
-                <div class="flex gap-3 justify-end">
-                    <UButton
-                        color="neutral"
-                        variant="outline"
-                        @click="handleCancel"
-                    >
-                        Cancel
-                    </UButton>
-                    <UButton color="primary" @click="handleCreate">
-                        Create Workout
-                    </UButton>
-                </div>
-            </template>
-        </UCard>
-    </UModal>
+            <DialogFooter class="flex gap-3 justify-end">
+                <Button
+                    variant="outline"
+                    @click="handleCancel"
+                >
+                    Cancel
+                </Button>
+                <Button @click="handleCreate">
+                    Create Workout
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
 </template>

@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import * as z from "zod";
+import { toTypedSchema } from '@vee-validate/zod'
+import { useForm, Field as FormField } from 'vee-validate'
 import { supabase } from "~/utils";
 import { useUserStore } from "~/stores/useUserStore";
-import type { FormSubmitEvent } from "@nuxt/ui";
 import type {AuthError} from "@supabase/supabase-js";
+import Button from '~/components/ui/button/Button.vue'
+import Input from '~/components/ui/input/Input.vue'
+import FormItem from '~/components/ui/form/FormItem.vue'
+import FormControl from '~/components/ui/form/FormControl.vue'
+import FormMessage from '~/components/ui/form/FormMessage.vue'
+import { ChevronLeft, Mail } from 'lucide-vue-next'
 
 definePageMeta({
     layout: false,
@@ -19,14 +26,12 @@ const userStore = useUserStore();
 
 const toast = useToast();
 
-const schema = z.object({
+const schema = toTypedSchema(z.object({
     email: z.string().email("Invalid email"),
-});
+}));
 
-type Schema = z.output<typeof schema>;
-
-const state = reactive({
-    email: undefined,
+const { handleSubmit } = useForm({
+  validationSchema: schema,
 });
 
 const router = useRouter();
@@ -55,8 +60,8 @@ async function login(email: string): Promise<UserSession> {
 
 }
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-    const { email } = event.data;
+const onSubmit = handleSubmit(async (values) => {
+    const { email } = values;
     const {user, session, error} = await login(email)
     if(error) {
       toast.add({
@@ -68,14 +73,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       userStore.addUserSession(user ?? {}, session ?? {});
       await router.push({
         path: "/verify-email",
-        query: {email: event.data.email},
+        query: {email: values.email},
       });
     }
-
-
-
-
-}
+});
 </script>
 
 <template>
@@ -112,7 +113,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                     to="/"
                     class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-12"
                 >
-                    <UIcon name="i-lucide-chevron-left" class="w-4 h-4" />
+                    <ChevronLeft class="w-4 h-4" />
                     Home
                 </NuxtLink>
 
@@ -148,33 +149,32 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                             account
                         </p>
 
-                        <UForm
-                            :schema="schema"
-                            :state="state"
-                            class="space-y-4"
-                            @submit="onSubmit"
-                        >
-                            <UFormField name="email">
-                                <UInput
-                                    v-model="state.email"
-                                    type="email"
-                                    placeholder="your.email@example.com"
-                                    size="lg"
-                                    icon="i-lucide-mail"
-                                    class="w-full"
-                                />
-                            </UFormField>
+                        <form class="space-y-4" @submit="onSubmit">
+                            <FormField v-slot="{ componentField }" name="email">
+                                <FormItem>
+                                    <FormControl>
+                                        <div class="relative">
+                                            <Mail class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <Input
+                                                v-bind="componentField"
+                                                type="email"
+                                                placeholder="your.email@example.com"
+                                                class="h-11 pl-10 w-full"
+                                            />
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            </FormField>
 
-                            <UButton
+                            <Button
                                 type="submit"
                                 size="lg"
-                                color="primary"
-                                block
-                                class="font-medium"
+                                class="w-full font-medium"
                             >
                                 Continue With Email
-                            </UButton>
-                        </UForm>
+                            </Button>
+                        </form>
 
                         <p
                             class="text-xs text-gray-500 dark:text-gray-400 text-center"

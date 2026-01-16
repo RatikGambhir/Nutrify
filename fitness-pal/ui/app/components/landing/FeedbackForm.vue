@@ -1,22 +1,30 @@
 <script setup lang="ts">
 import * as z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+import { toTypedSchema } from '@vee-validate/zod'
+import { useForm, Field as FormField } from 'vee-validate'
 import { useIntersectionObserver } from '@vueuse/core'
+import Card from '~/components/ui/card/Card.vue'
+import CardContent from '~/components/ui/card/CardContent.vue'
+import Button from '~/components/ui/button/Button.vue'
+import Input from '~/components/ui/input/Input.vue'
+import Textarea from '~/components/ui/textarea/Textarea.vue'
+import FormItem from '~/components/ui/form/FormItem.vue'
+import FormLabel from '~/components/ui/form/FormLabel.vue'
+import FormControl from '~/components/ui/form/FormControl.vue'
+import FormMessage from '~/components/ui/form/FormMessage.vue'
+import { User, Mail, Loader2 } from 'lucide-vue-next'
 
-const toast = useToast()
+// Toast functionality removed - will need to implement a custom solution
+// const toast = useToast()
 
-const schema = z.object({
+const schema = toTypedSchema(z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
   message: z.string().min(10, 'Message must be at least 10 characters')
-})
+}))
 
-type Schema = z.output<typeof schema>
-
-const state = reactive({
-  name: undefined,
-  email: undefined,
-  message: undefined
+const { handleSubmit, resetForm } = useForm({
+  validationSchema: schema,
 })
 
 const loading = ref(false)
@@ -33,24 +41,18 @@ useIntersectionObserver(
   { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
 )
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+const onSubmit = handleSubmit((values) => {
   loading.value = true
 
   setTimeout(() => {
-    toast.add({
-      title: 'Feedback Received!',
-      description: 'Thank you for your feedback. We\'ll get back to you soon.',
-      color: 'primary',
-      timeout: 5000
-    })
+    // TODO: Implement toast notification
+    console.log('Feedback submitted:', values)
+    alert('Feedback Received! Thank you for your feedback.')
 
-    state.name = undefined
-    state.email = undefined
-    state.message = undefined
-
+    resetForm()
     loading.value = false
   }, 500)
-}
+})
 </script>
 
 <template>
@@ -71,53 +73,71 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </p>
     </div>
 
-    <UCard class="shadow-xl">
-      <UForm
-        :schema="schema"
-        :state="state"
-        class="space-y-6"
-        @submit="onSubmit"
-      >
-        <UFormField name="name" label="Name">
-          <UInput
-            v-model="state.name"
-            type="text"
-            placeholder="Your name"
-            size="lg"
-            icon="i-lucide-user"
-          />
-        </UFormField>
+    <Card class="shadow-xl">
+      <CardContent class="p-6">
+        <form class="space-y-6" @submit="onSubmit">
+          <FormField v-slot="{ componentField }" name="name">
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <div class="relative">
+                  <User class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    v-bind="componentField"
+                    type="text"
+                    placeholder="Your name"
+                    class="h-11 pl-10"
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
 
-        <UFormField name="email" label="Email">
-          <UInput
-            v-model="state.email"
-            type="email"
-            placeholder="your.email@example.com"
-            size="lg"
-            icon="i-lucide-mail"
-          />
-        </UFormField>
+          <FormField v-slot="{ componentField }" name="email">
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <div class="relative">
+                  <Mail class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    v-bind="componentField"
+                    type="email"
+                    placeholder="your.email@example.com"
+                    class="h-11 pl-10"
+                  />
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
 
-        <UFormField name="message" label="Message">
-          <UTextarea
-            v-model="state.message"
-            placeholder="Tell us what you think..."
-            :rows="5"
-            size="lg"
-          />
-        </UFormField>
+          <FormField v-slot="{ componentField }" name="message">
+            <FormItem>
+              <FormLabel>Message</FormLabel>
+              <FormControl>
+                <Textarea
+                  v-bind="componentField"
+                  placeholder="Tell us what you think..."
+                  :rows="5"
+                  class="resize-none"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
 
-        <UButton
-          type="submit"
-          size="lg"
-          color="primary"
-          block
-          :loading="loading"
-          class="font-semibold bg-gray-900 hover:bg-gray-800"
-        >
-          Send Feedback
-        </UButton>
-      </UForm>
-    </UCard>
+          <Button
+            type="submit"
+            size="lg"
+            class="w-full font-semibold bg-gray-900 hover:bg-gray-800"
+            :disabled="loading"
+          >
+            <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
+            Send Feedback
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   </div>
 </template>

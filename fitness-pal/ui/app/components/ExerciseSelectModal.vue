@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import Dialog from '~/components/ui/dialog/Dialog.vue'
+import DialogContent from '~/components/ui/dialog/DialogContent.vue'
+import DialogHeader from '~/components/ui/dialog/DialogHeader.vue'
+import DialogTitle from '~/components/ui/dialog/DialogTitle.vue'
+import Button from '~/components/ui/button/Button.vue'
+import Input from '~/components/ui/input/Input.vue'
+import { Search, ChevronRight } from 'lucide-vue-next'
 
 const props = defineProps<{
     modelValue: boolean;
@@ -59,43 +66,35 @@ const handleSelect = (exercise: { id: number; name: string }) => {
 </script>
 
 <template>
-    <UModal v-model="isOpen" :ui="{ width: 'sm:max-w-2xl' }">
-        <UCard>
-            <template #header>
-                <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-semibold">Select Exercise</h3>
-                    <UButton
-                        icon="i-lucide-x"
-                        color="neutral"
-                        variant="ghost"
-                        size="sm"
-                        square
-                        @click="isOpen = false"
+    <Dialog v-model:open="isOpen">
+        <DialogContent class="sm:max-w-2xl">
+            <DialogHeader>
+                <DialogTitle>Select Exercise</DialogTitle>
+            </DialogHeader>
+
+            <div class="space-y-4 py-4">
+                <div class="relative">
+                    <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        v-model="searchQuery"
+                        placeholder="Search exercises..."
+                        class="pl-10 h-11"
                     />
                 </div>
-            </template>
-
-            <div class="space-y-4">
-                <UInput
-                    v-model="searchQuery"
-                    icon="i-lucide-search"
-                    placeholder="Search exercises..."
-                    size="lg"
-                />
 
                 <div class="max-h-96 overflow-y-auto space-y-2">
                     <div
                         v-for="exercise in filteredExercises"
                         :key="exercise.id"
-                        class="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                        class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
                         @click="handleSelect(exercise)"
                     >
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="font-medium">{{ exercise.name }}</p>
-                                <p class="text-sm text-gray-500">{{ exercise.category }}</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ exercise.category }}</p>
                             </div>
-                            <UIcon name="i-lucide-chevron-right" class="size-5 text-gray-400" />
+                            <ChevronRight class="h-5 w-5 text-gray-400" />
                         </div>
                     </div>
 
@@ -104,6 +103,6 @@ const handleSelect = (exercise: { id: number; name: string }) => {
                     </div>
                 </div>
             </div>
-        </UCard>
-    </UModal>
+        </DialogContent>
+    </Dialog>
 </template>
