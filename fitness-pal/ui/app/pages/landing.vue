@@ -104,7 +104,7 @@ const benefitCards: BentoCardData[] = [
 </script>
 
 <template>
-  <div class="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100">
+  <div class="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-muted via-background to-muted">
     <div class="absolute top-[175px] right-0 z-0 flex items-end justify-end pr-8 pointer-events-none overflow-hidden">
       <div class="flex items-end gap-3 h-[600px] opacity-80">
         <div
@@ -138,13 +138,13 @@ const benefitCards: BentoCardData[] = [
             'opacity-100 translate-x-0': mounted,
           }"
         >
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 border border-green-200">
-            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span class="text-sm font-medium text-gray-700">Track smarter, achieve faster</span>
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
+            <div class="w-2 h-2 bg-primary rounded-full animate-pulse" />
+            <span class="text-sm font-medium text-foreground/80">Track smarter, achieve faster</span>
           </div>
         </div>
         <h1
-          class="text-6xl sm:text-7xl md:text-8xl font-black text-gray-900 leading-tight tracking-tight transition-all duration-1000 ease-out delay-100"
+          class="text-6xl sm:text-7xl md:text-8xl font-black text-foreground leading-tight tracking-tight transition-all duration-1000 ease-out delay-100"
           :class="{
             'opacity-0 -translate-x-8': !mounted,
             'opacity-100 translate-x-0': mounted,
@@ -158,7 +158,7 @@ const benefitCards: BentoCardData[] = [
         </h1>
 
         <p
-          class="text-xl sm:text-2xl text-gray-600 max-w-2xl font-medium transition-all duration-1000 ease-out delay-200"
+          class="text-xl sm:text-2xl text-muted-foreground max-w-2xl font-medium transition-all duration-1000 ease-out delay-200"
           :class="{
             'opacity-0 -translate-x-8': !mounted,
             'opacity-100 translate-x-0': mounted,
@@ -176,7 +176,7 @@ const benefitCards: BentoCardData[] = [
         >
           <Button
             size="lg"
-            class="px-8 py-4 h-auto text-lg font-semibold bg-gray-900 hover:bg-gray-800 text-white shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 rounded-2xl"
+            class="px-8 py-4 h-auto text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 rounded-2xl"
             @click="getStarted"
           >
             <span class="flex items-center gap-2">
@@ -188,7 +188,7 @@ const benefitCards: BentoCardData[] = [
           <Button
             size="lg"
             variant="outline"
-            class="px-8 py-4 h-auto text-lg font-semibold border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:bg-gray-50 hover:scale-105 transition-all duration-300 rounded-2xl"
+            class="px-8 py-4 h-auto text-lg font-semibold border-2 border-border hover:border-primary/50 text-foreground hover:bg-accent hover:scale-105 transition-all duration-300 rounded-2xl"
             @click="learnMore"
           >
             <span class="flex items-center gap-2">
@@ -201,13 +201,13 @@ const benefitCards: BentoCardData[] = [
     </div>
 
     <!-- Features Bento Section -->
-    <section class="py-24 bg-white">
+    <section class="py-24 bg-background">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-          <h2 class="text-5xl font-bold text-gray-900 mb-4">
+          <h2 class="text-5xl font-bold text-foreground mb-4">
             Everything You Need to Succeed
           </h2>
-          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
             Powerful features designed to help you track, analyze, and optimize your nutrition and fitness journey.
           </p>
         </div>
@@ -216,13 +216,13 @@ const benefitCards: BentoCardData[] = [
     </section>
 
     <!-- Benefits Bento Section -->
-    <section class="py-24 bg-gray-50">
+    <section class="py-24 bg-muted">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-          <h2 class="text-5xl font-bold text-gray-900 mb-4">
+          <h2 class="text-5xl font-bold text-foreground mb-4">
             Why Choose Nutrify?
           </h2>
-          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
             More than just tracking—experience a complete ecosystem built for your success.
           </p>
         </div>
@@ -231,7 +231,7 @@ const benefitCards: BentoCardData[] = [
     </section>
 
     <!-- Feedback Form Section -->
-    <section class="py-24 pb-32 bg-white">
+    <section class="py-24 pb-32 bg-background">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <LandingFeedbackForm />
       </div>

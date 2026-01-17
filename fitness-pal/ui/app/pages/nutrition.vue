@@ -78,16 +78,16 @@ const resources = [
 </script>
 
 <template>
-    <div class="flex-1 flex flex-col h-full bg-slate-200">
+    <div class="flex-1 flex flex-col h-full bg-muted">
         <div class="flex-1 overflow-auto p-6">
             <div class="max-w-6xl mx-auto space-y-6">
                 <div class="space-y-2">
-                    <h1 class="text-2xl font-semibold text-slate-900">Nutrition Tracker</h1>
-                    <div class="flex flex-wrap items-center gap-4 text-sm text-slate-600">
+                    <h1 class="text-2xl font-semibold text-foreground">Nutrition Tracker</h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                         <span>{{ displayDate }}</span>
                         <div class="relative">
                             <Input v-model="selectedDate" class="h-8 w-[120px] pr-8" />
-                            <CalendarDays class="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                            <CalendarDays class="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         </div>
                     </div>
                 </div>

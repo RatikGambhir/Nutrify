@@ -15,7 +15,7 @@ defineProps<{
 </script>
 
 <template>
-    <Card class="bg-slate-700 text-slate-100 border-0 shadow-sm">
+    <Card class="bg-card text-card-foreground border shadow-sm">
         <CardContent class="p-5">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2 text-sm font-semibold">
@@ -28,21 +28,21 @@ defineProps<{
                 </Button>
             </div>
 
-            <div class="mt-4 grid grid-cols-4 gap-2 text-xs text-slate-300">
+            <div class="mt-4 grid grid-cols-4 gap-2 text-xs text-muted-foreground">
                 <div class="text-center">
-                    <div class="text-slate-400">Calories</div>
-                    <div class="text-base font-semibold text-slate-100">{{ meal.totals.calories }}</div>
+                    <div class="text-muted-foreground">Calories</div>
+                    <div class="text-base font-semibold text-foreground">{{ meal.totals.calories }}</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-slate-400">Carbs</div>
+                    <div class="text-muted-foreground">Carbs</div>
                     <div class="text-base font-semibold text-blue-400">{{ meal.totals.carbs }}g</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-slate-400">Protein</div>
+                    <div class="text-muted-foreground">Protein</div>
                     <div class="text-base font-semibold text-emerald-400">{{ meal.totals.protein }}g</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-slate-400">Fat</div>
+                    <div class="text-muted-foreground">Fat</div>
                     <div class="text-base font-semibold text-orange-400">{{ meal.totals.fat }}g</div>
                 </div>
             </div>
@@ -51,11 +51,11 @@ defineProps<{
                 <div
                     v-for="item in meal.items"
                     :key="item.name"
-                    class="bg-slate-600/50 rounded-lg px-4 py-3 flex items-center justify-between"
+                    class="bg-muted rounded-lg px-4 py-3 flex items-center justify-between"
                 >
                     <div class="space-y-1">
-                        <div class="text-sm font-medium text-slate-100">{{ item.name }}</div>
-                        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-300">
+                        <div class="text-sm font-medium text-foreground">{{ item.name }}</div>
+                        <div class="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                             <div class="flex items-center gap-1">
                                 <span class="h-1.5 w-1.5 rounded-full bg-purple-400"></span>
                                 {{ item.calories }} cal
@@ -74,9 +74,9 @@ defineProps<{
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 text-slate-400">
+                    <div class="flex items-center gap-3 text-muted-foreground">
                         <Pencil class="h-4 w-4" />
-                        <Trash2 class="h-4 w-4 text-red-400" />
+                        <Trash2 class="h-4 w-4 text-destructive" />
                     </div>
                 </div>
             </div>

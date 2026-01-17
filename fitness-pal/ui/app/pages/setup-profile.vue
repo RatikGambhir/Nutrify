@@ -170,30 +170,30 @@ const canProceed = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 p-8">
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-muted via-background to-muted p-8">
     <div class="w-full max-w-2xl">
       <div class="text-center mb-8">
         <NuxtLink to="/" class="inline-flex items-center gap-2 mb-8">
-          <div class="w-8 h-8 bg-gray-900 rounded" />
-          <span class="text-xl font-bold text-gray-900">Nutrify</span>
+          <div class="w-8 h-8 bg-primary rounded" />
+          <span class="text-xl font-bold text-foreground">Nutrify</span>
         </NuxtLink>
 
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">
+        <h1 class="text-4xl font-bold text-foreground mb-2">
           Complete Your Profile
         </h1>
-        <p class="text-gray-600">
+        <p class="text-muted-foreground">
           Help us personalize your fitness experience
         </p>
       </div>
 
       <div class="mb-8">
         <div class="flex justify-between items-center mb-2">
-          <span class="text-sm font-medium text-gray-600">Step {{ currentStep }} of {{ totalSteps }}</span>
-          <span class="text-sm text-gray-500">{{ Math.round((currentStep / totalSteps) * 100) }}% complete</span>
+          <span class="text-sm font-medium text-muted-foreground">Step {{ currentStep }} of {{ totalSteps }}</span>
+          <span class="text-sm text-muted-foreground">{{ Math.round((currentStep / totalSteps) * 100) }}% complete</span>
         </div>
-        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div class="h-2 bg-muted rounded-full overflow-hidden">
           <div
-            class="h-full bg-gray-900 transition-all duration-300 ease-out"
+            class="h-full bg-primary transition-all duration-300 ease-out"
             :style="{ width: `${(currentStep / totalSteps) * 100}%` }"
           />
         </div>
@@ -204,8 +204,8 @@ const canProceed = computed(() => {
           <form @submit.prevent="onSubmit">
             <div v-if="currentStep === 1" class="space-y-6">
               <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Basic Information</h2>
-                <p class="text-gray-600">Tell us about yourself</p>
+                <h2 class="text-2xl font-bold text-foreground mb-2">Basic Information</h2>
+                <p class="text-muted-foreground">Tell us about yourself</p>
               </div>
 
               <div class="space-y-2">
@@ -216,7 +216,7 @@ const canProceed = computed(() => {
                   type="number"
                   min="13"
                   max="120"
-                  class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
+                  class="w-24 px-3 py-2 text-center border border-border rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                 >
               </div>
 
@@ -229,7 +229,7 @@ const canProceed = computed(() => {
                     type="number"
                     min="36"
                     max="96"
-                    class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
+                    class="w-24 px-3 py-2 text-center border border-border rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                   >
                 </div>
 
@@ -241,7 +241,7 @@ const canProceed = computed(() => {
                     type="number"
                     min="50"
                     max="500"
-                    class="w-24 px-3 py-2 text-center border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
+                    class="w-24 px-3 py-2 text-center border border-border rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:border-primary"
                   >
                 </div>
               </div>
@@ -255,7 +255,6 @@ const canProceed = computed(() => {
                     type="button"
                     :variant="state.sex === option.value ? 'default' : 'outline'"
                     class="flex-1"
-                    :class="state.sex === option.value ? 'bg-gray-900 hover:bg-gray-800' : ''"
                     @click="state.sex = option.value"
                   >
                     {{ option.label }}
@@ -272,7 +271,6 @@ const canProceed = computed(() => {
                     type="button"
                     :variant="state.gender === option.value ? 'default' : 'outline'"
                     class="flex-1"
-                    :class="state.gender === option.value ? 'bg-gray-900 hover:bg-gray-800' : ''"
                     @click="state.gender = option.value"
                   >
                     {{ option.label }}
@@ -307,7 +305,7 @@ const canProceed = computed(() => {
                 <Button
                   type="button"
                   size="lg"
-                  class="flex-1 bg-gray-900 hover:bg-gray-800"
+                  class="flex-1"
                   :disabled="!canProceed"
                   @click="nextStep"
                 >
@@ -319,16 +317,16 @@ const canProceed = computed(() => {
             <!-- Step 2: Activity Level -->
             <div v-if="currentStep === 2" class="space-y-6">
               <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Activity Level</h2>
-                <p class="text-gray-600">How active are you?</p>
+                <h2 class="text-2xl font-bold text-foreground mb-2">Activity Level</h2>
+                <p class="text-muted-foreground">How active are you?</p>
               </div>
 
               <RadioGroup v-model="state.activity_level" class="space-y-3">
                 <div v-for="level in activityLevels" :key="level.value" class="flex items-start space-x-3">
                   <RadioGroupItem :id="level.value" :value="level.value" class="mt-1" />
                   <Label :for="level.value" class="cursor-pointer flex-1">
-                    <p class="font-medium text-gray-900">{{ level.label }}</p>
-                    <p class="text-sm text-gray-500">{{ level.description }}</p>
+                    <p class="font-medium text-foreground">{{ level.label }}</p>
+                    <p class="text-sm text-muted-foreground">{{ level.description }}</p>
                   </Label>
                 </div>
               </RadioGroup>
@@ -345,7 +343,7 @@ const canProceed = computed(() => {
                 <Button
                   type="button"
                   size="lg"
-                  class="flex-1 bg-gray-900 hover:bg-gray-800"
+                  class="flex-1"
                   @click="nextStep"
                 >
                   Next
@@ -355,8 +353,8 @@ const canProceed = computed(() => {
 
             <div v-if="currentStep === 3" class="space-y-6">
               <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Your Goal</h2>
-                <p class="text-gray-600">What do you want to achieve?</p>
+                <h2 class="text-2xl font-bold text-foreground mb-2">Your Goal</h2>
+                <p class="text-muted-foreground">What do you want to achieve?</p>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -366,13 +364,13 @@ const canProceed = computed(() => {
                   type="button"
                   class="p-6 rounded-lg border-2 transition-all text-left"
                   :class="state.goal === goal.value
-                    ? 'border-gray-900 bg-gray-50'
-                    : 'border-gray-200 hover:border-gray-300'"
+                    ? 'border-primary bg-primary/5'
+                    : 'border-border hover:border-primary/50'"
                   @click="state.goal = goal.value"
                 >
                   <component :is="goalIconMap[goal.value]" class="w-8 h-8 mb-3" />
-                  <h3 class="font-bold text-gray-900 mb-1">{{ goal.label }}</h3>
-                  <p class="text-sm text-gray-600">{{ goal.description }}</p>
+                  <h3 class="font-bold text-foreground mb-1">{{ goal.label }}</h3>
+                  <p class="text-sm text-muted-foreground">{{ goal.description }}</p>
                 </button>
               </div>
 
@@ -388,7 +386,7 @@ const canProceed = computed(() => {
                 <Button
                   type="submit"
                   size="lg"
-                  class="flex-1 bg-gray-900 hover:bg-gray-800"
+                  class="flex-1"
                   :disabled="loading"
                 >
                   <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />
@@ -401,7 +399,7 @@ const canProceed = computed(() => {
       </Card>
 
       <div class="text-center mt-6">
-        <p class="text-sm text-gray-500">
+        <p class="text-sm text-muted-foreground">
           You can always update your profile in settings later
         </p>
       </div>

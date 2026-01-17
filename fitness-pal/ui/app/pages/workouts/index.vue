@@ -222,7 +222,7 @@ const columnedWorkouts = computed(() => {
 
             <div
                 v-if="filteredWorkouts.length === 0"
-                class="text-center py-12 text-gray-500"
+                class="text-center py-12 text-muted-foreground"
             >
                 No workouts found
             </div>
@@ -276,7 +276,7 @@ const columnedWorkouts = computed(() => {
                                             <div class="space-y-2">
                                                 <div
                                                     v-if="workout.exercises.length === 0"
-                                                    class="text-sm text-gray-500 italic py-4"
+                                                    class="text-sm text-muted-foreground italic py-4"
                                                 >
                                                     No exercises added yet
                                                 </div>
@@ -286,9 +286,9 @@ const columnedWorkouts = computed(() => {
                                                         :key="exercise.id"
                                                         class="flex items-center gap-2 text-sm"
                                                     >
-                                                        <Circle class="h-2 w-2 text-gray-400 fill-current" />
+                                                        <Circle class="h-2 w-2 text-muted-foreground fill-current" />
                                                         <span class="font-medium">{{ exercise.name }}</span>
-                                                        <span class="text-gray-500">
+                                                        <span class="text-muted-foreground">
                                                             - {{ exercise.sets.length }} set{{ exercise.sets.length !== 1 ? "s" : "" }}
                                                         </span>
                                                     </li>

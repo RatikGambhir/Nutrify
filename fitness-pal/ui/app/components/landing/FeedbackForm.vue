@@ -65,10 +65,10 @@ const onSubmit = handleSubmit((values) => {
     }"
   >
     <div class="text-center mb-8">
-      <h2 class="text-4xl font-bold text-gray-900 mb-4">
+      <h2 class="text-4xl font-bold text-foreground mb-4">
         Share Your Feedback
       </h2>
-      <p class="text-lg text-gray-600">
+      <p class="text-lg text-muted-foreground">
         Have questions or suggestions? We'd love to hear from you.
       </p>
     </div>
@@ -130,7 +130,7 @@ const onSubmit = handleSubmit((values) => {
           <Button
             type="submit"
             size="lg"
-            class="w-full font-semibold bg-gray-900 hover:bg-gray-800"
+            class="w-full font-semibold"
             :disabled="loading"
           >
             <Loader2 v-if="loading" class="mr-2 h-4 w-4 animate-spin" />

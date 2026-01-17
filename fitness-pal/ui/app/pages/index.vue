@@ -15,6 +15,8 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '~/components/ui/tooltip'
+import DashboardStatsGrid from '~/components/dashboard/DashboardStatsGrid.vue'
+import DashboardVisitorsChart from '~/components/dashboard/DashboardVisitorsChart.vue'
 
 const items = [
   { label: 'New mail', icon: Send, to: '/inbox' },
@@ -94,9 +96,8 @@ const period = ref<Period>('daily')
       <div class="mb-6">
         <ProfileSetupBanner />
       </div>
-      <WorkoutStats :period="period" :range="range" />
-      <WeeklyChart :period="period" :range="range" />
-      <WeeklyStats :period="period" :range="range" />
+      <DashboardStatsGrid />
+      <DashboardVisitorsChart />
     </div>
   </div>
 </template>

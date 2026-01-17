@@ -17,9 +17,9 @@ defineProps<{
 </script>
 
 <template>
-    <Card class="bg-slate-700 text-slate-100 border-0 shadow-sm">
+    <Card class="bg-card text-card-foreground border shadow-sm">
         <CardHeader class="pb-2">
-            <CardTitle class="text-sm font-semibold text-slate-200">
+            <CardTitle class="text-sm font-semibold">
                 Macro Distribution
             </CardTitle>
         </CardHeader>
@@ -36,7 +36,7 @@ defineProps<{
                         {{ macro.name }} {{ macro.percent }}%
                     </span>
                 </div>
-                <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-300">
+                <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground">
                     <div v-for="macro in macros" :key="`legend-${macro.name}`" class="flex items-center gap-2">
                         <span class="h-2 w-2 rounded-full" :style="{ backgroundColor: macro.color }"></span>
                         <span>{{ macro.name }} ({{ macro.percent }}%)</span>

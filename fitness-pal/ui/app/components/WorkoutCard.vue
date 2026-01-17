@@ -40,7 +40,7 @@ const handleDuplicate = () => {
         :class="[
             'cursor-pointer transition-all duration-300 overflow-hidden',
             workout.isExpanded
-                ? 'ring-2 ring-emerald-500 shadow-lg shadow-emerald-500/20'
+                ? 'ring-2 ring-primary shadow-lg shadow-primary/20'
                 : 'hover:shadow-lg hover:-translate-y-1',
         ]"
         @click="handleCardClick"
@@ -49,7 +49,7 @@ const handleDuplicate = () => {
     >
         <div class="p-5">
             <div class="mb-4">
-                <Badge variant="default" class="bg-emerald-500 hover:bg-emerald-600">
+                <Badge variant="default" class="bg-primary hover:bg-primary/90">
                     {{ workout.duration }}
                 </Badge>
             </div>
@@ -58,12 +58,12 @@ const handleDuplicate = () => {
                 {{ workout.name }}
             </h3>
 
-            <div class="flex items-center gap-2 text-gray-400 text-sm mb-2">
+            <div class="flex items-center gap-2 text-muted-foreground text-sm mb-2">
                 <Clock class="h-4 w-4" />
                 <span>{{ workout.startTime }} — {{ workout.endTime }}</span>
             </div>
 
-            <div class="flex items-center gap-2 text-gray-400 text-sm">
+            <div class="flex items-center gap-2 text-muted-foreground text-sm">
                 <Calendar class="h-4 w-4" />
                 <span>{{ workout.date }}</span>
             </div>
@@ -71,7 +71,7 @@ const handleDuplicate = () => {
             <div class="flex justify-end mt-4">
                 <ChevronDown
                     :class="[
-                        'h-5 w-5 text-gray-400 transition-transform duration-300',
+                        'h-5 w-5 text-muted-foreground transition-transform duration-300',
                         workout.isExpanded ? 'rotate-180' : '',
                     ]"
                 />
@@ -97,7 +97,7 @@ const handleDuplicate = () => {
                     <!-- No Exercises -->
                     <p
                         v-if="workout.exercises.length === 0"
-                        class="text-gray-500 text-sm italic py-2"
+                        class="text-muted-foreground text-sm italic py-2"
                     >
                         No exercises added yet
                     </p>
@@ -107,10 +107,10 @@ const handleDuplicate = () => {
                         <div
                             v-for="exercise in workout.exercises"
                             :key="exercise.id"
-                            class="flex items-center justify-between py-2 px-3 bg-gray-800/50 rounded-lg"
+                            class="flex items-center justify-between py-2 px-3 bg-muted rounded-lg"
                         >
                             <div class="flex items-center gap-3">
-                                <Dumbbell class="h-4 w-4 text-emerald-500" />
+                                <Dumbbell class="h-4 w-4 text-primary" />
                                 <span class="text-sm font-medium">{{
                                     exercise.name
                                 }}</span>

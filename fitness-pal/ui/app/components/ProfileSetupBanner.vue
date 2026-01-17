@@ -54,7 +54,6 @@ const remindLater = () => {
     <div class="mt-4 flex gap-2">
       <Button
         size="sm"
-        class="bg-gray-900 hover:bg-gray-800"
         @click="completeNow"
       >
         Complete Now

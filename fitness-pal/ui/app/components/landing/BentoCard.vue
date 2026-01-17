@@ -76,10 +76,10 @@ const iconComponent = computed(() => iconMap[props.icon] || Shield)
         </div>
 
         <div class="flex-1">
-          <h3 class="text-xl font-bold text-gray-900 mb-2">
+          <h3 class="text-xl font-bold text-foreground mb-2">
             {{ title }}
           </h3>
-          <p class="text-gray-600 leading-relaxed">
+          <p class="text-muted-foreground leading-relaxed">
             {{ description }}
           </p>
         </div>

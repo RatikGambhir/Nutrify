@@ -55,16 +55,16 @@ const onSubmit = handleSubmit((values) => {
         </div>
 
         <div
-            class="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white dark:bg-gray-900"
+            class="w-full lg:w-1/2 flex items-center justify-center p-8 bg-background"
         >
             <div class="w-full max-w-md">
                 <div class="mb-16">
                     <NuxtLink to="/" class="flex items-center gap-2">
                         <div
-                            class="w-8 h-8 bg-gray-900 dark:bg-white rounded"
+                            class="w-8 h-8 bg-primary rounded"
                         />
                         <span
-                            class="text-xl font-bold text-gray-900 dark:text-white"
+                            class="text-xl font-bold text-foreground"
                             >Nutrify</span
                         >
                     </NuxtLink>
@@ -72,7 +72,7 @@ const onSubmit = handleSubmit((values) => {
 
                 <NuxtLink
                     to="/"
-                    class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-12"
+                    class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-12"
                 >
                     <ChevronLeft class="w-4 h-4" />
                     Home
@@ -81,11 +81,11 @@ const onSubmit = handleSubmit((values) => {
                 <div class="space-y-8">
                     <div>
                         <h1
-                            class="text-3xl font-bold text-gray-900 dark:text-white mb-2"
+                            class="text-3xl font-bold text-foreground mb-2"
                         >
                             Create Your Account
                         </h1>
-                        <p class="text-gray-600 dark:text-gray-400">
+                        <p class="text-muted-foreground">
                             Start your journey with efferd today.
                         </p>
                     </div>
@@ -93,19 +93,19 @@ const onSubmit = handleSubmit((values) => {
                     <div class="relative">
                         <div class="absolute inset-0 flex items-center">
                             <div
-                                class="w-full border-t border-gray-200 dark:border-gray-800"
+                                class="w-full border-t border-border"
                             />
                         </div>
                         <div class="relative flex justify-center text-sm">
                             <span
-                                class="px-2 bg-white dark:bg-gray-900 text-gray-500"
+                                class="px-2 bg-background text-muted-foreground"
                                 >OR</span
                             >
                         </div>
                     </div>
 
                     <div class="space-y-4">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                        <p class="text-sm text-muted-foreground">
                             Enter your email address to create an account
                         </p>
 
@@ -137,29 +137,29 @@ const onSubmit = handleSubmit((values) => {
                         </form>
 
                         <p
-                            class="text-xs text-gray-500 dark:text-gray-400 text-center"
+                            class="text-xs text-muted-foreground text-center"
                         >
                             By clicking continue, you agree to our
                             <NuxtLink
                                 to="/terms"
-                                class="underline hover:text-gray-900 dark:hover:text-white"
+                                class="underline hover:text-foreground"
                                 >Terms of Service</NuxtLink
                             >
                             and
                             <NuxtLink
                                 to="/privacy"
-                                class="underline hover:text-gray-900 dark:hover:text-white"
+                                class="underline hover:text-foreground"
                                 >Privacy Policy</NuxtLink
                             >.
                         </p>
                     </div>
 
                     <div class="text-center">
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                        <p class="text-sm text-muted-foreground">
                             Already have an account?
                             <NuxtLink
                                 to="/login"
-                                class="font-medium text-gray-900 dark:text-white hover:underline"
+                                class="font-medium text-foreground hover:underline"
                             >
                                 Sign in
                             </NuxtLink>

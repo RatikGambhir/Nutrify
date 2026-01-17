@@ -16,10 +16,10 @@ defineProps<{
 </script>
 
 <template>
-    <Card class="bg-slate-700 text-slate-100 border-0 shadow-sm">
+    <Card class="bg-card text-card-foreground border shadow-sm">
         <CardHeader class="pb-2">
             <CardTitle class="text-lg font-semibold">Your Nutrition Resources</CardTitle>
-            <p class="text-sm text-slate-300">Overview of available resources and tools</p>
+            <p class="text-sm text-muted-foreground">Overview of available resources and tools</p>
         </CardHeader>
         <CardContent class="pt-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -32,7 +32,7 @@ defineProps<{
                         <component :is="resource.icon" class="h-6 w-6" :class="resource.iconColor" />
                     </div>
                     <div class="text-2xl font-semibold">{{ resource.value }}</div>
-                    <div class="text-sm text-slate-300">{{ resource.label }}</div>
+                    <div class="text-sm text-muted-foreground">{{ resource.label }}</div>
                 </div>
             </div>
         </CardContent>

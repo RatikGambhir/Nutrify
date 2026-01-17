@@ -179,32 +179,32 @@ onUnmounted(() => {
 
 <template>
     <div
-        class="min-h-screen flex items-center justify-center p-8 bg-gray-50 dark:bg-gray-900"
+        class="min-h-screen flex items-center justify-center p-8 bg-muted"
     >
         <div class="w-full max-w-md">
-            <div class="bg-white dark:bg-gray-800 rounded-3xl p-12 shadow-sm">
+            <div class="bg-card rounded-3xl p-12 shadow-sm">
                 <div class="text-center mb-12">
                     <h1
-                        class="text-4xl font-bold text-gray-900 dark:text-white mb-4"
+                        class="text-4xl font-bold text-foreground mb-4"
                     >
                         Verify Your Email
                     </h1>
-                    <p class="text-gray-500 dark:text-gray-400 text-base">
+                    <p class="text-muted-foreground text-base">
                         We have sent a verification code to
                     </p>
                     <p
-                        class="text-gray-900 dark:text-white font-semibold text-lg mt-1"
+                        class="text-foreground font-semibold text-lg mt-1"
                     >
                         {{ email }}
                     </p>
-                    <p class="text-gray-500 dark:text-gray-400 text-base mt-3">
+                    <p class="text-muted-foreground text-base mt-3">
                         Please enter the code below.
                     </p>
                 </div>
 
                 <div class="mb-8">
                     <label
-                        class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-4"
+                        class="block text-foreground text-sm font-medium mb-4"
                     >
                         Verification Code
                     </label>
@@ -223,7 +223,7 @@ onUnmounted(() => {
                             type="text"
                             inputmode="numeric"
                             maxlength="1"
-                            class="w-14 h-14 text-center text-2xl font-semibold bg-gray-100 dark:bg-gray-700 border-0 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500 transition-all"
+                            class="w-14 h-14 text-center text-2xl font-semibold bg-muted border-0 rounded-xl text-foreground focus:ring-2 focus:ring-primary transition-all"
                             @input="handleInput(index, $event)"
                             @keydown="handleKeyDown(index, $event)"
                             @paste="index === 0 ? handlePaste($event) : null"
@@ -234,13 +234,13 @@ onUnmounted(() => {
                 <div class="text-center mb-8">
                     <p
                         v-if="!canResend"
-                        class="text-gray-500 dark:text-gray-400 text-sm"
+                        class="text-muted-foreground text-sm"
                     >
                         Wait for {{ resendTimer }}s to resend
                     </p>
                     <button
                         v-else
-                        class="text-gray-900 dark:text-white font-medium text-sm hover:underline"
+                        class="text-foreground font-medium text-sm hover:underline"
                         @click="resendCode"
                     >
                         Resend code
@@ -262,7 +262,7 @@ onUnmounted(() => {
                 <div class="text-center">
                     <NuxtLink
                         to="/register"
-                        class="text-gray-500 dark:text-gray-400 text-sm hover:text-gray-900 dark:hover:text-white underline"
+                        class="text-muted-foreground text-sm hover:text-foreground underline"
                     >
                         Change email address
                     </NuxtLink>
