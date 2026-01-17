@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import Tabs from '~/components/ui/tabs/Tabs.vue'
-import TabsList from '~/components/ui/tabs/TabsList.vue'
-import TabsTrigger from '~/components/ui/tabs/TabsTrigger.vue'
-import TabsContent from '~/components/ui/tabs/TabsContent.vue'
+import TabGroup from '~/components/TabGroup.vue'
+import TabPanel from '~/components/TabPanel.vue'
 import ProfileSettings from '~/components/settings/ProfileSettings.vue'
 import NutritionSettings from '~/components/settings/NutritionSettings.vue'
 import TrainingSettings from '~/components/settings/TrainingSettings.vue'
@@ -170,27 +168,21 @@ const isSelected = (currentValue: string, defaultValue: string, targetValue: str
 
         <div class="flex-1 overflow-auto p-6">
             <div class="max-w-5xl mx-auto">
-                <Tabs v-model="activeTab" class="w-full">
-                    <TabsList class="mb-8 w-full justify-start flex-wrap h-auto gap-1">
-                        <TabsTrigger
-                            v-for="tab in tabs"
-                            :key="tab.value"
-                            :value="tab.value"
-                            class="px-4"
-                        >
-                            {{ tab.label }}
-                        </TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="profile" class="space-y-6">
+                <TabGroup
+                    v-model="activeTab"
+                    :tabs="tabs"
+                    tabs-list-class="mb-8 w-full justify-start flex-wrap h-auto gap-1"
+                    tab-trigger-class="px-4"
+                >
+                    <TabPanel value="profile" class="space-y-6">
                         <ProfileSettings
                             :form-state="formState"
                             :form-defaults="formDefaults"
                             :placeholder-for="placeholderFor"
                         />
-                    </TabsContent>
+                    </TabPanel>
 
-                    <TabsContent value="nutrition" class="space-y-6">
+                    <TabPanel value="nutrition" class="space-y-6">
                         <NutritionSettings
                             :form-state="formState"
                             :form-defaults="formDefaults"
@@ -202,9 +194,9 @@ const isSelected = (currentValue: string, defaultValue: string, targetValue: str
                             :budget-options="budgetOptions"
                             :alcohol-options="alcoholOptions"
                         />
-                    </TabsContent>
+                    </TabPanel>
 
-                    <TabsContent value="training" class="space-y-6">
+                    <TabPanel value="training" class="space-y-6">
                         <TrainingSettings
                             :form-state="formState"
                             :form-defaults="formDefaults"
@@ -212,16 +204,16 @@ const isSelected = (currentValue: string, defaultValue: string, targetValue: str
                             :training-age-options="trainingAgeOptions"
                             :equipment-options="equipmentOptions"
                         />
-                    </TabsContent>
+                    </TabPanel>
 
-                    <TabsContent value="goals" class="space-y-6">
+                    <TabPanel value="goals" class="space-y-6">
                         <GoalsSettings
                             :form-state="formState"
                             :form-defaults="formDefaults"
                             :placeholder-for="placeholderFor"
                         />
-                    </TabsContent>
-                </Tabs>
+                    </TabPanel>
+                </TabGroup>
             </div>
         </div>
     </div>
