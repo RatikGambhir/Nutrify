@@ -78,7 +78,7 @@ const resources = [
 </script>
 
 <template>
-    <div class="flex-1 flex flex-col h-full bg-muted">
+    <div class="flex-1 flex flex-col h-full bg-background">
         <div class="flex-1 overflow-auto p-6">
             <div class="max-w-6xl mx-auto space-y-6">
                 <div class="space-y-2">

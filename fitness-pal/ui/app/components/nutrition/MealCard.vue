@@ -75,8 +75,8 @@ defineProps<{
                         </div>
                     </div>
                     <div class="flex items-center gap-3 text-muted-foreground">
-                        <Pencil class="h-4 w-4" />
-                        <Trash2 class="h-4 w-4 text-destructive" />
+                        <Pencil class="h-4 w-4 cursor-pointer hover:text-foreground transition-colors" />
+                        <Trash2 class="h-4 w-4 text-destructive cursor-pointer hover:text-destructive/80 transition-colors" />
                     </div>
                 </div>
             </div>
