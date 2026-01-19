@@ -3,32 +3,32 @@ import DashboardStatCard from './DashboardStatCard.vue'
 
 const stats = [
   {
-    title: 'Total Revenue',
-    value: '$1,250.00',
-    change: 12.5,
-    trend: 'Trending up this month',
-    description: 'Visitors for the last 6 months'
+    title: 'Calories Today',
+    value: '1,847',
+    change: 8.2,
+    trend: 'On track for daily goal',
+    description: '153 remaining of 2,000 goal'
   },
   {
-    title: 'New Customers',
-    value: '1,234',
-    change: -20,
-    trend: 'Down 20% this period',
-    description: 'Acquisition needs attention'
+    title: 'Protein',
+    value: '124g',
+    change: 15.3,
+    trend: 'Above target this week',
+    description: 'Goal: 120g daily'
   },
   {
-    title: 'Active Accounts',
-    value: '45,678',
-    change: 12.5,
-    trend: 'Strong user retention',
-    description: 'Engagement exceed targets'
+    title: 'Carbohydrates',
+    value: '186g',
+    change: -5.2,
+    trend: 'Slightly under target',
+    description: 'Goal: 200g daily'
   },
   {
-    title: 'Growth Rate',
-    value: '4.5%',
-    change: 4.5,
-    trend: 'Steady performance',
-    description: 'Meets growth projections'
+    title: 'Fats',
+    value: '52g',
+    change: 2.1,
+    trend: 'Within healthy range',
+    description: 'Goal: 55g daily'
   }
 ]
 </script>

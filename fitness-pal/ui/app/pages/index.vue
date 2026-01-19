@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Period, Range } from '~/types'
+import type { Range } from '~/types'
 import { useUserStore } from "~/stores/useUserStore"
 import Button from '~/components/ui/button/Button.vue'
 import { Bell, Plus, Send, UserPlus } from 'lucide-vue-next'
@@ -17,6 +17,9 @@ import {
 } from '~/components/ui/tooltip'
 import DashboardStatsGrid from '~/components/dashboard/DashboardStatsGrid.vue'
 import DashboardVisitorsChart from '~/components/dashboard/DashboardVisitorsChart.vue'
+import StatsRow from '~/components/dashboard/StatsRow.vue'
+import HealthyRestaurantsCard from '~/components/dashboard/HealthyRestaurantsCard.vue'
+import GeneratorCard from '~/components/generator/GeneratorCard.vue'
 
 const items = [
   { label: 'New mail', icon: Send, to: '/inbox' },
@@ -40,7 +43,6 @@ const range = shallowRef<Range>({
   start: new Date(Date.now() - 13 * 24 * 60 * 60 * 1000),
   end: new Date()
 })
-const period = ref<Period>('daily')
 </script>
 
 
@@ -87,7 +89,6 @@ const period = ref<Period>('daily')
       <!-- Toolbar -->
       <div class="flex items-center gap-4 px-6 py-3 border-t">
         <HomeDateRangePicker v-model="range" />
-        <HomePeriodSelect v-model="period" :range="range" />
       </div>
     </header>
 
@@ -98,6 +99,21 @@ const period = ref<Period>('daily')
       </div>
       <DashboardStatsGrid />
       <DashboardVisitorsChart />
+
+      <!-- Stats Row (Calories, Steps, Sleep) -->
+      <div class="mt-6">
+        <StatsRow />
+      </div>
+
+      <!-- Healthy Restaurants Card -->
+      <div class="mt-6">
+        <HealthyRestaurantsCard />
+      </div>
+
+      <!-- Generator Card (Workout/Meal Plan) -->
+      <div class="mt-6">
+        <GeneratorCard />
+      </div>
     </div>
   </div>
 </template>

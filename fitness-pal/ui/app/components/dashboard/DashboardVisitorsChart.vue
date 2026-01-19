@@ -4,23 +4,23 @@ import { eachDayOfInterval, subDays, subMonths, format } from 'date-fns'
 import { VisXYContainer, VisArea, VisLine, VisAxis, VisCrosshair, VisTooltip } from '@unovis/vue'
 import { useElementSize } from '@vueuse/core'
 
-type TimePeriod = 'last3months' | 'last30days' | 'last7days'
+type TimePeriod = 'daily' | 'weekly' | 'monthly'
 
 type DataRecord = {
   date: Date
-  visitors: number
-  sessions: number
+  caloriesConsumed: number
+  caloriesBurned: number
 }
 
 const cardRef = ref<HTMLElement | null>(null)
 const { width } = useElementSize(cardRef)
 
-const selectedPeriod = ref<TimePeriod>('last3months')
+const selectedPeriod = ref<TimePeriod>('daily')
 
 const periods = [
-  { value: 'last3months' as TimePeriod, label: 'Last 3 months' },
-  { value: 'last30days' as TimePeriod, label: 'Last 30 days' },
-  { value: 'last7days' as TimePeriod, label: 'Last 7 days' }
+  { value: 'daily' as TimePeriod, label: 'Daily' },
+  { value: 'weekly' as TimePeriod, label: 'Weekly' },
+  { value: 'monthly' as TimePeriod, label: 'Monthly' }
 ]
 
 const data = ref<DataRecord[]>([])
@@ -30,13 +30,13 @@ const generateData = () => {
   let start: Date
 
   switch (selectedPeriod.value) {
-    case 'last7days':
+    case 'daily':
       start = subDays(now, 7)
       break
-    case 'last30days':
-      start = subDays(now, 30)
+    case 'weekly':
+      start = subDays(now, 28)
       break
-    case 'last3months':
+    case 'monthly':
     default:
       start = subMonths(now, 3)
       break
@@ -44,14 +44,14 @@ const generateData = () => {
 
   const dates = eachDayOfInterval({ start, end: now })
 
-  // Generate wave-like data for the chart to match the screenshot
+  // Generate fitness data for the chart
   data.value = dates.map((date, index) => {
-    const baseVisitors = 150 + Math.sin(index * 0.3) * 80 + Math.random() * 40
-    const baseSessions = 80 + Math.sin(index * 0.3 + 1) * 50 + Math.random() * 30
+    const baseConsumed = 1800 + Math.sin(index * 0.4) * 300 + Math.random() * 200
+    const baseBurned = 400 + Math.sin(index * 0.3 + 1) * 150 + Math.random() * 100
     return {
       date,
-      visitors: Math.floor(baseVisitors),
-      sessions: Math.floor(baseSessions)
+      caloriesConsumed: Math.floor(baseConsumed),
+      caloriesBurned: Math.floor(baseBurned)
     }
   })
 }
@@ -59,8 +59,8 @@ const generateData = () => {
 watch(selectedPeriod, generateData, { immediate: true })
 
 const x = (_: DataRecord, i: number) => i
-const yVisitors = (d: DataRecord) => d.visitors
-const ySessions = (d: DataRecord) => d.sessions
+const yCaloriesConsumed = (d: DataRecord) => d.caloriesConsumed
+const yCaloriesBurned = (d: DataRecord) => d.caloriesBurned
 
 const xTicks = (i: number) => {
   if (!data.value[i]) return ''
@@ -75,12 +75,12 @@ const xTicks = (i: number) => {
 }
 
 const template = (d: DataRecord) => {
-  return `${format(d.date, 'MMM d, yyyy')}<br/>Visitors: ${d.visitors}<br/>Sessions: ${d.sessions}`
+  return `${format(d.date, 'MMM d, yyyy')}<br/>Consumed: ${d.caloriesConsumed} kcal<br/>Burned: ${d.caloriesBurned} kcal`
 }
 
 const periodLabel = computed(() => {
   const period = periods.find(p => p.value === selectedPeriod.value)
-  return period?.label.replace('Last ', 'the last ') || 'the last 3 months'
+  return period?.label.toLowerCase() || 'daily'
 })
 </script>
 
@@ -89,8 +89,8 @@ const periodLabel = computed(() => {
     <!-- Header -->
     <div class="flex items-start justify-between mb-6">
       <div>
-        <h3 class="text-lg font-semibold text-foreground">Total Visitors</h3>
-        <p class="text-sm text-muted-foreground">Total for {{ periodLabel }}</p>
+        <h3 class="text-lg font-semibold text-foreground">Calorie Tracking</h3>
+        <p class="text-sm text-muted-foreground">{{ periodLabel }} overview</p>
       </div>
 
       <!-- Period tabs -->
@@ -133,33 +133,33 @@ const periodLabel = computed(() => {
         class="h-full"
         :width="width - 48"
       >
-        <!-- Sessions area (chart-1, behind) -->
+        <!-- Calories Burned area (chart-1, behind) -->
         <VisArea
           :x="x"
-          :y="ySessions"
+          :y="yCaloriesBurned"
           color="url(#chart1Gradient)"
           :curve-type="'basis'"
         />
-        <!-- Sessions line (chart-1) -->
+        <!-- Calories Burned line (chart-1) -->
         <VisLine
           :x="x"
-          :y="ySessions"
+          :y="yCaloriesBurned"
           color="oklch(0.7156 0.0605 248.6845)"
           :curve-type="'basis'"
           :line-width="2"
         />
 
-        <!-- Visitors area (primary, in front) -->
+        <!-- Calories Consumed area (primary, in front) -->
         <VisArea
           :x="x"
-          :y="yVisitors"
+          :y="yCaloriesConsumed"
           color="url(#primaryGradient)"
           :curve-type="'basis'"
         />
-        <!-- Visitors line (primary) -->
+        <!-- Calories Consumed line (primary) -->
         <VisLine
           :x="x"
-          :y="yVisitors"
+          :y="yCaloriesConsumed"
           color="oklch(0.6397 0.1720 36.4421)"
           :curve-type="'basis'"
           :line-width="2"
