@@ -174,7 +174,7 @@ const columnsCount = computed(() => {
 const columnedWorkouts = computed(() => {
     const columns = Array.from({ length: columnsCount.value }, () => [] as typeof workouts.value);
     filteredWorkouts.value.forEach((workout, index) => {
-        columns[index % columnsCount.value].push(workout);
+        columns[index % columnsCount.value]?.push(workout);
     });
     return columns;
 });

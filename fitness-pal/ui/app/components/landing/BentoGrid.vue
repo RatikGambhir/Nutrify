@@ -43,7 +43,7 @@ const gridClasses = computed(() => {
     ref="gridRef"
     :class="gridClasses"
   >
-    <LandingBentoCard
+    <BentoCard
       v-for="(card, index) in cards"
       :key="card.title"
       :title="card.title"
