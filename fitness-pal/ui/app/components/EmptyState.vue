@@ -23,11 +23,11 @@ const emit = defineEmits<{
 
 <template>
     <div class="flex flex-col items-center justify-center py-20">
-        <component :is="icon" class="h-16 w-16 text-gray-600 mb-4" />
-        <h3 class="text-xl font-semibold text-gray-400 mb-2">
+        <component :is="icon" class="h-16 w-16 text-muted-foreground mb-4" />
+        <h3 class="text-xl font-semibold text-foreground/70 mb-2">
             {{ title }}
         </h3>
-        <p v-if="description" class="text-gray-500 mb-6">
+        <p v-if="description" class="text-muted-foreground mb-6">
             {{ description }}
         </p>
         <Button

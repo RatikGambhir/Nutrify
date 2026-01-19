@@ -125,7 +125,7 @@ const handleCancel = () => {
 
             <div class="flex-1 overflow-y-auto space-y-6 py-4">
                 <!-- Workout Header Info -->
-                <div class="flex items-center gap-6 text-gray-600 dark:text-gray-400">
+                <div class="flex items-center gap-6 text-muted-foreground">
                     <div class="flex items-center gap-2">
                         <Calendar class="h-5 w-5" />
                         <span>{{ workoutData?.date }}</span>
@@ -144,7 +144,7 @@ const handleCancel = () => {
                         class="space-y-4"
                     >
                         <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-blue-600">
+                            <h3 class="text-xl font-semibold text-primary">
                                 {{ exercise.name }}
                             </h3>
                             <div class="flex items-center gap-2">
@@ -158,10 +158,10 @@ const handleCancel = () => {
                         </div>
 
                         <!-- Sets Table -->
-                        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                        <div class="border border-border rounded-lg overflow-hidden">
                             <div class="overflow-x-auto">
                                 <table class="w-full">
-                                    <thead class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                                    <thead class="bg-muted border-b border-border">
                                         <tr>
                                             <th class="px-4 py-3 text-left text-sm font-semibold">
                                                 Set
@@ -183,28 +183,28 @@ const handleCancel = () => {
                                         <tr
                                             v-for="(set, index) in exercise.sets"
                                             :key="index"
-                                            class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                                            class="border-b border-border hover:bg-muted"
                                         >
                                             <td class="px-4 py-3">
-                                                <div class="bg-gray-200 dark:bg-gray-700 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
+                                                <div class="bg-secondary rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium">
                                                     {{ set.set }}
                                                 </div>
                                             </td>
-                                            <td class="px-4 py-3 text-gray-500">
+                                            <td class="px-4 py-3 text-muted-foreground">
                                                 {{ set.previous !== null ? set.previous : '—' }}
                                             </td>
                                             <td class="px-4 py-3">
                                                 <input
                                                     v-model.number="set.lbs"
                                                     type="number"
-                                                    class="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-background"
+                                                    class="w-20 px-2 py-1 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring bg-background"
                                                 />
                                             </td>
                                             <td class="px-4 py-3">
                                                 <input
                                                     v-model.number="set.reps"
                                                     type="number"
-                                                    class="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-background"
+                                                    class="w-20 px-2 py-1 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring bg-background"
                                                 />
                                             </td>
                                             <td class="px-4 py-3 text-center">
@@ -212,7 +212,7 @@ const handleCancel = () => {
                                                     v-if="exercise.sets.length > 1"
                                                     variant="ghost"
                                                     size="icon"
-                                                    class="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                                    class="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                                                     @click="deleteSet(exercise.id, index)"
                                                 >
                                                     <Trash class="h-4 w-4" />
@@ -223,7 +223,7 @@ const handleCancel = () => {
                                 </table>
                             </div>
 
-                            <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-background">
+                            <div class="p-4 border-t border-border bg-background">
                                 <Button
                                     variant="outline"
                                     class="w-full"
@@ -250,7 +250,7 @@ const handleCancel = () => {
                 <Button
                     variant="outline"
                     size="lg"
-                    class="w-full text-red-500 border-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    class="w-full text-destructive border-destructive/50 hover:bg-destructive/10 hover:text-destructive"
                     @click="handleCancel"
                 >
                     Cancel Workout

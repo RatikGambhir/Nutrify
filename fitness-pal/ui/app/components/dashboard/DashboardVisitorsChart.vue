@@ -116,13 +116,13 @@ const periodLabel = computed(() => {
       <!-- SVG Gradient Definitions -->
       <svg class="absolute w-0 h-0">
         <defs>
-          <linearGradient id="greenGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#22c55e" stop-opacity="0.5" />
-            <stop offset="100%" stop-color="#22c55e" stop-opacity="0.05" />
+          <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="oklch(0.6397 0.1720 36.4421)" stop-opacity="0.5" />
+            <stop offset="100%" stop-color="oklch(0.6397 0.1720 36.4421)" stop-opacity="0.05" />
           </linearGradient>
-          <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#f97316" stop-opacity="0.5" />
-            <stop offset="100%" stop-color="#f97316" stop-opacity="0.05" />
+          <linearGradient id="chart1Gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="oklch(0.7156 0.0605 248.6845)" stop-opacity="0.5" />
+            <stop offset="100%" stop-color="oklch(0.7156 0.0605 248.6845)" stop-opacity="0.05" />
           </linearGradient>
         </defs>
       </svg>
@@ -133,34 +133,34 @@ const periodLabel = computed(() => {
         class="h-full"
         :width="width - 48"
       >
-        <!-- Sessions area (orange, behind) -->
+        <!-- Sessions area (chart-1, behind) -->
         <VisArea
           :x="x"
           :y="ySessions"
-          color="url(#orangeGradient)"
+          color="url(#chart1Gradient)"
           :curve-type="'basis'"
         />
-        <!-- Sessions line (orange) -->
+        <!-- Sessions line (chart-1) -->
         <VisLine
           :x="x"
           :y="ySessions"
-          color="#f97316"
+          color="oklch(0.7156 0.0605 248.6845)"
           :curve-type="'basis'"
           :line-width="2"
         />
 
-        <!-- Visitors area (green, in front) -->
+        <!-- Visitors area (primary, in front) -->
         <VisArea
           :x="x"
           :y="yVisitors"
-          color="url(#greenGradient)"
+          color="url(#primaryGradient)"
           :curve-type="'basis'"
         />
-        <!-- Visitors line (green) -->
+        <!-- Visitors line (primary) -->
         <VisLine
           :x="x"
           :y="yVisitors"
-          color="#22c55e"
+          color="oklch(0.6397 0.1720 36.4421)"
           :curve-type="'basis'"
           :line-width="2"
         />
@@ -173,7 +173,7 @@ const periodLabel = computed(() => {
         />
 
         <VisCrosshair
-          color="#22c55e"
+          color="oklch(0.6397 0.1720 36.4421)"
           :template="template"
         />
 

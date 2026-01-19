@@ -43,7 +43,7 @@ onMounted(async () => {
   <div class="flex h-screen bg-background">
     <!-- Sidebar -->
     <aside
-      class="flex flex-col border-r bg-card transition-all duration-300"
+      class="flex flex-col border-r bg-[#dddfe2] transition-all duration-300"
       :class="sidebarCollapsed ? 'w-16' : 'w-64'"
     >
       <!-- Header -->
@@ -58,6 +58,7 @@ onMounted(async () => {
       <div class="p-2">
         <Button
           variant="outline"
+          class="bg-background hover:bg-white"
           :class="sidebarCollapsed ? 'w-full justify-center' : 'w-full justify-start'"
         >
           <Search class="h-4 w-4" />
@@ -71,9 +72,9 @@ onMounted(async () => {
           v-for="item in mainNavItems"
           :key="item.to"
           :to="item.to"
-          class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          class="flex items-center gap-3 rounded-lg px-3 py-2 text-foreground transition-colors hover:bg-white hover:text-foreground"
           :class="{
-            'bg-accent text-accent-foreground': route.path === item.to || (item.to !== '/' && route.path.startsWith(item.to)),
+            'bg-primary text-foreground': route.path === item.to || (item.to !== '/' && route.path.startsWith(item.to)),
             'justify-center': sidebarCollapsed
           }"
         >

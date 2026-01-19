@@ -19,7 +19,7 @@ defineProps<{
         <CardContent class="p-5">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2 text-sm font-semibold">
-                    <component :is="meal.icon" class="h-4 w-4 text-yellow-400" />
+                    <component :is="meal.icon" class="h-4 w-4 text-primary" />
                     {{ meal.name }}
                 </div>
                 <Button size="sm" variant="secondary" class="h-7 px-3 text-xs">
@@ -35,15 +35,15 @@ defineProps<{
                 </div>
                 <div class="text-center">
                     <div class="text-muted-foreground">Carbs</div>
-                    <div class="text-base font-semibold text-blue-400">{{ meal.totals.carbs }}g</div>
+                    <div class="text-base font-semibold text-chart-1">{{ meal.totals.carbs }}g</div>
                 </div>
                 <div class="text-center">
                     <div class="text-muted-foreground">Protein</div>
-                    <div class="text-base font-semibold text-emerald-400">{{ meal.totals.protein }}g</div>
+                    <div class="text-base font-semibold text-chart-3">{{ meal.totals.protein }}g</div>
                 </div>
                 <div class="text-center">
                     <div class="text-muted-foreground">Fat</div>
-                    <div class="text-base font-semibold text-orange-400">{{ meal.totals.fat }}g</div>
+                    <div class="text-base font-semibold text-chart-2">{{ meal.totals.fat }}g</div>
                 </div>
             </div>
 
@@ -57,19 +57,19 @@ defineProps<{
                         <div class="text-sm font-medium text-foreground">{{ item.name }}</div>
                         <div class="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                             <div class="flex items-center gap-1">
-                                <span class="h-1.5 w-1.5 rounded-full bg-purple-400"></span>
+                                <span class="h-1.5 w-1.5 rounded-full bg-chart-4"></span>
                                 {{ item.calories }} cal
                             </div>
                             <div class="flex items-center gap-1">
-                                <span class="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+                                <span class="h-1.5 w-1.5 rounded-full bg-chart-1"></span>
                                 {{ item.carbs }}g carbs
                             </div>
                             <div class="flex items-center gap-1">
-                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                                <span class="h-1.5 w-1.5 rounded-full bg-chart-3"></span>
                                 {{ item.protein }}g protein
                             </div>
                             <div class="flex items-center gap-1">
-                                <span class="h-1.5 w-1.5 rounded-full bg-orange-400"></span>
+                                <span class="h-1.5 w-1.5 rounded-full bg-chart-2"></span>
                                 {{ item.fat }}g fat
                             </div>
                         </div>

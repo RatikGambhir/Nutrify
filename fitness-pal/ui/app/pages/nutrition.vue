@@ -11,32 +11,32 @@ const selectedDate = ref("01/13/2026");
 const displayDate = "Monday, January 12, 2026";
 
 const summaryCards = [
-    { label: "Total Calories", value: "2450", unit: "kcal", valueClass: "text-purple-400", dotClass: "bg-purple-400" },
-    { label: "Carbs", value: "271", unit: "g", valueClass: "text-blue-400", dotClass: "bg-blue-400" },
-    { label: "Protein", value: "165", unit: "g", valueClass: "text-emerald-400", dotClass: "bg-emerald-400" },
-    { label: "Fat", value: "85", unit: "g", valueClass: "text-orange-400", dotClass: "bg-orange-400" },
+    { label: "Total Calories", value: "2450", unit: "kcal", valueClass: "text-chart-4", dotClass: "bg-chart-4" },
+    { label: "Carbs", value: "271", unit: "g", valueClass: "text-chart-1", dotClass: "bg-chart-1" },
+    { label: "Protein", value: "165", unit: "g", valueClass: "text-chart-3", dotClass: "bg-chart-3" },
+    { label: "Fat", value: "85", unit: "g", valueClass: "text-chart-2", dotClass: "bg-chart-2" },
 ];
 
     const macros = [
         {
             name: "Carbs",
             percent: 43,
-            color: "#60A5FA",
-            labelColor: "text-blue-300",
+            color: "var(--chart-1)",
+            labelColor: "text-chart-1",
             labelClass: "-top-6 left-1/2 -translate-x-1/2",
         },
         {
             name: "Protein",
             percent: 26,
-            color: "#34D399",
-            labelColor: "text-emerald-300",
+            color: "var(--chart-3)",
+            labelColor: "text-chart-3",
             labelClass: "left-0 bottom-4 -translate-x-6",
         },
         {
             name: "Fat",
             percent: 30,
-            color: "#F97316",
-            labelColor: "text-orange-300",
+            color: "var(--chart-2)",
+            labelColor: "text-chart-2",
             labelClass: "right-0 bottom-6 translate-x-6",
         },
     ];
@@ -70,10 +70,10 @@ const meals = [
 ];
 
 const resources = [
-            { label: "Meal Plans", value: 12, icon: FileText, iconBg: "bg-blue-100", iconColor: "text-blue-600" },
-            { label: "Add Specific Food", value: 156, icon: Plus, iconBg: "bg-rose-100", iconColor: "text-rose-600" },
-            { label: "Recipes", value: 48, icon: FileText, iconBg: "bg-emerald-100", iconColor: "text-emerald-600" },
-            { label: "Nutrition Recommendations", value: 8, icon: Lightbulb, iconBg: "bg-violet-100", iconColor: "text-violet-600" },
+            { label: "Meal Plans", value: 12, icon: FileText, iconBg: "bg-primary/10", iconColor: "text-primary" },
+            { label: "Add Specific Food", value: 156, icon: Plus, iconBg: "bg-destructive/10", iconColor: "text-destructive" },
+            { label: "Recipes", value: 48, icon: FileText, iconBg: "bg-accent", iconColor: "text-accent-foreground" },
+            { label: "Nutrition Recommendations", value: 8, icon: Lightbulb, iconBg: "bg-secondary", iconColor: "text-secondary-foreground" },
     ];
 </script>
 

@@ -86,19 +86,19 @@ const handleSelect = (exercise: { id: number; name: string }) => {
                     <div
                         v-for="exercise in filteredExercises"
                         :key="exercise.id"
-                        class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                        class="p-4 border border-border rounded-lg hover:bg-muted cursor-pointer transition-colors"
                         @click="handleSelect(exercise)"
                     >
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="font-medium">{{ exercise.name }}</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ exercise.category }}</p>
+                                <p class="text-sm text-muted-foreground">{{ exercise.category }}</p>
                             </div>
-                            <ChevronRight class="h-5 w-5 text-gray-400" />
+                            <ChevronRight class="h-5 w-5 text-muted-foreground" />
                         </div>
                     </div>
 
-                    <div v-if="filteredExercises.length === 0" class="text-center py-8 text-gray-500">
+                    <div v-if="filteredExercises.length === 0" class="text-center py-8 text-muted-foreground">
                         No exercises found
                     </div>
                 </div>

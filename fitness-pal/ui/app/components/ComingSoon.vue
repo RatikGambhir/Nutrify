@@ -17,11 +17,11 @@ withDefaults(defineProps<Props>(), {
 <template>
     <div class="flex items-center justify-center py-20">
         <div class="text-center">
-            <component :is="icon" class="h-16 w-16 text-gray-600 mb-4 mx-auto" />
-            <h3 class="text-2xl font-semibold text-gray-400 mb-2">
+            <component :is="icon" class="h-16 w-16 text-muted-foreground mb-4 mx-auto" />
+            <h3 class="text-2xl font-semibold text-foreground/70 mb-2">
                 {{ title }}
             </h3>
-            <p class="text-gray-500">
+            <p class="text-muted-foreground">
                 {{ description }}
             </p>
         </div>

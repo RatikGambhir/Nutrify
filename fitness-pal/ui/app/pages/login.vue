@@ -82,7 +82,7 @@ const onSubmit = handleSubmit(async (values) => {
 <template>
     <div class="min-h-screen flex">
         <div
-            class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#e5989b] via-[#d47b7e] to-[#c25d60]"
+            class="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-primary/80 via-primary to-primary/90"
         >
             <div class="absolute bottom-12 left-12 max-w-lg z-10">
                 <p class="text-white text-2xl font-medium mb-4">

@@ -27,9 +27,9 @@ const chartSlices = computed(() => {
 });
 
 const colorMap: { [key: string]: string } = {
-    Protein: "#3b82f6",
-    Carbs: "#f97316",
-    Fats: "#f59e0b",
+    Protein: "var(--chart-3)",
+    Carbs: "var(--chart-1)",
+    Fats: "var(--chart-2)",
 };
 
 const getPieSlices = () => {
@@ -69,7 +69,7 @@ const getPieSlices = () => {
         return {
             ...slice,
             pathData,
-            color: colorMap[slice.name] || "#666",
+            color: colorMap[slice.name] || "var(--muted-foreground)",
         };
     });
 };
@@ -94,7 +94,7 @@ const getPieSlices = () => {
             <div v-for="item in data" :key="item.name" class="flex items-center gap-2">
                 <div
                     class="w-4 h-4 rounded"
-                    :style="{ backgroundColor: colorMap[item.name] || '#666' }"
+                    :style="{ backgroundColor: colorMap[item.name] || 'var(--muted-foreground)' }"
                 ></div>
                 <span class="text-sm font-medium">{{ item.name }}: {{ item.value }}g</span>
             </div>

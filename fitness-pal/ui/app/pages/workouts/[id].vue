@@ -166,7 +166,7 @@ const addExercise = (exercise: { id: number; name: string }) => {
         <!-- Body -->
         <div class="flex-1 overflow-auto p-6 space-y-6">
             <!-- Workout Header Info -->
-            <div class="flex items-center gap-6 text-gray-600">
+            <div class="flex items-center gap-6 text-muted-foreground">
                 <div class="flex items-center gap-2">
                     <Calendar class="h-5 w-5" />
                     <span>{{ workout?.date }}</span>
@@ -185,7 +185,7 @@ const addExercise = (exercise: { id: number; name: string }) => {
                     class="space-y-4"
                 >
                     <div class="flex items-center justify-between">
-                        <h3 class="text-xl font-semibold text-blue-600">
+                        <h3 class="text-xl font-semibold text-primary">
                             {{ exercise.name }}
                         </h3>
                         <div class="flex items-center gap-2">
@@ -212,7 +212,7 @@ const addExercise = (exercise: { id: number; name: string }) => {
                             <div class="overflow-x-auto">
                                 <table class="w-full">
                                     <thead
-                                        class="bg-gray-50 border-b border-gray-200"
+                                        class="bg-muted border-b border-border"
                                     >
                                         <tr>
                                             <th
@@ -246,16 +246,16 @@ const addExercise = (exercise: { id: number; name: string }) => {
                                                 set, index
                                             ) in exercise.sets"
                                             :key="index"
-                                            class="border-b border-gray-100 hover:bg-gray-50"
+                                            class="border-b border-border hover:bg-muted"
                                         >
                                             <td class="px-4 py-3">
                                                 <div
-                                                    class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium"
+                                                    class="bg-secondary rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium"
                                                 >
                                                     {{ set.set }}
                                                 </div>
                                             </td>
-                                            <td class="px-4 py-3 text-gray-500">
+                                            <td class="px-4 py-3 text-muted-foreground">
                                                 {{
                                                     set.previous !== null
                                                         ? set.previous
@@ -266,14 +266,14 @@ const addExercise = (exercise: { id: number; name: string }) => {
                                                 <input
                                                     v-model.number="set.lbs"
                                                     type="number"
-                                                    class="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    class="w-20 px-2 py-1 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring bg-background"
                                                 />
                                             </td>
                                             <td class="px-4 py-3">
                                                 <input
                                                     v-model.number="set.reps"
                                                     type="number"
-                                                    class="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    class="w-20 px-2 py-1 border border-border rounded focus:outline-none focus:ring-2 focus:ring-ring bg-background"
                                                 />
                                             </td>
                                             <td class="px-4 py-3 text-center">
@@ -283,7 +283,7 @@ const addExercise = (exercise: { id: number; name: string }) => {
                                                     "
                                                     variant="ghost"
                                                     size="icon"
-                                                    class="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+                                                    class="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
                                                     @click="
                                                         deleteSet(
                                                             exercise.id,
@@ -299,7 +299,7 @@ const addExercise = (exercise: { id: number; name: string }) => {
                                 </table>
                             </div>
 
-                            <div class="p-4 border-t border-gray-200">
+                            <div class="p-4 border-t border-border">
                                 <Button
                                     variant="outline"
                                     class="w-full"
@@ -327,7 +327,7 @@ const addExercise = (exercise: { id: number; name: string }) => {
             <Button
                 variant="outline"
                 size="lg"
-                class="w-full text-red-500 border-red-300 hover:bg-red-50 hover:text-red-600"
+                class="w-full text-destructive border-destructive/50 hover:bg-destructive/10 hover:text-destructive"
             >
                 Cancel Workout
             </Button>
