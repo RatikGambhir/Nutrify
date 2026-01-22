@@ -5,10 +5,8 @@ import Input from '~/components/ui/input/Input.vue'
 import Card from '~/components/ui/card/Card.vue'
 import CardHeader from '~/components/ui/card/CardHeader.vue'
 import CardContent from '~/components/ui/card/CardContent.vue'
-import Expandable from '~/components/ui/expandable/Expandable.vue'
-import ExpandableCard from '~/components/ui/expandable/ExpandableCard.vue'
-import ExpandableContent from '~/components/ui/expandable/ExpandableContent.vue'
-import ExpandableTrigger from '~/components/ui/expandable/ExpandableTrigger.vue'
+import WorkoutCategorySummaryRow from '~/components/workouts/WorkoutCategorySummaryRow.vue'
+import WorkoutCategorySection from '~/components/workouts/WorkoutCategorySection.vue'
 import Tooltip from '~/components/ui/tooltip/Tooltip.vue'
 import TooltipContent from '~/components/ui/tooltip/TooltipContent.vue'
 import TooltipProvider from '~/components/ui/tooltip/TooltipProvider.vue'
@@ -18,6 +16,7 @@ import { Plus, Bell, MoreHorizontal, Circle, Search, ChevronDown, Clock } from '
 
 const isAddWorkoutModalOpen = ref(false);
 const searchQuery = ref("");
+const selectedWorkoutId = ref<number | null>(null);
 
 // Mock workout data
 const workouts = ref([
@@ -26,88 +25,71 @@ const workouts = ref([
         name: "Morning Workout",
         date: "Dec 15, 2025",
         duration: "0:50",
-        exercises: [
-            {
-                id: 1,
-                name: "Bicep Curl (Machine)",
-                sets: [{ set: 1, previous: null, lbs: 50, reps: 12 }],
-            },
-        ],
+        categories: {
+            weightlifting: [
+                { id: 1, name: "Bicep Curl (Machine)", sets: 3, reps: 12 },
+            ],
+            cardio: [
+                { id: 1, name: "Treadmill", duration: "12 min" },
+            ],
+            dynamic: [
+                { id: 1, name: "Mountain Climbers", frequency: "3 rounds" },
+            ],
+        },
     },
     {
         id: 2,
         name: "Evening Push Day",
         date: "Dec 14, 2025",
         duration: "1:15",
-        exercises: [
-            {
-                id: 1,
-                name: "Bench Press",
-                sets: [
-                    { set: 1, previous: null, lbs: 135, reps: 10 },
-                    { set: 2, previous: 135, lbs: 155, reps: 8 },
-                    { set: 3, previous: 155, lbs: 155, reps: 8 },
-                ],
-            },
-            {
-                id: 2,
-                name: "Shoulder Press",
-                sets: [
-                    { set: 1, previous: null, lbs: 65, reps: 10 },
-                    { set: 2, previous: 65, lbs: 65, reps: 10 },
-                ],
-            },
-        ],
+        categories: {
+            weightlifting: [
+                { id: 1, name: "Bench Press", sets: 4, reps: 8 },
+                { id: 2, name: "Shoulder Press", sets: 3, reps: 10 },
+            ],
+            cardio: [
+                { id: 1, name: "Assault Bike", duration: "8 min" },
+            ],
+            dynamic: [
+                { id: 1, name: "Medicine Ball Slams", frequency: "4 rounds" },
+            ],
+        },
     },
     {
         id: 3,
         name: "Leg Day",
         date: "Dec 13, 2025",
         duration: "1:30",
-        exercises: [
-            {
-                id: 1,
-                name: "Squat",
-                sets: [
-                    { set: 1, previous: null, lbs: 185, reps: 10 },
-                    { set: 2, previous: 185, lbs: 205, reps: 8 },
-                    { set: 3, previous: 205, lbs: 225, reps: 6 },
-                ],
-            },
-            {
-                id: 2,
-                name: "Leg Press",
-                sets: [
-                    { set: 1, previous: null, lbs: 270, reps: 12 },
-                    { set: 2, previous: 270, lbs: 270, reps: 12 },
-                ],
-            },
-        ],
+        categories: {
+            weightlifting: [
+                { id: 1, name: "Squat", sets: 5, reps: 6 },
+                { id: 2, name: "Leg Press", sets: 4, reps: 12 },
+            ],
+            cardio: [
+                { id: 1, name: "Row Erg", duration: "10 min" },
+            ],
+            dynamic: [
+                { id: 1, name: "Box Jumps", frequency: "5 rounds" },
+            ],
+        },
     },
     {
         id: 4,
         name: "Back & Biceps",
         date: "Dec 12, 2025",
         duration: "1:20",
-        exercises: [
-            {
-                id: 1,
-                name: "Deadlift",
-                sets: [
-                    { set: 1, previous: null, lbs: 225, reps: 8 },
-                    { set: 2, previous: 225, lbs: 245, reps: 6 },
-                ],
-            },
-            {
-                id: 2,
-                name: "Pull Ups",
-                sets: [
-                    { set: 1, previous: null, lbs: 0, reps: 10 },
-                    { set: 2, previous: 0, lbs: 0, reps: 8 },
-                    { set: 3, previous: 0, lbs: 0, reps: 6 },
-                ],
-            },
-        ],
+        categories: {
+            weightlifting: [
+                { id: 1, name: "Deadlift", sets: 4, reps: 6 },
+                { id: 2, name: "Pull Ups", sets: 3, reps: 8 },
+            ],
+            cardio: [
+                { id: 1, name: "Bike Sprint", duration: "6 min" },
+            ],
+            dynamic: [
+                { id: 1, name: "Farmer Carry", frequency: "5 rounds" },
+            ],
+        },
     },
 ]);
 
@@ -125,7 +107,11 @@ const createWorkout = (name: string) => {
             year: "numeric",
         }),
         duration: "0:00",
-        exercises: [],
+        categories: {
+            weightlifting: [],
+            cardio: [],
+            dynamic: [],
+        },
     };
     workouts.value.unshift(newWorkout);
     navigateTo(`/workouts/${newId}`);
@@ -178,6 +164,30 @@ const columnedWorkouts = computed(() => {
     });
     return columns;
 });
+
+const toggleWorkout = (id: number) => {
+    selectedWorkoutId.value = selectedWorkoutId.value === id ? null : id;
+};
+
+const getCategoryCount = (workout: typeof workouts.value[number]) => {
+    const categories = workout.categories;
+    return (
+        categories.weightlifting.length +
+        categories.cardio.length +
+        categories.dynamic.length
+    );
+};
+
+const getCategoryPercent = (
+    workout: typeof workouts.value[number],
+    category: "weightlifting" | "cardio" | "dynamic",
+) => {
+    const total = getCategoryCount(workout);
+    if (total === 0) {
+        return 0;
+    }
+    return Math.round((workout.categories[category].length / total) * 100);
+};
 </script>
 
 <template>
@@ -233,95 +243,135 @@ const columnedWorkouts = computed(() => {
                     :key="`column-${columnIndex}`"
                     class="flex flex-col gap-6 flex-1"
                 >
-                    <Expandable v-for="workout in column" :key="workout.id" class="h-full max-h-4">
-                        <template #default="isExpanded">
-                            <ExpandableTrigger>
-                                <ExpandableCard
-                                    class="rounded-lg border bg-card text-card-foreground shadow-sm transition-[height] duration-300"
-                                    :class="isExpanded ? 'h-full' : 'h-[260px]'"
+                    <div
+                        v-for="workout in column"
+                        :key="workout.id"
+                        class="rounded-lg border bg-card text-card-foreground shadow-sm transition-[height] duration-300 cursor-pointer"
+                        :class="selectedWorkoutId === workout.id ? 'h-[440px]' : 'h-[260px]'"
+                        role="button"
+                        tabindex="0"
+                        :aria-expanded="selectedWorkoutId === workout.id"
+                        @click="toggleWorkout(workout.id)"
+                        @keydown.enter.prevent="toggleWorkout(workout.id)"
+                        @keydown.space.prevent="toggleWorkout(workout.id)"
+                    >
+                        <Card class="border-0 shadow-none h-full flex flex-col">
+                            <CardHeader class="pb-2">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-lg font-semibold">
+                                            {{ workout.name }}
+                                        </h3>
+                                        <div class="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                                            <Badge variant="secondary">{{ workout.date }}</Badge>
+                                            <span class="flex items-center gap-1">
+                                                <Clock class="h-3 w-3" />
+                                                {{ workout.duration }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            class="h-8 w-8"
+                                            @click.stop
+                                        >
+                                            <MoreHorizontal class="h-4 w-4" />
+                                        </Button>
+                                        <ChevronDown
+                                            class="h-4 w-4 text-muted-foreground transition-transform duration-200"
+                                            :class="selectedWorkoutId === workout.id ? 'rotate-180' : ''"
+                                        />
+                                    </div>
+                                </div>
+                            </CardHeader>
+
+                            <CardContent class="flex flex-1 flex-col">
+                                <div class="space-y-3">
+                                    <WorkoutCategorySummaryRow
+                                        label="Weightlifting"
+                                        :percentage="getCategoryPercent(workout, 'weightlifting')"
+                                    />
+                                    <WorkoutCategorySummaryRow
+                                        label="Cardio"
+                                        :percentage="getCategoryPercent(workout, 'cardio')"
+                                    />
+                                    <WorkoutCategorySummaryRow
+                                        label="Dynamic"
+                                        :percentage="getCategoryPercent(workout, 'dynamic')"
+                                    />
+                                </div>
+
+                                <div
+                                    class="mt-4 overflow-hidden transition-[max-height,opacity] duration-300"
+                                    :class="selectedWorkoutId === workout.id ? 'max-h-[320px] opacity-100' : 'max-h-0 opacity-0'"
                                 >
-                                    <Card class="border-0 shadow-none">
-                                        <CardHeader class="pb-2">
-                                            <div class="flex items-center justify-between">
-                                                <div>
-                                                    <h3 class="text-lg font-semibold">
-                                                        {{ workout.name }}
-                                                    </h3>
-                                                    <div class="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                                                        <Badge variant="secondary">{{ workout.date }}</Badge>
-                                                        <span class="flex items-center gap-1">
-                                                            <Clock class="h-3 w-3" />
-                                                            {{ workout.duration }}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="flex items-center gap-2">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        class="h-8 w-8"
-                                                        @click.stop
-                                                    >
-                                                        <MoreHorizontal class="h-4 w-4" />
-                                                    </Button>
-                                                    <ChevronDown
-                                                        class="h-4 w-4 text-muted-foreground transition-transform duration-200"
-                                                        :class="isExpanded ? 'rotate-180' : ''"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </CardHeader>
+                                    <div class="border-t pt-4 space-y-4">
+                                        <WorkoutCategorySection
+                                            label="Weightlifting"
+                                            :count="workout.categories.weightlifting.length"
+                                            empty-text="No weightlifting exercises yet"
+                                        >
+                                            <li
+                                                v-for="lift in workout.categories.weightlifting"
+                                                :key="`lift-${lift.id}`"
+                                                class="flex items-center gap-2 text-sm"
+                                            >
+                                                <Circle class="h-2 w-2 text-muted-foreground fill-current" />
+                                                <span class="font-medium">{{ lift.name }}</span>
+                                                <span class="text-muted-foreground">
+                                                    - {{ lift.sets }} sets x {{ lift.reps }} reps
+                                                </span>
+                                            </li>
+                                        </WorkoutCategorySection>
 
-                                        <CardContent>
-                                            <div class="space-y-2">
-                                                <div
-                                                    v-if="workout.exercises.length === 0"
-                                                    class="text-sm text-muted-foreground italic py-4"
-                                                >
-                                                    No exercises added yet
-                                                </div>
-                                                <ul v-else class="space-y-2">
-                                                    <li
-                                                        v-for="exercise in workout.exercises"
-                                                        :key="exercise.id"
-                                                        class="flex items-center gap-2 text-sm"
-                                                    >
-                                                        <Circle class="h-2 w-2 text-muted-foreground fill-current" />
-                                                        <span class="font-medium">{{ exercise.name }}</span>
-                                                        <span class="text-muted-foreground">
-                                                            - {{ exercise.sets.length }} set{{ exercise.sets.length !== 1 ? "s" : "" }}
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                        <WorkoutCategorySection
+                                            label="Cardio"
+                                            :count="workout.categories.cardio.length"
+                                            empty-text="No cardio sessions yet"
+                                        >
+                                            <li
+                                                v-for="cardio in workout.categories.cardio"
+                                                :key="`cardio-${cardio.id}`"
+                                                class="flex items-center gap-2 text-sm"
+                                            >
+                                                <Circle class="h-2 w-2 text-muted-foreground fill-current" />
+                                                <span class="font-medium">{{ cardio.name }}</span>
+                                                <span class="text-muted-foreground">
+                                                    - {{ cardio.duration }}
+                                                </span>
+                                            </li>
+                                        </WorkoutCategorySection>
 
-                                            <ExpandableContent preset="slide-up" class="mt-4">
-                                                <div class="border-t pt-4 space-y-3">
-                                                    <div
-                                                        v-for="exercise in workout.exercises"
-                                                        :key="`detail-${exercise.id}`"
-                                                        class="text-sm text-muted-foreground"
-                                                    >
-                                                        <span class="font-medium text-foreground">
-                                                            {{ exercise.name }}
-                                                        </span>
-                                                        <span>
-                                                            - {{ exercise.sets.map((set) => `${set.lbs}lb x ${set.reps}`).join(", ") }}
-                                                        </span>
-                                                    </div>
-                                                    <div class="flex justify-end">
-                                                        <Button size="sm" @click.stop="navigateTo(`/workouts/${workout.id}`)">
-                                                            Open workout
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                            </ExpandableContent>
-                                        </CardContent>
-                                    </Card>
-                                </ExpandableCard>
-                            </ExpandableTrigger>
-                        </template>
-                    </Expandable>
+                                        <WorkoutCategorySection
+                                            label="Dynamic"
+                                            :count="workout.categories.dynamic.length"
+                                            empty-text="No dynamic work yet"
+                                        >
+                                            <li
+                                                v-for="dynamic in workout.categories.dynamic"
+                                                :key="`dynamic-${dynamic.id}`"
+                                                class="flex items-center gap-2 text-sm"
+                                            >
+                                                <Circle class="h-2 w-2 text-muted-foreground fill-current" />
+                                                <span class="font-medium">{{ dynamic.name }}</span>
+                                                <span class="text-muted-foreground">
+                                                    - {{ dynamic.frequency }}
+                                                </span>
+                                            </li>
+                                        </WorkoutCategorySection>
+
+                                        <div class="flex justify-end">
+                                            <Button size="sm" @click.stop="navigateTo(`/workouts/${workout.id}`)">
+                                                Open workout
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </div>
             </div>
         </div>
