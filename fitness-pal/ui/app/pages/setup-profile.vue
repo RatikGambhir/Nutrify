@@ -97,12 +97,12 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-background py-12 px-4">
-    <div class="max-w-6xl mx-auto">
+  <div class="min-h-screen border bg-background py-12 px-4">
+    <div class="max-w-7xl mx-auto ">
       <!-- Header -->
       <div class="text-center mb-12">
-        <Badge variant="outline" class="mb-4 px-4 py-1">
-          • WIZARD FORM
+        <Badge variant="outline" class="mb-4 px-4 py-1 bg-primary">
+          Nutrify
         </Badge>
         <h1 class="text-4xl font-bold mb-3">Account Setup</h1>
         <p class="text-muted-foreground">

@@ -49,7 +49,6 @@ onMounted(async () => {
       <!-- Header -->
       <div class="flex h-16 items-center border-b px-4">
         <NuxtLink to="/" class="flex items-center gap-2">
-          <div class="w-8 h-8 bg-primary rounded" />
           <span v-if="!sidebarCollapsed" class="text-lg font-bold text-foreground">Nutrify</span>
         </NuxtLink>
       </div>
