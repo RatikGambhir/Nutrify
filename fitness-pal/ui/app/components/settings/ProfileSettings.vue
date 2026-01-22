@@ -22,43 +22,40 @@ defineProps<{
 
 <template>
     <div class="space-y-6">
-        <div class="space-y-1">
-            <h2 class="text-lg font-semibold">Profile</h2>
-            <p class="text-sm text-muted-foreground">
-                Configure your personal and body metrics information.
-            </p>
-        </div>
-
-        <Card>
-            <CardContent class="p-6 space-y-5">
-                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
-                    <div>
-                        <Label>Age</Label>
-                        <p class="text-xs text-muted-foreground">Your current age.</p>
-                    </div>
-                    <Input
-                        v-model="formState.profile.age"
-                        :placeholder="placeholderFor(formDefaults.profile.age, 'e.g., 28')"
-                    />
+        <Card class="shadow-sm">
+            <CardContent class="p-6 space-y-6">
+                <div class="space-y-1">
+                    <h2 class="text-lg font-semibold">Profile</h2>
+                    <p class="text-sm text-muted-foreground">
+                        Configure your personal and body metrics information.
+                    </p>
                 </div>
 
                 <Separator />
 
-                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
-                    <div>
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="space-y-2">
+                        <Label>Age</Label>
+                        <p class="text-xs text-muted-foreground">Your current age.</p>
+                        <Input
+                            v-model="formState.profile.age"
+                            :placeholder="placeholderFor(formDefaults.profile.age, 'e.g., 28')"
+                        />
+                    </div>
+                    <div class="space-y-2">
                         <Label>Sex</Label>
                         <p class="text-xs text-muted-foreground">Biological sex assigned at birth.</p>
+                        <Select v-model="formState.profile.sex">
+                            <SelectTrigger>
+                                <SelectValue :placeholder="placeholderFor(formDefaults.profile.sex, 'Select sex')" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="female">Female</SelectItem>
+                                <SelectItem value="male">Male</SelectItem>
+                                <SelectItem value="intersex">Intersex</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
-                    <Select v-model="formState.profile.sex">
-                        <SelectTrigger>
-                            <SelectValue :placeholder="placeholderFor(formDefaults.profile.sex, 'Select sex')" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="female">Female</SelectItem>
-                            <SelectItem value="male">Male</SelectItem>
-                            <SelectItem value="intersex">Intersex</SelectItem>
-                        </SelectContent>
-                    </Select>
                 </div>
 
                 <Separator />
@@ -76,54 +73,44 @@ defineProps<{
 
                 <Separator />
 
-                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
-                    <div>
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="space-y-2">
                         <Label>Height</Label>
                         <p class="text-xs text-muted-foreground">Your height in centimeters.</p>
+                        <Input
+                            v-model="formState.profile.height"
+                            :placeholder="placeholderFor(formDefaults.profile.height, 'e.g., 175')"
+                        />
                     </div>
-                    <Input
-                        v-model="formState.profile.height"
-                        :placeholder="placeholderFor(formDefaults.profile.height, 'e.g., 175')"
-                    />
-                </div>
-
-                <Separator />
-
-                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
-                    <div>
+                    <div class="space-y-2">
                         <Label>Weight</Label>
                         <p class="text-xs text-muted-foreground">Your weight in kilograms.</p>
+                        <Input
+                            v-model="formState.profile.weight"
+                            :placeholder="placeholderFor(formDefaults.profile.weight, 'e.g., 70')"
+                        />
                     </div>
-                    <Input
-                        v-model="formState.profile.weight"
-                        :placeholder="placeholderFor(formDefaults.profile.weight, 'e.g., 70')"
-                    />
                 </div>
 
                 <Separator />
 
-                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
-                    <div>
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="space-y-2">
                         <Label>Body Fat Percentage</Label>
                         <p class="text-xs text-muted-foreground">Your body fat percentage (optional).</p>
+                        <Input
+                            v-model="formState.profile.bodyFat"
+                            :placeholder="placeholderFor(formDefaults.profile.bodyFat, 'e.g., 18.5')"
+                        />
                     </div>
-                    <Input
-                        v-model="formState.profile.bodyFat"
-                        :placeholder="placeholderFor(formDefaults.profile.bodyFat, 'e.g., 18.5')"
-                    />
-                </div>
-
-                <Separator />
-
-                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
-                    <div>
+                    <div class="space-y-2">
                         <Label>Lean Mass</Label>
                         <p class="text-xs text-muted-foreground">Your lean body mass in kg (optional).</p>
+                        <Input
+                            v-model="formState.profile.leanMass"
+                            :placeholder="placeholderFor(formDefaults.profile.leanMass, 'e.g., 57.0')"
+                        />
                     </div>
-                    <Input
-                        v-model="formState.profile.leanMass"
-                        :placeholder="placeholderFor(formDefaults.profile.leanMass, 'e.g., 57.0')"
-                    />
                 </div>
 
                 <Separator />
@@ -157,8 +144,8 @@ defineProps<{
         </Card>
 
         <div class="flex justify-end gap-3">
-            <Button variant="ghost">Cancel</Button>
-            <Button>Save changes</Button>
+            <Button variant="ghost" class="text-muted-foreground">Cancel</Button>
+            <Button class="bg-[#d96d54] text-white hover:bg-[#c75f49]">Save changes</Button>
         </div>
     </div>
 </template>

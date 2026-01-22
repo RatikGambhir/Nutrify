@@ -28,15 +28,17 @@ defineProps<{
 
 <template>
     <div class="space-y-6">
-        <div class="space-y-1">
-            <h2 class="text-lg font-semibold">Nutrition</h2>
-            <p class="text-sm text-muted-foreground">
-                Configure your nutrition preferences and dietary information.
-            </p>
-        </div>
+        <Card class="shadow-sm">
+            <CardContent class="p-6 space-y-6">
+                <div class="space-y-1">
+                    <h2 class="text-lg font-semibold">Nutrition</h2>
+                    <p class="text-sm text-muted-foreground">
+                        Configure your nutrition preferences and dietary information.
+                    </p>
+                </div>
 
-        <Card>
-            <CardContent class="p-6 space-y-5">
+                <Separator />
+
                 <div class="grid gap-4 md:grid-cols-[220px,1fr]">
                     <div>
                         <Label>Current Diet Pattern</Label>
@@ -56,46 +58,43 @@ defineProps<{
 
                 <Separator />
 
-                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
-                    <div>
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="space-y-2">
                         <Label>Calorie Tracking Experience</Label>
                         <p class="text-xs text-muted-foreground">Have you tracked calories before?</p>
+                        <div class="flex gap-3">
+                            <Button
+                                variant="outline"
+                                class="h-10 w-20"
+                                :class="isSelected(formState.nutrition.calorieTracking, formDefaults.nutrition.calorieTracking, 'yes') ? 'border-foreground text-foreground' : ''"
+                                @click="formState.nutrition.calorieTracking = 'yes'"
+                            >
+                                {{ yesNoOptions[0].label }}
+                            </Button>
+                            <Button
+                                variant="outline"
+                                class="h-10 w-20"
+                                :class="isSelected(formState.nutrition.calorieTracking, formDefaults.nutrition.calorieTracking, 'no') ? 'border-foreground text-foreground' : ''"
+                                @click="formState.nutrition.calorieTracking = 'no'"
+                            >
+                                {{ yesNoOptions[1].label }}
+                            </Button>
+                        </div>
                     </div>
-                    <div class="flex gap-3">
-                        <Button
-                            variant="outline"
-                            :class="isSelected(formState.nutrition.calorieTracking, formDefaults.nutrition.calorieTracking, 'yes') ? 'border-foreground text-foreground' : ''"
-                            @click="formState.nutrition.calorieTracking = 'yes'"
-                        >
-                            {{ yesNoOptions[0].label }}
-                        </Button>
-                        <Button
-                            variant="outline"
-                            :class="isSelected(formState.nutrition.calorieTracking, formDefaults.nutrition.calorieTracking, 'no') ? 'border-foreground text-foreground' : ''"
-                            @click="formState.nutrition.calorieTracking = 'no'"
-                        >
-                            {{ yesNoOptions[1].label }}
-                        </Button>
-                    </div>
-                </div>
-
-                <Separator />
-
-                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
-                    <div>
+                    <div class="space-y-2">
                         <Label>Cooking Skill Level</Label>
                         <p class="text-xs text-muted-foreground">How would you rate your cooking skills?</p>
+                        <Select v-model="formState.nutrition.cookingSkill">
+                            <SelectTrigger>
+                                <SelectValue :placeholder="placeholderFor(formDefaults.nutrition.cookingSkill, 'Select skill level')" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem v-for="option in skillLevels" :key="option.value" :value="option.value">
+                                    {{ option.label }}
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
-                    <Select v-model="formState.nutrition.cookingSkill">
-                        <SelectTrigger>
-                            <SelectValue :placeholder="placeholderFor(formDefaults.nutrition.cookingSkill, 'Select skill level')" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem v-for="option in skillLevels" :key="option.value" :value="option.value">
-                                {{ option.label }}
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
                 </div>
 
                 <Separator />
@@ -192,8 +191,8 @@ defineProps<{
         </Card>
 
         <div class="flex justify-end gap-3">
-            <Button variant="ghost">Cancel</Button>
-            <Button>Save changes</Button>
+            <Button variant="ghost" class="text-muted-foreground">Cancel</Button>
+            <Button class="bg-[#d96d54] text-white hover:bg-[#c75f49]">Save changes</Button>
         </div>
     </div>
 </template>

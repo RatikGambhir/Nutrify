@@ -24,15 +24,17 @@ defineProps<{
 
 <template>
     <div class="space-y-6">
-        <div class="space-y-1">
-            <h2 class="text-lg font-semibold">Training</h2>
-            <p class="text-sm text-muted-foreground">
-                Configure your training preferences and workout information.
-            </p>
-        </div>
+        <Card class="shadow-sm">
+            <CardContent class="p-6 space-y-6">
+                <div class="space-y-1">
+                    <h2 class="text-lg font-semibold">Training</h2>
+                    <p class="text-sm text-muted-foreground">
+                        Configure your training preferences and workout information.
+                    </p>
+                </div>
 
-        <Card>
-            <CardContent class="p-6 space-y-5">
+                <Separator />
+
                 <div class="grid gap-4 md:grid-cols-[220px,1fr]">
                     <div>
                         <Label>Training Age</Label>
@@ -125,35 +127,30 @@ defineProps<{
 
                 <Separator />
 
-                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
-                    <div>
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="space-y-2">
                         <Label>Time Per Session</Label>
                         <p class="text-xs text-muted-foreground">Average workout duration in minutes.</p>
+                        <Input
+                            v-model="formState.training.timePerSession"
+                            :placeholder="placeholderFor(formDefaults.training.timePerSession, 'e.g., 60')"
+                        />
                     </div>
-                    <Input
-                        v-model="formState.training.timePerSession"
-                        :placeholder="placeholderFor(formDefaults.training.timePerSession, 'e.g., 60')"
-                    />
-                </div>
-
-                <Separator />
-
-                <div class="grid gap-4 md:grid-cols-[220px,1fr]">
-                    <div>
+                    <div class="space-y-2">
                         <Label>Days Per Week</Label>
                         <p class="text-xs text-muted-foreground">How many days per week do you train?</p>
+                        <Input
+                            v-model="formState.training.daysPerWeek"
+                            :placeholder="placeholderFor(formDefaults.training.daysPerWeek, 'e.g., 4')"
+                        />
                     </div>
-                    <Input
-                        v-model="formState.training.daysPerWeek"
-                        :placeholder="placeholderFor(formDefaults.training.daysPerWeek, 'e.g., 4')"
-                    />
                 </div>
             </CardContent>
         </Card>
 
         <div class="flex justify-end gap-3">
-            <Button variant="ghost">Cancel</Button>
-            <Button>Save changes</Button>
+            <Button variant="ghost" class="text-muted-foreground">Cancel</Button>
+            <Button class="bg-[#d96d54] text-white hover:bg-[#c75f49]">Save changes</Button>
         </div>
     </div>
 </template>

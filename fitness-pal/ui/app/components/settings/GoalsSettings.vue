@@ -17,15 +17,17 @@ defineProps<{
 
 <template>
     <div class="space-y-6">
-        <div class="space-y-1">
-            <h2 class="text-lg font-semibold">Goals</h2>
-            <p class="text-sm text-muted-foreground">
-                Configure your fitness goals and targets.
-            </p>
-        </div>
+        <Card class="shadow-sm">
+            <CardContent class="p-6 space-y-6">
+                <div class="space-y-1">
+                    <h2 class="text-lg font-semibold">Goals</h2>
+                    <p class="text-sm text-muted-foreground">
+                        Configure your fitness goals and targets.
+                    </p>
+                </div>
 
-        <Card>
-            <CardContent class="p-6 space-y-5">
+                <Separator />
+
                 <div class="grid gap-4 md:grid-cols-[220px,1fr]">
                     <div>
                         <Label>Primary Goal</Label>
@@ -119,8 +121,8 @@ defineProps<{
         </Card>
 
         <div class="flex justify-end gap-3">
-            <Button variant="ghost">Cancel</Button>
-            <Button>Save changes</Button>
+            <Button variant="ghost" class="text-muted-foreground">Cancel</Button>
+            <Button class="bg-[#d96d54] text-white hover:bg-[#c75f49]">Save changes</Button>
         </div>
     </div>
 </template>
