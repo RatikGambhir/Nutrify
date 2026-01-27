@@ -161,18 +161,18 @@ const isSelected = (currentValue: string, defaultValue: string, targetValue: str
 </script>
 
 <template>
-    <div class="flex-1 flex flex-col h-full">
-        <header class="flex h-16 items-center justify-between border-b px-6 shrink-0">
-            <h1 class="text-xl font-semibold">Settings</h1>
+    <div class="flex-1 flex flex-col h-full bg-[#e9ecef]">
+        <header class="flex h-16 items-center justify-between px-8 shrink-0">
+            <h1 class="text-xl font-semibold text-slate-700">Settings</h1>
         </header>
 
-        <div class="flex-1 overflow-auto p-6">
-            <div class="max-w-5xl mx-auto">
+        <div class="flex-1 overflow-auto px-8 pb-10">
+            <div class="max-w-4xl mx-auto">
                 <TabGroup
                     v-model="activeTab"
                     :tabs="tabs"
-                    tabs-list-class="mb-8 w-full justify-start flex-wrap h-auto gap-1"
-                    tab-trigger-class="px-4"
+                    tabs-list-class="mb-6 w-full justify-start flex-wrap h-auto gap-3 bg-transparent p-0"
+                    tab-trigger-class="rounded-full px-4 py-1.5 text-xs font-semibold text-slate-500 data-[state=active]:bg-[#d96d54] data-[state=active]:text-white data-[state=active]:shadow-none"
                 >
                     <TabPanel value="profile" class="space-y-6">
                         <ProfileSettings
